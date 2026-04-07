@@ -252,7 +252,7 @@ def set_test_env(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch
     monkeypatch.setenv("MOCK_MODE", "true")
     monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://test.openai.azure.com")
     monkeypatch.setenv("AZURE_OPENAI_API_KEY", "test-key")
-    monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "gpt-5.2")
+    monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "gpt-4.1")
     monkeypatch.setenv("COSMOS_DB_ENDPOINT", "https://test.documents.azure.com")
     monkeypatch.setenv("COSMOS_DB_KEY", "test-key")
     monkeypatch.setenv("SERVICENOW_INSTANCE", "test.service-now.com")

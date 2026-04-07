@@ -213,7 +213,7 @@ async def gpt4o_service():
     from app.services.azure.llm_service import AzureOpenAILLMService
 
     endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT", "")
-    deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT", "gpt-5.2")
+    deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT", "gpt-4.1")
     api_version = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-05-01-preview")
 
     if _auth_mode == "api_key":

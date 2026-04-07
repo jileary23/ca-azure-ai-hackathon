@@ -14,7 +14,7 @@ services:
     environment:
       - USE_MOCK_SERVICES=true
       - AZURE_OPENAI_ENDPOINT=
-      - AZURE_OPENAI_DEPLOYMENT=gpt-5.2
+      - AZURE_OPENAI_DEPLOYMENT=gpt-4.1
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -48,7 +48,7 @@ services:
     environment:
       - USE_MOCK_SERVICES=true
       - AZURE_OPENAI_ENDPOINT=
-      - AZURE_OPENAI_DEPLOYMENT=gpt-5.2
+      - AZURE_OPENAI_DEPLOYMENT=gpt-4.1
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -82,7 +82,7 @@ services:
     environment:
       - USE_MOCK_SERVICES=true
       - AZURE_OPENAI_ENDPOINT=
-      - AZURE_OPENAI_DEPLOYMENT=gpt-5.2
+      - AZURE_OPENAI_DEPLOYMENT=gpt-4.1
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -116,7 +116,7 @@ services:
     environment:
       - USE_MOCK_SERVICES=true
       - AZURE_OPENAI_ENDPOINT=
-      - AZURE_OPENAI_DEPLOYMENT=gpt-5.2
+      - AZURE_OPENAI_DEPLOYMENT=gpt-4.1
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -150,7 +150,7 @@ services:
     environment:
       - USE_MOCK_SERVICES=true
       - AZURE_OPENAI_ENDPOINT=
-      - AZURE_OPENAI_DEPLOYMENT=gpt-5.2
+      - AZURE_OPENAI_DEPLOYMENT=gpt-4.1
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -170,7 +170,7 @@ services:
     environment:
       - USE_MOCK_SERVICES=true
       - AZURE_OPENAI_ENDPOINT=
-      - AZURE_OPENAI_DEPLOYMENT=gpt-5.2
+      - AZURE_OPENAI_DEPLOYMENT=gpt-4.1
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -204,7 +204,7 @@ services:
     environment:
       - USE_MOCK_SERVICES=true
       - AZURE_OPENAI_ENDPOINT=
-      - AZURE_OPENAI_DEPLOYMENT=gpt-5.2
+      - AZURE_OPENAI_DEPLOYMENT=gpt-4.1
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -238,7 +238,7 @@ services:
     environment:
       - USE_MOCK_SERVICES=true
       - AZURE_OPENAI_ENDPOINT=
-      - AZURE_OPENAI_DEPLOYMENT=gpt-5.2
+      - AZURE_OPENAI_DEPLOYMENT=gpt-4.1
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s

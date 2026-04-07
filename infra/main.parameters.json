@@ -12,10 +12,10 @@
       "value": "canadacentral"
     },
     "openAiModel": {
-      "value": "gpt-5.2"
+      "value": "gpt-4.1"
     },
     "openAiModelVersion": {
-      "value": "2025-12-11"
+      "value": "2025-04-14"
     },
     "mockMode": {
       "value": false
