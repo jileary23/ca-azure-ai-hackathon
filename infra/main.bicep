@@ -40,6 +40,7 @@ param deploymentDate string = utcNow('yyyy-MM-dd')
 // Naming convention
 var resourceToken = toLower(uniqueString(subscription().id, resourceGroup().id, location))
 var prefix = '${resourcePrefix}-${resourceToken}'
+var caPrefix = '${resourcePrefix}-${take(resourceToken, 6)}'  // Short prefix for Container Apps (32-char limit)
 var keyVaultName = take(replace('${resourcePrefix}${resourceToken}kv', '-', ''), 24)
 var cosmosToken = toLower(uniqueString(subscription().id, resourceGroup().id, cosmosLocation))
 var cosmosAccountName = '${resourcePrefix}-${cosmosToken}-cosmos'
@@ -340,7 +341,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' =
 // Service Targets for azd deploy
 // ============================================================================
 resource backendContainerApp 'Microsoft.App/containerApps@2023-08-01-preview' = {
-  name: '${prefix}-backend'
+  name: '${caPrefix}-backend'
   location: location
   tags: union(tags, {
     'azd-service-name': 'backend'
@@ -485,7 +486,7 @@ resource backendACSRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-
 // Frontend Container App
 // ============================================================================
 resource frontendContainerApp 'Microsoft.App/containerApps@2023-08-01-preview' = {
-  name: '${prefix}-frontend'
+  name: '${caPrefix}-frontend'
   location: location
   tags: union(tags, {
     'azd-service-name': 'frontend'
@@ -543,7 +544,7 @@ resource frontendContainerApp 'Microsoft.App/containerApps@2023-08-01-preview' =
 
 // Accelerator backend Container Apps
 resource accelBackends 'Microsoft.App/containerApps@2023-08-01-preview' = [for accel in activeAccelerators: {
-  name: '${prefix}-accel-${accel.id}-be'
+  name: '${caPrefix}-a${accel.id}-be'
   location: location
   tags: union(tags, {
     'azd-service-name': 'accel-${accel.id}'
@@ -612,7 +613,7 @@ resource accelBackends 'Microsoft.App/containerApps@2023-08-01-preview' = [for a
 
 // Accelerator frontend Container Apps (only for accelerators with frontends)
 resource accelFrontends 'Microsoft.App/containerApps@2023-08-01-preview' = [for (accel, i) in activeAccelerators: if (accel.hasFrontend) {
-  name: '${prefix}-accel-${accel.id}-fe'
+  name: '${caPrefix}-a${accel.id}-fe'
   location: location
   tags: union(tags, {
     'azd-service-name': 'accel-${accel.id}-fe'
