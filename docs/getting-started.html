@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started — CA Hackathon Accelerators</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#1B2A4A',
+            'navy-light': '#243659',
+            'navy-dark': '#111D33',
+            'ca-blue': '#003366',
+            gold: '#FDB515',
+            'gold-light': '#FEC84B',
+            'gold-dark': '#D4960E',
+            poppy: '#E87722',
+            'poppy-light': '#F09A56',
+            slate: '#4A5568',
+            'warm-gray': '#F7F5F2',
+            'warm-gray-dark': '#EDE9E3',
+          },
+          fontFamily: {
+            display: ['"DM Serif Display"', 'Georgia', 'serif'],
+            body: ['"Source Sans 3"', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Source Sans 3', system-ui, sans-serif; }
+
+    .grain::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-up { animation: slideUp 0.6s ease-out both; }
+    .animate-up-d1 { animation-delay: 0.1s; }
+    .animate-up-d2 { animation-delay: 0.2s; }
+    .animate-up-d3 { animation-delay: 0.3s; }
+
+    /* Code blocks */
+    .code-block {
+      position: relative;
+      background: #1B2A4A;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .code-block pre {
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      line-height: 1.7;
+      color: #E2E8F0;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+    .code-block .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #94A3B8;
+      border-radius: 6px;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Source Sans 3', system-ui, sans-serif;
+    }
+    .code-block .copy-btn:hover {
+      background: rgba(255,255,255,0.15);
+      color: #FDB515;
+    }
+    .code-block .lang-tag {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.75rem;
+      color: #64748B;
+      font-size: 0.65rem;
+      font-family: 'Source Sans 3', system-ui, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .code-block.has-tag pre {
+      padding-top: 2rem;
+    }
+
+    /* Comment styling in code */
+    .code-comment { color: #64748B; }
+    .code-string { color: #FDB515; }
+    .code-cmd { color: #7DD3FC; }
+
+    html { scroll-behavior: smooth; }
+
+    /* Table styling */
+    .data-table th {
+      background: #1B2A4A;
+      color: white;
+      font-weight: 600;
+      text-align: left;
+    }
+    .data-table td { border-bottom: 1px solid #EDE9E3; }
+    .data-table tr:hover td { background: #FEFCF7; }
+
+    /* Nav link */
+    .nav-link {
+      position: relative;
+      transition: color 0.2s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #FDB515;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(90deg, #FDB515, #E87722, transparent);
+      border: none;
+    }
+
+    /* Step counter */
+    .step-number {
+      counter-increment: step;
+    }
+    .step-number::before {
+      content: counter(step);
+    }
+
+    /* Focus styles */
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid #FDB515;
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    /* Directory tree */
+    .tree { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 0.8rem; line-height: 1.8; }
+    .tree-dir { color: #FDB515; font-weight: 600; }
+    .tree-comment { color: #64748B; }
+
+    .mobile-nav { display: none; }
+    @media (max-width: 768px) {
+      .desktop-nav { display: none; }
+      .mobile-nav { display: block; }
+      .mobile-menu { display: none; }
+      .mobile-menu.open { display: flex; }
+    }
+  </style>
+</head>
+<body class="bg-warm-gray text-navy antialiased">
+
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-gold text-navy px-4 py-2 rounded font-semibold z-50">
+    Skip to main content
+  </a>
+
+  <!-- Navigation -->
+  <nav class="bg-navy text-white sticky top-0 z-40 shadow-lg" role="navigation" aria-label="Main navigation">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3 group" aria-label="CA Hackathon Accelerators Home">
+          <div class="w-9 h-9 bg-gold rounded-lg flex items-center justify-center font-display text-navy text-lg font-bold group-hover:scale-105 transition-transform" aria-hidden="true">CA</div>
+          <div class="hidden sm:block">
+            <span class="font-display text-lg text-gold">CA Hackathon</span>
+            <span class="text-white/60 text-sm ml-1">Accelerators</span>
+          </div>
+        </a>
+        <div class="desktop-nav flex items-center gap-8">
+          <a href="index.html" class="nav-link text-white/80 hover:text-gold text-sm font-medium tracking-wide">Home</a>
+          <a href="index.html#accelerators" class="nav-link text-white/80 hover:text-gold text-sm font-medium tracking-wide">Accelerators</a>
+          <a href="architecture.html" class="nav-link text-white/80 hover:text-gold text-sm font-medium tracking-wide">Architecture</a>
+          <a href="getting-started.html" class="nav-link active text-gold text-sm font-medium tracking-wide" aria-current="page">Getting Started</a>
+        </div>
+        <div class="mobile-nav">
+          <button onclick="document.getElementById('mobileMenu').classList.toggle('open')" class="text-white/80 hover:text-gold p-2" aria-expanded="false" aria-controls="mobileMenu" aria-label="Toggle navigation menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobileMenu" class="mobile-menu flex-col bg-navy-dark border-t border-white/10 px-4 pb-4">
+      <a href="index.html" class="block py-3 text-white/80 hover:text-gold text-sm font-medium border-b border-white/5">Home</a>
+      <a href="index.html#accelerators" class="block py-3 text-white/80 hover:text-gold text-sm font-medium border-b border-white/5">Accelerators</a>
+      <a href="architecture.html" class="block py-3 text-white/80 hover:text-gold text-sm font-medium border-b border-white/5">Architecture</a>
+      <a href="getting-started.html" class="block py-3 text-gold text-sm font-medium" aria-current="page">Getting Started</a>
+    </div>
+  </nav>
+
+  <!-- Hero Header -->
+  <header class="relative bg-gradient-to-br from-navy via-ca-blue to-navy-dark text-white overflow-hidden grain">
+    <div class="absolute inset-0 opacity-5" aria-hidden="true">
+      <svg width="100%" height="100%"><defs><pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="white"/></pattern></defs><rect width="100%" height="100%" fill="url(#dots)"/></svg>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <div class="animate-up">
+        <p class="text-gold font-semibold text-sm tracking-widest uppercase mb-3">Developer Guide</p>
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl mb-4">Getting Started</h1>
+        <p class="text-white/70 text-lg sm:text-xl max-w-2xl leading-relaxed">
+          From zero to running your first accelerator — in a GitHub Codespace or locally. No Azure account needed.
+        </p>
+      </div>
+      <nav class="mt-10 animate-up animate-up-d2 flex flex-wrap gap-3" aria-label="Page sections">
+        <a href="#prerequisites" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓵</span> Prerequisites
+        </a>
+        <a href="#quickstart" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓶</span> Quick Start
+        </a>
+        <a href="#accelerator" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓷</span> Run an Accelerator
+        </a>
+        <a href="#testing" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓸</span> Testing
+        </a>
+        <a href="#labs" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓹</span> Labs
+        </a>
+        <a href="#deploy" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓺</span> Deploy
+        </a>
+        <a href="#structure" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓻</span> Project Structure
+        </a>
+        <a href="#envvars" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓼</span> Env Variables
+        </a>
+      </nav>
+    </div>
+    <div class="h-1 bg-gradient-to-r from-gold via-poppy to-gold" aria-hidden="true"></div>
+  </header>
+
+  <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 1: Prerequisites                    -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="prerequisites" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">1</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Prerequisites</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        Choose your development environment. GitHub Codespaces is the fastest path — everything is pre-configured.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Codespace (Recommended) -->
+        <div class="bg-white rounded-2xl border-2 border-gold/40 p-8 relative shadow-sm">
+          <div class="absolute -top-3 left-6">
+            <span class="bg-gold text-navy text-xs font-bold px-3 py-1 rounded-full shadow-sm">RECOMMENDED</span>
+          </div>
+          <div class="flex items-center gap-3 mb-4 mt-2">
+            <div class="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center" aria-hidden="true">
+              <svg class="w-6 h-6 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+            </div>
+            <div>
+              <h3 class="font-display text-2xl text-navy">GitHub Codespace</h3>
+              <p class="text-xs text-slate">Zero setup — runs in your browser</p>
+            </div>
+          </div>
+          <ul class="space-y-3 text-sm text-slate" role="list">
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gold/15 text-gold text-xs font-bold flex-shrink-0 mt-0.5" aria-hidden="true">✓</span>
+              <span>Pre-installed Python 3.11+, Node.js 18+, Docker</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gold/15 text-gold text-xs font-bold flex-shrink-0 mt-0.5" aria-hidden="true">✓</span>
+              <span>Extensions and settings pre-configured</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gold/15 text-gold text-xs font-bold flex-shrink-0 mt-0.5" aria-hidden="true">✓</span>
+              <span>Port forwarding for all services</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gold/15 text-gold text-xs font-bold flex-shrink-0 mt-0.5" aria-hidden="true">✓</span>
+              <span>Works on any machine with a browser</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Local Dev -->
+        <div class="bg-white rounded-2xl border border-warm-gray-dark p-8 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-ca-blue/10 rounded-xl flex items-center justify-center" aria-hidden="true">
+              <svg class="w-6 h-6 text-ca-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <div>
+              <h3 class="font-display text-2xl text-navy">Local Development</h3>
+              <p class="text-xs text-slate">Full control on your own machine</p>
+            </div>
+          </div>
+          <p class="text-sm text-slate mb-4">You'll need these installed locally:</p>
+          <div class="space-y-2.5">
+            <div class="flex items-center gap-3 bg-warm-gray rounded-lg px-4 py-2.5">
+              <span class="text-base" aria-hidden="true">🐍</span>
+              <div>
+                <span class="font-semibold text-navy text-sm">Python 3.11+</span>
+                <span class="text-xs text-slate ml-2">with pip</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 bg-warm-gray rounded-lg px-4 py-2.5">
+              <span class="text-base" aria-hidden="true">🟢</span>
+              <div>
+                <span class="font-semibold text-navy text-sm">Node.js 18+</span>
+                <span class="text-xs text-slate ml-2">with npm</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 bg-warm-gray rounded-lg px-4 py-2.5">
+              <span class="text-base" aria-hidden="true">🐳</span>
+              <div>
+                <span class="font-semibold text-navy text-sm">Docker</span>
+                <span class="text-xs text-slate ml-2">for multi-accelerator runs</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 bg-warm-gray rounded-lg px-4 py-2.5">
+              <span class="text-base" aria-hidden="true">📦</span>
+              <div>
+                <span class="font-semibold text-navy text-sm">Git</span>
+                <span class="text-xs text-slate ml-2">to clone the repository</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 2: Quick Start                      -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="quickstart" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">2</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Quick Start</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        Three commands to go from zero to running. Mock mode means no Azure credentials needed.
+      </p>
+
+      <!-- Step-by-step -->
+      <div class="space-y-6" style="counter-reset: step;">
+
+        <!-- Step 1 -->
+        <div class="flex gap-5">
+          <div class="flex-shrink-0 flex flex-col items-center">
+            <div class="step-number w-10 h-10 rounded-full bg-gold text-navy font-bold text-sm flex items-center justify-center shadow-sm"></div>
+            <div class="w-px flex-1 bg-gold/30 mt-2" aria-hidden="true"></div>
+          </div>
+          <div class="flex-1 pb-2">
+            <h3 class="font-bold text-navy text-lg mb-2">Open in GitHub Codespace</h3>
+            <p class="text-slate text-sm mb-4">Navigate to the repository on GitHub and launch a Codespace. Everything is pre-configured in <code class="bg-warm-gray-dark px-1.5 py-0.5 rounded text-xs font-mono">.devcontainer/</code>.</p>
+            <div class="bg-white rounded-xl border border-warm-gray-dark p-5">
+              <p class="text-sm text-navy mb-2">On the GitHub repo page:</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="inline-flex items-center gap-1.5 bg-ca-blue/10 text-ca-blue text-xs font-medium px-3 py-1.5 rounded-full">
+                  <span aria-hidden="true">①</span> Click <strong>Code</strong>
+                </span>
+                <span class="text-slate" aria-hidden="true">→</span>
+                <span class="inline-flex items-center gap-1.5 bg-ca-blue/10 text-ca-blue text-xs font-medium px-3 py-1.5 rounded-full">
+                  <span aria-hidden="true">②</span> Select <strong>Codespaces</strong> tab
+                </span>
+                <span class="text-slate" aria-hidden="true">→</span>
+                <span class="inline-flex items-center gap-1.5 bg-gold/15 text-gold-dark text-xs font-medium px-3 py-1.5 rounded-full">
+                  <span aria-hidden="true">③</span> <strong>Create codespace on main</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex gap-5">
+          <div class="flex-shrink-0 flex flex-col items-center">
+            <div class="step-number w-10 h-10 rounded-full bg-gold text-navy font-bold text-sm flex items-center justify-center shadow-sm"></div>
+            <div class="w-px flex-1 bg-gold/30 mt-2" aria-hidden="true"></div>
+          </div>
+          <div class="flex-1 pb-2">
+            <h3 class="font-bold text-navy text-lg mb-2">Install dependencies</h3>
+            <p class="text-slate text-sm mb-4">One command installs both Python and Node.js dependencies across all projects.</p>
+            <div class="code-block has-tag">
+              <span class="lang-tag">bash</span>
+              <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+              <pre>npm run setup</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flex gap-5">
+          <div class="flex-shrink-0 flex flex-col items-center">
+            <div class="step-number w-10 h-10 rounded-full bg-gold text-navy font-bold text-sm flex items-center justify-center shadow-sm"></div>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-bold text-navy text-lg mb-2">Start the platform</h3>
+            <p class="text-slate text-sm mb-4">Launches the core platform backend and frontend in mock mode — no cloud services needed.</p>
+            <div class="code-block has-tag">
+              <span class="lang-tag">bash</span>
+              <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+              <pre>npm start</pre>
+            </div>
+            <div class="mt-4 grid sm:grid-cols-2 gap-3">
+              <div class="bg-white rounded-lg border border-warm-gray-dark p-4 flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-green-500 flex-shrink-0 animate-pulse" aria-hidden="true"></div>
+                <div>
+                  <p class="text-xs text-slate">Backend API</p>
+                  <p class="font-mono text-sm text-navy font-semibold">http://localhost:8000</p>
+                </div>
+              </div>
+              <div class="bg-white rounded-lg border border-warm-gray-dark p-4 flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-green-500 flex-shrink-0 animate-pulse" aria-hidden="true"></div>
+                <div>
+                  <p class="text-xs text-slate">Frontend UI</p>
+                  <p class="font-mono text-sm text-navy font-semibold">http://localhost:5173</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 3: Running an Accelerator           -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="accelerator" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">3</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Running an Accelerator</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        Each accelerator is independently runnable. Pick one to start, or spin them all up with Docker Compose.
+      </p>
+
+      <div class="space-y-6">
+        <!-- Single accelerator -->
+        <div>
+          <h3 class="font-bold text-navy text-base mb-3 flex items-center gap-2">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-ca-blue/10 text-ca-blue text-xs font-bold" aria-hidden="true">A</span>
+            Run a single accelerator
+          </h3>
+          <div class="code-block has-tag">
+            <span class="lang-tag">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+            <pre><span class="code-comment"># Run BenefitsCal Navigator (accelerator 001)</span>
+./scripts/run-accelerator.sh 001
+
+<span class="code-comment"># Run Multilingual Emergency Chatbot (accelerator 008)</span>
+./scripts/run-accelerator.sh 008</pre>
+          </div>
+        </div>
+
+        <!-- All accelerators -->
+        <div>
+          <h3 class="font-bold text-navy text-base mb-3 flex items-center gap-2">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-poppy/10 text-poppy text-xs font-bold" aria-hidden="true">B</span>
+            Run all accelerators with Docker Compose
+          </h3>
+          <div class="code-block has-tag">
+            <span class="lang-tag">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+            <pre><span class="code-comment"># Start all 8 accelerators</span>
+docker-compose -f docker-compose.accelerators.yml up
+
+<span class="code-comment"># Or rebuild and start</span>
+docker-compose -f docker-compose.accelerators.yml up --build</pre>
+          </div>
+        </div>
+
+        <!-- Specific accelerator with compose -->
+        <div>
+          <h3 class="font-bold text-navy text-base mb-3 flex items-center gap-2">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-gold/15 text-gold-dark text-xs font-bold" aria-hidden="true">C</span>
+            Run a specific accelerator via Docker Compose
+          </h3>
+          <div class="code-block has-tag">
+            <span class="lang-tag">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+            <pre><span class="code-comment"># Run just the Multilingual Emergency Chatbot</span>
+docker-compose -f docker-compose.accelerators.yml up accel-008-backend accel-008-frontend</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 4: Running Tests                    -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="testing" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">4</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Running Tests</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        Validate your changes at every level — from quick smoke tests to full accelerator test suites and evaluations.
+      </p>
+
+      <div class="grid md:grid-cols-3 gap-5 mb-8">
+        <!-- Smoke Test -->
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center" aria-hidden="true">
+              <span class="text-green-600 text-sm">💨</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-navy text-sm">Smoke Test</h3>
+              <p class="text-xs text-slate">Quick validation</p>
+            </div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+            <pre>npm run smoke-test</pre>
+          </div>
+          <p class="text-xs text-slate mt-3">Fast check that core services are responding. Run after any change.</p>
+        </div>
+
+        <!-- Unit Tests -->
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 bg-ca-blue/10 rounded-lg flex items-center justify-center" aria-hidden="true">
+              <span class="text-ca-blue text-sm">🧪</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-navy text-sm">Accelerator Tests</h3>
+              <p class="text-xs text-slate">Per-accelerator suite</p>
+            </div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+            <pre><span class="code-comment"># Test accelerator 001</span>
+cd accelerators/\
+001-benefitscal-navigator/\
+backend
+python -m pytest tests/ -x -v</pre>
+          </div>
+          <p class="text-xs text-slate mt-3">Full pytest suite for a specific accelerator. <code class="font-mono text-xs">-x</code> stops on first failure.</p>
+        </div>
+
+        <!-- Eval Suite -->
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 bg-poppy/10 rounded-lg flex items-center justify-center" aria-hidden="true">
+              <span class="text-poppy text-sm">📊</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-navy text-sm">Eval Suite</h3>
+              <p class="text-xs text-slate">AI quality evaluation</p>
+            </div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+            <pre><span class="code-comment"># Run evals for all</span>
+./scripts/run-evals.sh all
+
+<span class="code-comment"># Run evals for one</span>
+./scripts/run-evals.sh 001</pre>
+          </div>
+          <p class="text-xs text-slate mt-3">Measures response quality, accuracy, and compliance against golden datasets.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 5: Workshop Labs                    -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="labs" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">5</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Workshop Labs</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        A structured 8-lab curriculum that progresses from local development to full Azure deployment. Labs 00–03 require no Azure account.
+      </p>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-warm-gray-dark overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="data-table w-full text-sm">
+            <thead>
+              <tr>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">Lab</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">Topic</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">Description</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase text-center">Azure Required?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-ca-blue/10 text-ca-blue font-semibold text-xs">00</span>
+                </td>
+                <td class="px-5 py-3.5 font-medium text-navy">Environment Setup</td>
+                <td class="px-5 py-3.5 text-slate">Configure your Codespace, install dependencies, verify mock services</td>
+                <td class="px-5 py-3.5 text-center">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-green-50 text-green-700 text-xs font-medium">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    No
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-ca-blue/10 text-ca-blue font-semibold text-xs">01</span>
+                </td>
+                <td class="px-5 py-3.5 font-medium text-navy">First Agent</td>
+                <td class="px-5 py-3.5 text-slate">Build your first QueryAgent with intent detection and entity extraction</td>
+                <td class="px-5 py-3.5 text-center">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-green-50 text-green-700 text-xs font-medium">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    No
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-ca-blue/10 text-ca-blue font-semibold text-xs">02</span>
+                </td>
+                <td class="px-5 py-3.5 font-medium text-navy">RAG Pipeline</td>
+                <td class="px-5 py-3.5 text-slate">Implement retrieval-augmented generation with domain knowledge bases</td>
+                <td class="px-5 py-3.5 text-center">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-green-50 text-green-700 text-xs font-medium">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    No
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-ca-blue/10 text-ca-blue font-semibold text-xs">03</span>
+                </td>
+                <td class="px-5 py-3.5 font-medium text-navy">Agent Orchestration</td>
+                <td class="px-5 py-3.5 text-slate">Wire up the full 3-agent pipeline: Query → Router → Action</td>
+                <td class="px-5 py-3.5 text-center">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-green-50 text-green-700 text-xs font-medium">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    No
+                  </span>
+                </td>
+              </tr>
+              <tr class="bg-poppy/3">
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-poppy/10 text-poppy font-semibold text-xs">04</span>
+                </td>
+                <td class="px-5 py-3.5 font-medium text-navy">Azure OpenAI</td>
+                <td class="px-5 py-3.5 text-slate">Connect to Azure OpenAI for real LLM-powered responses</td>
+                <td class="px-5 py-3.5 text-center">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-poppy/10 text-poppy text-xs font-medium">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" clip-rule="evenodd"/></svg>
+                    Yes
+                  </span>
+                </td>
+              </tr>
+              <tr class="bg-poppy/3">
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-poppy/10 text-poppy font-semibold text-xs">05</span>
+                </td>
+                <td class="px-5 py-3.5 font-medium text-navy">Azure AI Search</td>
+                <td class="px-5 py-3.5 text-slate">Replace mock search with Azure AI Search for production RAG</td>
+                <td class="px-5 py-3.5 text-center">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-poppy/10 text-poppy text-xs font-medium">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" clip-rule="evenodd"/></svg>
+                    Yes
+                  </span>
+                </td>
+              </tr>
+              <tr class="bg-poppy/3">
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-poppy/10 text-poppy font-semibold text-xs">06</span>
+                </td>
+                <td class="px-5 py-3.5 font-medium text-navy">Voice (Realtime API)</td>
+                <td class="px-5 py-3.5 text-slate">Add voice input/output using Azure OpenAI Realtime API</td>
+                <td class="px-5 py-3.5 text-center">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-poppy/10 text-poppy text-xs font-medium">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" clip-rule="evenodd"/></svg>
+                    Yes
+                  </span>
+                </td>
+              </tr>
+              <tr class="bg-poppy/3">
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-poppy/10 text-poppy font-semibold text-xs">07</span>
+                </td>
+                <td class="px-5 py-3.5 font-medium text-navy">MCP Server</td>
+                <td class="px-5 py-3.5 text-slate">Build a Model Context Protocol server for tool integration</td>
+                <td class="px-5 py-3.5 text-center">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-poppy/10 text-poppy text-xs font-medium">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" clip-rule="evenodd"/></svg>
+                    Yes
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-gold/10 border border-gold/30 rounded-xl p-5 flex items-start gap-3">
+        <svg class="w-5 h-5 text-gold-dark flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+        <p class="text-sm text-navy leading-relaxed">
+          <strong>Tip:</strong> Labs are located in the <code class="bg-warm-gray-dark px-1.5 py-0.5 rounded text-xs font-mono">labs/</code> directory. Each lab has its own README with step-by-step instructions. Start with Lab 00 to verify your environment.
+        </p>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 6: Deploying to Azure               -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="deploy" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">6</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Deploying to Azure</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        When you're ready to go beyond mock mode, deploy to Azure with the Azure Developer CLI (<code class="bg-warm-gray-dark px-1.5 py-0.5 rounded text-sm font-mono">azd</code>).
+      </p>
+
+      <div class="space-y-6" style="counter-reset: step;">
+        <!-- Step 1: Login -->
+        <div class="flex gap-5">
+          <div class="flex-shrink-0 flex flex-col items-center">
+            <div class="step-number w-10 h-10 rounded-full bg-poppy text-white font-bold text-sm flex items-center justify-center shadow-sm"></div>
+            <div class="w-px flex-1 bg-poppy/30 mt-2" aria-hidden="true"></div>
+          </div>
+          <div class="flex-1 pb-2">
+            <h3 class="font-bold text-navy text-lg mb-2">Authenticate with Azure</h3>
+            <p class="text-slate text-sm mb-4">Sign in with your Azure account. This grants <code class="font-mono text-xs bg-warm-gray-dark px-1 rounded">azd</code> permission to provision and deploy resources.</p>
+            <div class="code-block has-tag">
+              <span class="lang-tag">bash</span>
+              <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+              <pre>azd auth login</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Deploy everything -->
+        <div class="flex gap-5">
+          <div class="flex-shrink-0 flex flex-col items-center">
+            <div class="step-number w-10 h-10 rounded-full bg-poppy text-white font-bold text-sm flex items-center justify-center shadow-sm"></div>
+            <div class="w-px flex-1 bg-poppy/30 mt-2" aria-hidden="true"></div>
+          </div>
+          <div class="flex-1 pb-2">
+            <h3 class="font-bold text-navy text-lg mb-2">Deploy everything</h3>
+            <p class="text-slate text-sm mb-4">Provisions all Azure infrastructure (via Bicep) and deploys every service in one command.</p>
+            <div class="code-block has-tag">
+              <span class="lang-tag">bash</span>
+              <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+              <pre>azd up</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Deploy specific -->
+        <div class="flex gap-5">
+          <div class="flex-shrink-0 flex flex-col items-center">
+            <div class="step-number w-10 h-10 rounded-full bg-poppy text-white font-bold text-sm flex items-center justify-center shadow-sm"></div>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-bold text-navy text-lg mb-2">Or deploy a single accelerator</h3>
+            <p class="text-slate text-sm mb-4">Deploy just one accelerator's backend and frontend without touching others.</p>
+            <div class="code-block has-tag">
+              <span class="lang-tag">bash</span>
+              <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+              <pre><span class="code-comment"># Deploy accelerator 001 (backend + frontend)</span>
+./scripts/azd-deploy.sh 001
+
+<span class="code-comment"># Or deploy backend and frontend separately</span>
+azd deploy accel-001
+azd deploy accel-001-fe</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 bg-white rounded-xl border border-warm-gray-dark p-5 flex items-start gap-3">
+        <svg class="w-5 h-5 text-ca-blue flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+        <p class="text-sm text-slate leading-relaxed">
+          <strong>Cost note:</strong> Azure Container Apps use scale-to-zero, so idle accelerators cost nothing. See <a href="deployment/COST_ESTIMATION.md" class="text-ca-blue underline hover:text-navy">Cost Estimation</a> for detailed breakdowns.
+        </p>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 7: Project Structure                -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="structure" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">7</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Project Structure</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        A monorepo with independently deployable accelerators, shared governance, and a workshop curriculum.
+      </p>
+
+      <div class="bg-white rounded-2xl border border-warm-gray-dark overflow-hidden shadow-sm">
+        <div class="bg-navy px-5 py-3 flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-red-400/80" aria-hidden="true"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-400/80" aria-hidden="true"></div>
+          <div class="w-3 h-3 rounded-full bg-green-400/80" aria-hidden="true"></div>
+          <span class="text-white/50 text-xs ml-2 font-mono">ca-hackathon/</span>
+        </div>
+        <div class="p-6 overflow-x-auto">
+          <div class="tree text-navy">
+            <div>
+              <span class="tree-dir">accelerators/</span> <span class="tree-comment">── 8 independent accelerator projects</span>
+            </div>
+            <div class="ml-5">
+              <span class="tree-dir">001-benefitscal-navigator/</span>
+            </div>
+            <div class="ml-5">
+              <span class="tree-dir">002-wildfire-response/</span>
+            </div>
+            <div class="ml-5">
+              <span class="tree-dir">003-medical-eligibility/</span>
+            </div>
+            <div class="ml-5">
+              <span class="tree-dir">004-permit-streamliner/</span>
+            </div>
+            <div class="ml-5">
+              <span class="tree-dir">005-genai-procurement/</span>
+            </div>
+            <div class="ml-5">
+              <span class="tree-dir">006-cross-agency-knowledge/</span>
+            </div>
+            <div class="ml-5">
+              <span class="tree-dir">007-edd-claims-assistant/</span>
+            </div>
+            <div class="ml-5">
+              <span class="tree-dir">008-multilingual-emergency-chat/</span>
+            </div>
+            <div class="mt-2">
+              <span class="tree-dir">backend/</span> <span class="tree-comment">── Core platform backend (FastAPI + Python)</span>
+            </div>
+            <div>
+              <span class="tree-dir">frontend/</span> <span class="tree-comment">── Core platform frontend (React + TypeScript)</span>
+            </div>
+            <div>
+              <span class="tree-dir">labs/</span> <span class="tree-comment">── 8-lab workshop curriculum (00–07)</span>
+            </div>
+            <div>
+              <span class="tree-dir">shared/</span> <span class="tree-comment">── Constitution, routing rules, schemas</span>
+            </div>
+            <div>
+              <span class="tree-dir">specs/</span> <span class="tree-comment">── Speckit feature specifications</span>
+            </div>
+            <div>
+              <span class="tree-dir">infra/</span> <span class="tree-comment">── Bicep IaC templates for Azure</span>
+            </div>
+            <div>
+              <span class="tree-dir">scripts/</span> <span class="tree-comment">── Helper scripts (deploy, run, eval)</span>
+            </div>
+            <div>
+              <span class="tree-dir">docs/</span> <span class="tree-comment">── This documentation site</span>
+            </div>
+            <div class="mt-2">
+              <span>azure.yaml</span> <span class="tree-comment">── Azure Developer CLI config</span>
+            </div>
+            <div>
+              <span>docker-compose.yml</span> <span class="tree-comment">── Core platform compose</span>
+            </div>
+            <div>
+              <span>docker-compose.accelerators.yml</span> <span class="tree-comment">── All accelerators compose</span>
+            </div>
+            <div>
+              <span>package.json</span> <span class="tree-comment">── Root scripts (setup, start, test)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 8: Environment Variables            -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="envvars" class="mb-16 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">8</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Environment Variables</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        Configuration is driven by environment variables. Only <code class="bg-warm-gray-dark px-1.5 py-0.5 rounded text-sm font-mono">USE_MOCK_SERVICES</code> is required for local development — everything else is for Azure mode.
+      </p>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-warm-gray-dark overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="data-table w-full text-sm">
+            <thead>
+              <tr>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">Variable</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">Required</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="px-5 py-3.5"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono text-navy font-semibold">USE_MOCK_SERVICES</code></td>
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-gold/15 text-gold-dark text-xs font-medium">Always</span>
+                </td>
+                <td class="px-5 py-3.5 text-slate">Set to <code class="font-mono text-xs">true</code> for local dev (no Azure), <code class="font-mono text-xs">false</code> for production</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono text-navy">AZURE_OPENAI_ENDPOINT</code></td>
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-poppy/10 text-poppy text-xs font-medium">Azure mode</span>
+                </td>
+                <td class="px-5 py-3.5 text-slate">Azure OpenAI endpoint URL</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono text-navy">AZURE_OPENAI_API_KEY</code></td>
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-poppy/10 text-poppy text-xs font-medium">Azure mode</span>
+                </td>
+                <td class="px-5 py-3.5 text-slate">Azure OpenAI API key (or use managed identity)</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono text-navy">AZURE_SEARCH_ENDPOINT</code></td>
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-poppy/10 text-poppy text-xs font-medium">Azure mode</span>
+                </td>
+                <td class="px-5 py-3.5 text-slate">Azure AI Search endpoint URL</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono text-navy">AZURE_SEARCH_API_KEY</code></td>
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-poppy/10 text-poppy text-xs font-medium">Azure mode</span>
+                </td>
+                <td class="px-5 py-3.5 text-slate">Azure AI Search API key (or use managed identity)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <h3 class="font-bold text-navy text-base mb-3">Example <code class="font-mono text-sm bg-warm-gray-dark px-1.5 py-0.5 rounded">.env</code> file</h3>
+        <div class="code-block has-tag">
+          <span class="lang-tag">env</span>
+          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+          <pre><span class="code-comment"># Local development — no Azure required</span>
+USE_MOCK_SERVICES=true
+
+<span class="code-comment"># Azure mode — uncomment and fill in when ready</span>
+<span class="code-comment"># USE_MOCK_SERVICES=false</span>
+<span class="code-comment"># AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/</span>
+<span class="code-comment"># AZURE_OPENAI_API_KEY=your-key-here</span>
+<span class="code-comment"># AZURE_SEARCH_ENDPOINT=https://your-search.search.windows.net</span>
+<span class="code-comment"># AZURE_SEARCH_API_KEY=your-key-here</span></pre>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-red-50 border border-red-200 rounded-xl p-5 flex items-start gap-3">
+        <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+        <p class="text-sm text-red-800 leading-relaxed">
+          <strong>Security:</strong> Never commit <code class="font-mono text-xs bg-red-100 px-1 rounded">.env</code> files with API keys to version control. The <code class="font-mono text-xs bg-red-100 px-1 rounded">.gitignore</code> already excludes <code class="font-mono text-xs">.env</code> files. In production, use managed identity (DefaultAzureCredential) instead of API keys.
+        </p>
+      </div>
+    </section>
+
+    <!-- Next Steps CTA -->
+    <div class="bg-gradient-to-br from-navy via-ca-blue to-navy-dark text-white rounded-2xl p-8 sm:p-12 text-center relative overflow-hidden">
+      <div class="absolute inset-0 opacity-5" aria-hidden="true">
+        <svg width="100%" height="100%"><defs><pattern id="ctaDots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="white"/></pattern></defs><rect width="100%" height="100%" fill="url(#ctaDots)"/></svg>
+      </div>
+      <div class="relative z-10">
+        <h2 class="font-display text-3xl sm:text-4xl mb-3">Ready to build?</h2>
+        <p class="text-white/70 text-lg max-w-xl mx-auto mb-8">
+          Open a Codespace, run <code class="bg-white/10 px-2 py-0.5 rounded text-sm">npm start</code>, and start building your California AI accelerator.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="architecture.html" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-sm px-6 py-3 rounded-lg transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            View Architecture
+          </a>
+          <a href="../README.md" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-navy font-semibold text-sm px-6 py-3 rounded-lg transition-colors">
+            Read the README
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-navy text-white/60 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid sm:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 bg-gold rounded-lg flex items-center justify-center font-display text-navy text-sm font-bold" aria-hidden="true">CA</div>
+            <span class="font-display text-gold text-base">CA Hackathon Accelerators</span>
+          </div>
+          <p class="text-sm leading-relaxed">AI accelerators for California state government agencies. Built with Azure, governed by constitution.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white text-sm mb-3">Documentation</h4>
+          <nav class="space-y-2 text-sm" aria-label="Footer documentation links">
+            <a href="architecture.html" class="block hover:text-gold transition-colors">Architecture Overview</a>
+            <a href="getting-started.html" class="block hover:text-gold transition-colors" aria-current="page">Getting Started</a>
+            <a href="deployment/COST_ESTIMATION.md" class="block hover:text-gold transition-colors">Cost Estimation</a>
+            <a href="customization/CUSTOMIZATION.md" class="block hover:text-gold transition-colors">Customization Guide</a>
+          </nav>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white text-sm mb-3">References</h4>
+          <nav class="space-y-2 text-sm" aria-label="Footer reference links">
+            <a href="../shared/constitution.md" class="block hover:text-gold transition-colors">Agent Constitution</a>
+            <a href="../CHANGELOG.md" class="block hover:text-gold transition-colors">Changelog</a>
+            <a href="../README.md" class="block hover:text-gold transition-colors">README</a>
+          </nav>
+        </div>
+      </div>
+      <div class="border-t border-white/10 mt-8 pt-6 text-xs text-center">
+        <p>State of California · AI Hackathon Accelerators · Built for CA state agencies</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Copy-to-clipboard Script -->
+  <script>
+    function copyCode(btn) {
+      const pre = btn.parentElement.querySelector('pre');
+      const text = pre.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.color = '#FDB515';
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.color = '';
+        }, 2000);
+      });
+    }
+
+    document.querySelector('[aria-controls="mobileMenu"]')?.addEventListener('click', function() {
+      const expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', String(!expanded));
+    });
+  </script>
+
+</body>
+</html>

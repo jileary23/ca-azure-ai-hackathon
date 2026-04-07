@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>008 — Multilingual Emergency Chatbot | CA AI Accelerators</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#1B2A4A',
+                        'ca-blue': '#003366',
+                        gold: '#FDB515',
+                        poppy: '#E87722',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-navy text-white sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <span class="text-gold font-bold text-xl tracking-tight">CA AI Accelerators</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <a href="../index.html" class="hover:text-gold transition-colors">Home</a>
+                    <a href="../index.html#accelerators" class="text-gold border-b-2 border-gold pb-0.5">Accelerators</a>
+                    <a href="../architecture.html" class="hover:text-gold transition-colors">Architecture</a>
+                    <a href="../getting-started.html" class="hover:text-gold transition-colors">Getting Started</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded hover:bg-white/10" aria-label="Open menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden border-t border-white/10">
+            <div class="px-4 py-3 space-y-2 text-sm">
+                <a href="../index.html" class="block py-1 hover:text-gold">Home</a>
+                <a href="../index.html#accelerators" class="block py-1 text-gold">Accelerators</a>
+                <a href="../architecture.html" class="block py-1 hover:text-gold">Architecture</a>
+                <a href="../getting-started.html" class="block py-1 hover:text-gold">Getting Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <nav aria-label="Breadcrumb" class="flex items-center text-sm text-gray-500 space-x-2">
+                <a href="../index.html" class="hover:text-ca-blue transition-colors">Home</a>
+                <span aria-hidden="true">/</span>
+                <a href="../index.html#accelerators" class="hover:text-ca-blue transition-colors">Accelerators</a>
+                <span aria-hidden="true">/</span>
+                <span class="text-navy font-medium">Multilingual Emergency Chatbot</span>
+            </nav>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+        <!-- Back Link -->
+        <a href="../index.html#accelerators" class="inline-flex items-center text-sm text-ca-blue hover:text-poppy font-medium mb-8 transition-colors">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            Back to All Accelerators
+        </a>
+
+        <!-- Header -->
+        <header class="mb-12">
+            <div class="flex flex-wrap items-start gap-3 mb-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-ca-blue text-white tracking-wide">ACCEL-008</span>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gold/20 text-yellow-800 border border-gold/40">Cal OES</span>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 border border-red-200">Emergency Services</span>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 border border-green-200">⭐⭐ Starter Project</span>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-navy leading-tight">Multilingual Emergency Chatbot</h1>
+            <p class="mt-3 text-lg text-gray-600 max-w-3xl">Real-time emergency alerts, shelter locations, and air quality data in 15+ languages — built for California's most vulnerable communities.</p>
+        </header>
+
+        <!-- Problem Statement -->
+        <section id="problem" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">1</span>
+                Problem Statement
+            </h2>
+            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <p class="text-gray-700 leading-relaxed">During the <strong>2025 LA fires</strong>, non-English speakers couldn't access critical evacuation orders, shelter information, or air quality warnings. California responded by launching a 70-language wildfire chatbot — demonstrating the urgent need for multilingual emergency communication. This accelerator is the <strong>open-source blueprint</strong> for that capability: making emergency information accessible to every Californian regardless of language, in low-bandwidth and SMS-ready formats.</p>
+            </div>
+        </section>
+
+        <!-- Solution Overview -->
+        <section id="solution" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">2</span>
+                Solution Overview
+            </h2>
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="text-poppy font-bold text-sm uppercase tracking-wide mb-2">Emergency Alerts by ZIP</div>
+                    <p class="text-gray-700 text-sm">Real-time alerts for fire, earthquake, flood, and tsunami events filtered by ZIP code with severity levels and actionable instructions.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="text-poppy font-bold text-sm uppercase tracking-wide mb-2">Shelter Locator</div>
+                    <p class="text-gray-700 text-sm">Nearby shelter search with capacity, ADA accessibility, pet-friendliness, and available services — filtered by radius from any ZIP code.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="text-poppy font-bold text-sm uppercase tracking-wide mb-2">Air Quality Monitoring</div>
+                    <p class="text-gray-700 text-sm">AQI readings with health guidance levels, especially critical during wildfire season for vulnerable populations.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="text-poppy font-bold text-sm uppercase tracking-wide mb-2">Real-Time Translation</div>
+                    <p class="text-gray-700 text-sm">15+ language support with instant translation, designed for low-bandwidth connections and SMS delivery during infrastructure outages.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture -->
+        <section id="architecture" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">3</span>
+                Architecture — 3-Agent Pipeline
+            </h2>
+            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-14 h-14 rounded-full bg-ca-blue text-white flex items-center justify-center mx-auto mb-3 text-xl font-bold">Q</div>
+                        <h3 class="font-bold text-navy">QueryAgent</h3>
+                        <p class="text-sm text-gray-600 mt-1">Detects language, extracts location (ZIP code), identifies emergency type (fire/earthquake/flood/tsunami), and normalizes queries for low-bandwidth input formats.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-14 h-14 rounded-full bg-gold text-navy flex items-center justify-center mx-auto mb-3 text-xl font-bold">R</div>
+                        <h3 class="font-bold text-navy">RouterAgent</h3>
+                        <p class="text-sm text-gray-600 mt-1">Routes to alert feeds, shelter database, air quality API, or translation service. Prioritizes life-safety queries and handles SMS-format routing.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-14 h-14 rounded-full bg-poppy text-white flex items-center justify-center mx-auto mb-3 text-xl font-bold">A</div>
+                        <h3 class="font-bold text-navy">ActionAgent</h3>
+                        <p class="text-sm text-gray-600 mt-1">Retrieves geo-filtered alerts, locates accessible shelters, fetches AQI data, and translates all responses into the user's preferred language.</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center justify-center gap-2 text-gray-400" aria-hidden="true">
+                    <div class="w-20 h-0.5 bg-ca-blue/30"></div>
+                    <svg class="w-4 h-4 text-ca-blue/40" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                    <div class="w-20 h-0.5 bg-gold/30"></div>
+                    <svg class="w-4 h-4 text-gold/60" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                    <div class="w-20 h-0.5 bg-poppy/30"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Endpoints -->
+        <section id="api" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">4</span>
+                API Endpoints
+            </h2>
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-navy text-white text-left">
+                            <th class="px-4 py-3 font-semibold">Method</th>
+                            <th class="px-4 py-3 font-semibold">Path</th>
+                            <th class="px-4 py-3 font-semibold">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/health</td>
+                            <td class="px-4 py-3 text-gray-700">Health check</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/chat</td>
+                            <td class="px-4 py-3 text-gray-700">Main chat interface</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/status</td>
+                            <td class="px-4 py-3 text-gray-700">Service status</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/alerts?zip=&amp;lang=</td>
+                            <td class="px-4 py-3 text-gray-700">Emergency alerts by ZIP</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/shelters?zip=&amp;radius=</td>
+                            <td class="px-4 py-3 text-gray-700">Shelter locator</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/air-quality?zip=</td>
+                            <td class="px-4 py-3 text-gray-700">Air quality index</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/translate</td>
+                            <td class="px-4 py-3 text-gray-700">Text translation</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Data Models -->
+        <section id="models" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">5</span>
+                Data Models
+            </h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h3 class="font-bold text-navy text-lg mb-2">Alert</h3>
+                    <p class="text-sm text-gray-600 mb-3">Emergency alert with type, severity, and actionable instructions.</p>
+                    <pre class="bg-gray-900 text-green-400 text-xs rounded-lg p-4 overflow-x-auto"><code>{
+  "alert_id": "string",
+  "type": "fire | earthquake | flood | tsunami",
+  "severity": "watch | warning | emergency",
+  "title": "string",
+  "description": "string",
+  "zip_codes": ["string"],
+  "issued_at": "ISO 8601",
+  "expires_at": "ISO 8601"
+}</code></pre>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h3 class="font-bold text-navy text-lg mb-2">Shelter</h3>
+                    <p class="text-sm text-gray-600 mb-3">Shelter with capacity, accessibility, and services info.</p>
+                    <pre class="bg-gray-900 text-green-400 text-xs rounded-lg p-4 overflow-x-auto"><code>{
+  "shelter_id": "string",
+  "name": "string",
+  "address": "string",
+  "capacity": 200,
+  "current_occupancy": 85,
+  "ada_accessible": true,
+  "pets_allowed": true,
+  "services": ["food", "medical", "wifi"]
+}</code></pre>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h3 class="font-bold text-navy text-lg mb-2">AirQualityReading</h3>
+                    <p class="text-sm text-gray-600 mb-3">AQI reading with health guidance for sensitive groups.</p>
+                    <pre class="bg-gray-900 text-green-400 text-xs rounded-lg p-4 overflow-x-auto"><code>{
+  "zip": "string",
+  "aqi": 142,
+  "category": "Unhealthy for Sensitive Groups",
+  "dominant_pollutant": "PM2.5",
+  "health_guidance": "string",
+  "measured_at": "ISO 8601"
+}</code></pre>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h3 class="font-bold text-navy text-lg mb-2">TranslateRequest / Response</h3>
+                    <p class="text-sm text-gray-600 mb-3">Translation payload for 15+ supported languages.</p>
+                    <pre class="bg-gray-900 text-green-400 text-xs rounded-lg p-4 overflow-x-auto"><code>// Request
+{
+  "text": "string",
+  "source_lang": "en",
+  "target_lang": "es | zh | vi | ko | tl | ..."
+}
+// Response
+{
+  "translated_text": "string",
+  "detected_lang": "en",
+  "confidence": 0.98
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section id="quickstart" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">6</span>
+                Quick Start
+            </h2>
+            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <div class="bg-gold/10 border border-gold/30 rounded-lg p-4 mb-4 flex items-start gap-3">
+                    <span class="text-xl mt-0.5">⭐</span>
+                    <div>
+                        <p class="font-semibold text-navy text-sm">Recommended Hackathon Starter Project</p>
+                        <p class="text-xs text-gray-600 mt-1">Lowest complexity accelerator — great for getting started quickly and building on top of.</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mb-4">Start the backend API and frontend application:</p>
+                <div class="bg-gray-900 rounded-lg p-4 mb-4">
+                    <code class="text-green-400 text-sm">docker-compose -f docker-compose.accelerators.yml up accel-008-backend accel-008-frontend</code>
+                </div>
+                <div class="flex flex-wrap gap-4 text-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-navy">Backend Port:</span>
+                        <span class="font-mono bg-gray-100 px-2 py-0.5 rounded">8008</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-navy">Frontend Port:</span>
+                        <span class="font-mono bg-gray-100 px-2 py-0.5 rounded">3008</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compliance -->
+        <section id="compliance" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">7</span>
+                Compliance &amp; Governance
+            </h2>
+            <div class="grid sm:grid-cols-3 gap-4">
+                <div class="bg-ca-blue/5 border border-ca-blue/20 rounded-xl p-4 text-center">
+                    <div class="text-ca-blue font-bold text-sm">EO N-12-23</div>
+                    <p class="text-xs text-gray-600 mt-1">GenAI guidelines for state agencies</p>
+                </div>
+                <div class="bg-ca-blue/5 border border-ca-blue/20 rounded-xl p-4 text-center">
+                    <div class="text-ca-blue font-bold text-sm">Envision 2026 Goal 1</div>
+                    <p class="text-xs text-gray-600 mt-1">Human-centered digital services</p>
+                </div>
+                <div class="bg-ca-blue/5 border border-ca-blue/20 rounded-xl p-4 text-center">
+                    <div class="text-ca-blue font-bold text-sm">ADA / WCAG AA</div>
+                    <p class="text-xs text-gray-600 mt-1">Accessibility for all Californians</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Source Code -->
+        <section id="source" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">8</span>
+                Source Code
+            </h2>
+            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <p class="font-mono text-sm text-ca-blue">accelerators/008-multilingual-emergency-chat/</p>
+                    <p class="text-xs text-gray-500 mt-1">Full-stack — Python / FastAPI backend + React frontend</p>
+                </div>
+                <a href="https://github.com" class="inline-flex items-center gap-2 px-4 py-2 bg-navy text-white rounded-lg text-sm font-medium hover:bg-ca-blue transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    View on GitHub
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-navy text-white mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid md:grid-cols-3 gap-8 text-sm">
+                <div>
+                    <h3 class="font-bold text-gold mb-3">CA AI Accelerators</h3>
+                    <p class="text-gray-300 leading-relaxed">Open-source AI accelerators for California state government agencies. Built for the California State AI Hackathon.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gold mb-3">Quick Links</h3>
+                    <ul class="space-y-1.5 text-gray-300">
+                        <li><a href="../index.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="../architecture.html" class="hover:text-white transition-colors">Architecture</a></li>
+                        <li><a href="../getting-started.html" class="hover:text-white transition-colors">Getting Started</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gold mb-3">Compliance</h3>
+                    <ul class="space-y-1.5 text-gray-300">
+                        <li>EO N-12-23 · EO N-5-26</li>
+                        <li>SB 53 · CCPA/CPRA</li>
+                        <li>WCAG 2.1 AA Accessible</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 mt-8 pt-6 text-center text-xs text-gray-400">
+                &copy; 2025 California State AI Hackathon. Built with transparency and public trust.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

@@ -1,859 +1,944 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>47 Doors — Voice Feature Demo Runbook</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>California State AI Hackathon Accelerators — Documentation</title>
+  <meta name="description" content="8 AI-powered solutions for California state agencies, built on the 3-agent pipeline pattern. Aligned with Envision 2026, EO N-12-23, and the Breakthrough Project.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 50: '#f0f3f8', 100: '#dae1ed', 200: '#b5c3db', 300: '#8aa1c5', 400: '#5f7faf', 500: '#3a5d99', 600: '#003366', 700: '#1B2A4A', 800: '#15213a', 900: '#0f172a' },
+            gold: { 50: '#fffbeb', 100: '#fef3c7', 200: '#fde68a', 300: '#fcd34d', 400: '#FDB515', 500: '#f59e0b', 600: '#d97706', 700: '#b45309', 800: '#92400e', 900: '#78350f' },
+            poppy: { 50: '#fff4ed', 100: '#ffe6d5', 200: '#feccaa', 300: '#fdaa74', 400: '#fb8a3c', 500: '#E87722', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' },
+            slate: { 750: '#293548' }
+          },
+          fontFamily: {
+            display: ['Outfit', 'system-ui', 'sans-serif'],
+            body: ['DM Sans', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    /* ─── Reset & Base ───────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg:            #0f0f1a;
-      --surface:       #1a1a2e;
-      --surface2:      #22223b;
-      --purple:        #7c3aed;
-      --purple-dark:   #6d28d9;
-      --purple-lite:   #a78bfa;
-      --purple-dim:    rgba(124,58,237,0.15);
-      --purple-border: rgba(124,58,237,0.25);
-      --text:          #e2e8f0;
-      --text-muted:    #94a3b8;
-      --text-dim:      #64748b;
-      --green:         #34d399;
-      --yellow:        #fbbf24;
-      --red:           #f87171;
-      --nav-h:         64px;
-      --radius:        12px;
-      --radius-sm:     8px;
-    }
-    html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--purple-dark) var(--surface); }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--surface); }
-    ::-webkit-scrollbar-thumb { background: var(--purple-dark); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--purple); }
-    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+    * { font-family: 'DM Sans', system-ui, sans-serif; }
+    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Outfit', system-ui, sans-serif; }
 
-    /* ─── Nav ────────────────────────────────────────────────────── */
-    nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); background: rgba(15,15,26,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--purple-border); z-index: 1000; display: flex; align-items: center; padding: 0 24px; }
-    .nav-brand { font-weight: 700; font-size: 1rem; color: var(--purple-lite); white-space: nowrap; margin-right: 24px; letter-spacing: -0.01em; }
-    .nav-brand span { color: var(--text-muted); font-weight: 400; }
-    .nav-links { display: flex; align-items: center; gap: 4px; overflow-x: auto; scrollbar-width: none; flex: 1; }
-    .nav-links::-webkit-scrollbar { display: none; }
-    .nav-links a { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; color: var(--text-muted); text-decoration: none; white-space: nowrap; transition: all 0.2s ease; border: 1px solid transparent; }
-    .nav-links a:hover { color: var(--purple-lite); background: var(--purple-dim); border-color: var(--purple-border); }
-    .nav-links a.active { color: #fff; background: var(--purple); border-color: var(--purple); }
-
-    /* ─── Auth Bar ───────────────────────────────────────────────── */
-    .nav-auth { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-shrink: 0; padding-left: 16px; }
-    .auth-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
-    .auth-badge .auth-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; box-shadow: 0 0 6px rgba(52,211,153,0.6); }
-    .auth-name { color: var(--text); font-weight: 600; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .auth-signout { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 16px; font-size: 0.73rem; font-weight: 500; color: var(--text-muted); text-decoration: none; border: 1px solid var(--purple-border); background: transparent; transition: all 0.2s ease; }
-    .auth-signout:hover { color: var(--purple-lite); background: var(--purple-dim); border-color: var(--purple); }
-    .auth-localdev { font-size: 0.72rem; color: var(--text-dim); font-style: italic; }
-
-    /* ─── Layout ─────────────────────────────────────────────────── */
-    main { max-width: 880px; margin: 0 auto; padding: calc(var(--nav-h) + 48px) 32px 80px; }
-    section { scroll-margin-top: calc(var(--nav-h) + 24px); margin-bottom: 80px; }
-
-    /* ─── Hero ───────────────────────────────────────────────────── */
-    .hero { text-align: center; padding: 48px 24px 56px; background: linear-gradient(135deg, rgba(124,58,237,0.12) 0%, rgba(109,40,217,0.06) 100%); border: 1px solid var(--purple-border); border-radius: var(--radius); margin-bottom: 40px; }
-    .hero-ascii { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--purple-lite); white-space: pre; line-height: 1.4; display: block; margin-bottom: 28px; text-shadow: 0 0 20px rgba(167,139,250,0.4); }
-    .hero-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 28px; }
-    .badge { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--purple-border); border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; color: var(--text-muted); }
-    .badge strong { color: var(--text); }
-
-    /* ─── Progress Bars ──────────────────────────────────────────── */
-    .progress-group { display: flex; flex-direction: column; gap: 10px; background: var(--surface); border: 1px solid var(--purple-border); border-radius: var(--radius-sm); padding: 20px 24px; margin: 20px 0; }
-    .progress-row { display: flex; align-items: center; gap: 12px; }
-    .progress-label { font-size: 0.8rem; color: var(--text-muted); min-width: 145px; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
-    .progress-bar-wrap { flex: 1; background: rgba(255,255,255,0.06); border-radius: 4px; height: 8px; overflow: hidden; }
-    .progress-bar { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--purple) 0%, var(--purple-lite) 100%); transition: width 0.6s ease; }
-    .progress-bar.yellow { background: linear-gradient(90deg, #d97706 0%, var(--yellow) 100%); }
-    .progress-bar.green  { background: linear-gradient(90deg, #059669 0%, var(--green) 100%); }
-    .progress-bar.red    { background: linear-gradient(90deg, #b91c1c 0%, var(--red) 100%); }
-    .progress-pct { font-size: 0.78rem; font-weight: 600; min-width: 36px; text-align: right; font-family: 'JetBrains Mono', monospace; }
-    .progress-pct.green  { color: var(--green); }
-    .progress-pct.yellow { color: var(--yellow); }
-    .progress-pct.red    { color: var(--red); }
-    .progress-status { font-size: 0.75rem; color: var(--text-muted); }
-
-    /* ─── Headings ───────────────────────────────────────────────── */
-    h2 { font-size: 1.75rem; font-weight: 700; color: var(--text); margin-bottom: 20px; letter-spacing: -0.02em; display: flex; align-items: center; }
-    h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--purple-border) 0%, transparent 100%); margin-left: 16px; }
-    h3 { font-size: 1.1rem; font-weight: 600; color: var(--purple-lite); margin: 32px 0 14px; letter-spacing: -0.01em; }
-    p { margin-bottom: 14px; line-height: 1.75; max-width: 72ch; }
-    strong { color: #fff; font-weight: 600; }
-    em { color: var(--purple-lite); font-style: italic; }
-    a { color: var(--purple-lite); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    /* ─── Inline Code ────────────────────────────────────────────── */
-    code { font-family: 'JetBrains Mono', monospace; font-size: 0.83em; background: rgba(124,58,237,0.15); border: 1px solid var(--purple-border); border-radius: 4px; padding: 1px 6px; color: var(--purple-lite); }
-
-    /* ─── Code Blocks ────────────────────────────────────────────── */
-    pre { background: var(--surface); border: 1px solid var(--purple-border); border-radius: var(--radius-sm); padding: 20px 22px; overflow-x: auto; margin: 16px 0; box-shadow: 0 0 0 1px rgba(124,58,237,0.08), inset 0 0 40px rgba(124,58,237,0.03); }
-    pre code { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: none; border: none; padding: 0; color: var(--text); line-height: 1.65; display: block; }
-    .ascii-art pre { border-color: rgba(124,58,237,0.4); box-shadow: 0 0 20px rgba(124,58,237,0.12), inset 0 0 40px rgba(124,58,237,0.05); }
-    .ascii-art pre code { color: var(--purple-lite); }
-    .cm { color: var(--text-dim); }
-
-    /* ─── Blockquotes ────────────────────────────────────────────── */
-    blockquote { border-left: 3px solid var(--purple); background: var(--purple-dim); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 14px 20px; margin: 16px 0; color: var(--text-muted); font-size: 0.95rem; }
-    blockquote p { margin-bottom: 6px; max-width: none; }
-    blockquote p:last-child { margin-bottom: 0; }
-    blockquote strong { color: var(--purple-lite); }
-    .status-note { display: inline-flex; align-items: center; gap: 8px; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.25); border-radius: 20px; padding: 4px 14px; font-size: 0.8rem; color: var(--green); margin-bottom: 16px; }
-    .status-note.yellow { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.25); color: var(--yellow); }
-
-    /* ─── Tables ─────────────────────────────────────────────────── */
-    .table-wrap { overflow-x: auto; margin: 16px 0; border-radius: var(--radius-sm); }
-    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; border: 1px solid var(--purple-border); border-radius: var(--radius-sm); overflow: hidden; }
-    thead tr { background: linear-gradient(135deg, rgba(124,58,237,0.3) 0%, rgba(109,40,217,0.2) 100%); }
-    thead th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: 0.8rem; color: var(--purple-lite); letter-spacing: 0.02em; border-bottom: 1px solid var(--purple-border); white-space: nowrap; }
-    tbody tr { transition: background 0.15s; }
-    tbody tr:nth-child(even) { background: rgba(124,58,237,0.05); }
-    tbody tr:nth-child(odd)  { background: rgba(255,255,255,0.01); }
-    tbody tr:hover           { background: rgba(124,58,237,0.1); }
-    tbody td { padding: 11px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text); vertical-align: top; }
-    tbody tr:last-child td { border-bottom: none; }
-    td code { font-size: 0.78rem; }
-
-    /* ─── Lists ──────────────────────────────────────────────────── */
-    ul { padding-left: 24px; margin: 12px 0 16px; }
-    ul li { margin-bottom: 8px; line-height: 1.65; }
-    ol { list-style: none; counter-reset: step; padding-left: 0; margin: 12px 0 16px; }
-    ol > li { counter-increment: step; display: flex; gap: 14px; align-items: flex-start; margin-bottom: 14px; }
-    ol > li::before { content: counter(step); min-width: 28px; height: 28px; background: var(--purple-dim); border: 1px solid var(--purple-border); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: var(--purple-lite); flex-shrink: 0; margin-top: 2px; }
-    ol > li > div { flex: 1; }
-
-    /* ─── Scene Cards ────────────────────────────────────────────── */
-    .scene { background: var(--surface); border: 1px solid var(--purple-border); border-radius: var(--radius); padding: 24px 28px 24px 32px; margin: 20px 0; position: relative; overflow: hidden; }
-    .scene::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, var(--purple) 0%, var(--purple-lite) 100%); }
-    .scene h3 { margin-top: 0; }
-
-    /* ─── Talk Track ─────────────────────────────────────────────── */
-    .talk-track { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 14px 18px; margin: 12px 0; font-style: italic; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
-
-    /* ─── Card ───────────────────────────────────────────────────── */
-    .card { background: var(--surface); border: 1px solid var(--purple-border); border-radius: var(--radius); padding: 24px 28px; margin: 16px 0; }
-
-    /* ─── Color Helpers ──────────────────────────────────────────── */
-    .green  { color: var(--green)  !important; }
-    .yellow { color: var(--yellow) !important; }
-    .red    { color: var(--red)    !important; }
-
-    /* ─── Back to Top ────────────────────────────────────────────── */
-    #back-top { position: fixed; bottom: 28px; right: 28px; width: 44px; height: 44px; background: var(--purple); color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 1.2rem; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(124,58,237,0.5); opacity: 0; transform: translateY(10px); transition: all 0.3s ease; z-index: 999; }
-    #back-top.visible { opacity: 1; transform: translateY(0); }
-    #back-top:hover   { background: var(--purple-dark); transform: translateY(-2px); }
-
-    /* ─── Footer ─────────────────────────────────────────────────── */
-    footer { text-align: center; padding: 40px 32px; border-top: 1px solid var(--purple-border); color: var(--text-dim); font-size: 0.82rem; }
-    .footer-ascii { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); white-space: pre; line-height: 1.4; display: block; margin-bottom: 16px; }
-
-    /* ─── Responsive ─────────────────────────────────────────────── */
-    @media (max-width: 720px) {
-      main { padding: calc(var(--nav-h) + 24px) 16px 60px; }
-      h2 { font-size: 1.35rem; }
-      .hero-ascii { font-size: 0.52rem; }
-      .progress-label { min-width: 90px; font-size: 0.7rem; }
-      .scene { padding: 16px 18px 16px 22px; }
-      .card { padding: 16px; }
-    }
-    @media (max-width: 480px) {
-      .hero-ascii { display: none; }
-      nav { padding: 0 12px; }
-      .nav-links a { padding: 5px 8px; font-size: 0.72rem; }
-      .nav-brand { font-size: 0.85rem; margin-right: 12px; }
+    /* California topographic background pattern */
+    .hero-bg {
+      background-color: #1B2A4A;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 20% 60%, rgba(253,181,21,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 30%, rgba(0,51,102,0.3) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.96 2.243 8.2 0H5.374zM48.97 0l3.657 3.657-1.414 1.414L46.143 0h2.828zM11.03 0L7.372 3.657 8.787 5.07 13.857 0H11.03zm32.284 0L49.8 6.485 48.384 7.9l-7.9-7.9h2.83zM16.686 0L10.2 6.485 11.616 7.9l7.9-7.9h-2.83zM22.344 0L13.858 8.485 15.272 9.9l9.9-9.9h-2.828zM32 0l-3.486 3.485' stroke='rgba(255,255,255,0.03)' fill='none' stroke-width='0.5'/%3E%3C/svg%3E");
     }
 
-    /* ─── Print ──────────────────────────────────────────────────── */
-    @media print {
-      nav, #back-top { display: none !important; }
-      main { padding: 0; max-width: 100%; }
-      body { background: #fff; color: #000; font-size: 11pt; }
-      pre, .ascii-art pre { background: #f5f5f5 !important; color: #000 !important; border: 1px solid #ccc !important; box-shadow: none !important; }
-      pre code, .ascii-art pre code { color: #000 !important; }
-      code { background: #f0f0f0 !important; color: #6d28d9 !important; border-color: #ddd !important; }
-      table { page-break-inside: avoid; border-color: #ddd !important; }
-      thead tr { background: #f0e8ff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      thead th { color: #6d28d9 !important; border-color: #ddd !important; }
-      tbody td { color: #000 !important; border-color: #eee !important; }
-      .scene { border: 1px solid #ddd; break-inside: avoid; }
-      .scene::before { background: #7c3aed !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      h2, h3 { color: #000; break-after: avoid; }
-      h2::after { background: #ddd !important; }
-      blockquote { border-color: #7c3aed !important; color: #333 !important; background: #faf5ff !important; }
-      .progress-bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      footer { border-color: #ddd; }
-      a { color: #6d28d9; }
-      section { margin-bottom: 36pt; }
-      .talk-track { background: #f9f9f9 !important; color: #555 !important; border-color: #ddd !important; }
-      .status-note { border-color: #aaa !important; color: #333 !important; background: #f9f9f9 !important; }
+    /* Gold accent line */
+    .gold-rule {
+      height: 3px;
+      background: linear-gradient(90deg, #FDB515, #E87722, #FDB515);
+      border: none;
     }
+
+    /* Card hover lift */
+    .accel-card {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    }
+    .accel-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -12px rgba(27,42,74,0.2), 0 0 0 1px rgba(253,181,21,0.15);
+    }
+    .accel-card:hover .card-badge {
+      background: #FDB515;
+      color: #1B2A4A;
+    }
+    .accel-card:hover .card-arrow {
+      transform: translateX(4px);
+      opacity: 1;
+    }
+
+    /* Pipeline connector animation */
+    @keyframes flowPulse {
+      0%, 100% { opacity: 0.4; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(3px); }
+    }
+    .pipeline-arrow { animation: flowPulse 2s ease-in-out infinite; }
+    .pipeline-arrow-delay-1 { animation-delay: 0.3s; }
+    .pipeline-arrow-delay-2 { animation-delay: 0.6s; }
+
+    /* Stagger card entrance */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-card {
+      opacity: 0;
+      animation: fadeSlideUp 0.6s ease-out forwards;
+    }
+    .animate-card:nth-child(1) { animation-delay: 0.05s; }
+    .animate-card:nth-child(2) { animation-delay: 0.1s; }
+    .animate-card:nth-child(3) { animation-delay: 0.15s; }
+    .animate-card:nth-child(4) { animation-delay: 0.2s; }
+    .animate-card:nth-child(5) { animation-delay: 0.25s; }
+    .animate-card:nth-child(6) { animation-delay: 0.3s; }
+    .animate-card:nth-child(7) { animation-delay: 0.35s; }
+    .animate-card:nth-child(8) { animation-delay: 0.4s; }
+
+    /* Hero text entrance */
+    @keyframes heroFadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-animate { animation: heroFadeIn 0.8s ease-out forwards; }
+    .hero-animate-delay { animation: heroFadeIn 0.8s ease-out 0.15s forwards; opacity: 0; }
+    .hero-animate-delay-2 { animation: heroFadeIn 0.8s ease-out 0.3s forwards; opacity: 0; }
+
+    /* Section divider with seal motif */
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #FDB515;
+    }
+    .section-label::before,
+    .section-label::after {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: #FDB515;
+      opacity: 0.5;
+    }
+
+    /* Sticky nav blur */
+    .nav-blur {
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+    }
+
+    /* Code block styling */
+    .code-block {
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 0.75rem;
+      overflow: hidden;
+    }
+    .code-block pre {
+      font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.875rem;
+      line-height: 1.7;
+    }
+
+    /* Compliance badge */
+    .compliance-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    /* Tech stack icon glow */
+    .tech-icon {
+      transition: box-shadow 0.3s ease;
+    }
+    .tech-icon:hover {
+      box-shadow: 0 0 20px rgba(253,181,21,0.2);
+    }
+
+    /* Smooth focus outline for accessibility */
+    :focus-visible {
+      outline: 2px solid #FDB515;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      z-index: 100;
+      padding: 0.5rem 1rem;
+      background: #FDB515;
+      color: #1B2A4A;
+      font-weight: 700;
+      border-radius: 0 0 0.5rem 0.5rem;
+      transition: top 0.2s ease;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    .mobile-menu.open {
+      max-height: 400px;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    /* Complexity stars */
+    .star-filled { color: #FDB515; }
+    .star-empty { color: rgba(27,42,74,0.15); }
   </style>
 </head>
-<body>
+<body class="bg-white text-gray-900 font-body antialiased">
 
-<!-- ─── Sticky Navigation ─────────────────────────────────────────── -->
-<nav>
-  <div class="nav-brand">🚪 47 Doors <span>/ Runbook</span></div>
-  <div class="nav-links">
-    <a href="#overview">🎯 Overview</a>
-    <a href="#version-matrix">🧰 Versions</a>
-    <a href="#checklist">✅ Checklist</a>
-    <a href="#start-commands">🚀 Start</a>
-    <a href="#demo-sequence">🎬 Demo</a>
-    <a href="#troubleshooting">🔧 Troubleshoot</a>
-    <a href="#edu-framing">🏫 EDU Framing</a>
-  </div>
-  <div class="nav-auth" id="nav-auth" style="display:none">
-    <span class="auth-badge"><span class="auth-dot"></span> 🔒 <span id="auth-name" class="auth-name"></span></span>
-    <a href="/.auth/logout" class="auth-signout">Sign Out ↩</a>
-  </div>
-</nav>
+  <!-- Skip to main content (accessibility) -->
+  <a href="#main" class="skip-link font-display">Skip to main content</a>
 
-<main>
-
-  <!-- ─── Hero ─────────────────────────────────────────────────── -->
-  <div class="hero">
-    <code class="hero-ascii">╔══════════════════════════════════════════════════════════════════════════════╗
-║   🎤  4 7   D O O R S   —   V O I C E   F E A T U R E   R U N B O O K  🎤  ║
-║              speak naturally · be heard · get answers                       ║
-╚══════════════════════════════════════════════════════════════════════════════╝</code>
-    <div class="hero-meta">
-      <span class="badge">👥 <strong>Audience:</strong> EDU customers &amp; stakeholders</span>
-      <span class="badge">📅 <strong>Updated:</strong> 2026-03-15</span>
-      <span class="badge">⏱️ <strong>Demo time:</strong> 12–15 min</span>
-      <span class="badge">🟢 <strong>Status:</strong> LIVE ON AZURE</span>
-    </div>
-    <div class="progress-group">
-      <div class="progress-row">
-        <span class="progress-label">Demo Readiness</span>
-        <div class="progress-bar-wrap"><div class="progress-bar green" style="width:100%"></div></div>
-        <span class="progress-pct green">100%</span>
-        <span class="progress-status">✅ All systems go</span>
-      </div>
-      <div class="progress-row">
-        <span class="progress-label">Azure Live</span>
-        <div class="progress-bar-wrap"><div class="progress-bar green" style="width:100%"></div></div>
-        <span class="progress-pct green">100%</span>
-        <span class="progress-status">✅ Connected to Azure OpenAI (MOCK_MODE=false)</span>
-      </div>
-      <div class="progress-row">
-        <span class="progress-label">Test Coverage</span>
-        <div class="progress-bar-wrap"><div class="progress-bar yellow" style="width:76%"></div></div>
-        <span class="progress-pct yellow">76%</span>
-        <span class="progress-status">🟡 76 backend tests passing</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 🎯 Demo Overview ─────────────────────────────────────────────── -->
-  <section id="overview">
-    <h2>🎯 Demo Overview</h2>
-    <p>The <strong>47 Doors Universal Front Door Support Agent</strong> now speaks. Students can click a single microphone button and have a natural spoken conversation with the same AI pipeline that powers text chat — getting ticket confirmations, knowledge article summaries, and escalation notices, all by voice. This demo shows how a university can replace dozens of disconnected support portals with <strong>one trusted digital colleague</strong> that works whether you type or talk.</p>
-    <div class="ascii-art">
-<pre><code>┌─────────────────────────────────────────────────────────────┐
-│  🎓 Student speaks  →  🧠 3-Agent Pipeline  →  🔊 AI replies │
-│                                                             │
-│  QueryAgent ──► RouterAgent ──► ActionAgent                 │
-│      │               │               │                      │
-│   🔍 Intent       🗺️ Route        🎫 Ticket                 │
-│   Detection      Selection        Creation                  │
-└─────────────────────────────────────────────────────────────┘</code></pre>
-    </div>
-  </section>
-
-  <!-- 🧰 Version Matrix ─────────────────────────────────────────────── -->
-  <section id="version-matrix">
-    <h2>🧰 Version Matrix &amp; Compatibility</h2>
-
-    <h3>🐍 Runtime &amp; Framework Versions</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>🔧 Component</th><th>📌 Required</th><th>🏷️ Recommended</th><th>🟢 Status</th></tr></thead>
-        <tbody>
-          <tr><td>🐍 Python</td><td><code>3.11+</code></td><td><code>3.12</code></td><td class="green">✅ Supported</td></tr>
-          <tr><td>🟩 Node.js</td><td><code>18+</code></td><td><code>20 LTS</code></td><td class="green">✅ Supported</td></tr>
-          <tr><td>⚡ FastAPI</td><td><code>0.109+</code></td><td><code>0.115+</code></td><td class="green">✅ Supported</td></tr>
-          <tr><td>⚛️ React</td><td><code>18.x</code></td><td><code>18.3+</code></td><td class="green">✅ Supported</td></tr>
-          <tr><td>⚡ Vite</td><td><code>5.x</code></td><td><code>5.2+</code></td><td class="green">✅ Supported</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>☁️ Azure OpenAI Model Versions</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>🤖 Model</th><th>🏷️ Version</th><th>🎯 Use Case</th><th>🟢 Status</th></tr></thead>
-        <tbody>
-          <tr><td>🧠 GPT-4o</td><td><code>2024-05-13</code></td><td>Text chat pipeline</td><td class="green">✅ Active</td></tr>
-          <tr><td>🎤 GPT-4o Realtime</td><td><code>2024-12-17</code></td><td>Voice / WebRTC (GA nested format, default voice: marin)</td><td class="green">✅ Active</td></tr>
-          <tr><td>🔊 GPT-4o Audio Preview</td><td><code>2024-10-01</code></td><td>Audio fallback</td><td class="yellow">🟡 Optional</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>🌐 Browser Compatibility</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>🌐 Browser</th><th>📌 Min Version</th><th>🎤 WebRTC</th><th>🔊 Audio API</th><th>🟢 Recommended</th></tr></thead>
-        <tbody>
-          <tr><td>🟡 Chrome</td><td><code>90+</code></td><td class="green">✅ Full</td><td class="green">✅ Full</td><td>⭐ Best</td></tr>
-          <tr><td>🔵 Edge</td><td><code>90+</code></td><td class="green">✅ Full</td><td class="green">✅ Full</td><td>⭐ Best</td></tr>
-          <tr><td>🟠 Firefox</td><td><code>85+</code></td><td class="green">✅ Full</td><td class="green">✅ Full</td><td class="green">✅ Good</td></tr>
-          <tr><td>🔘 Safari</td><td><code>15+</code></td><td class="yellow">⚠️ Partial</td><td class="yellow">⚠️ Partial</td><td class="yellow">🟡 Caution</td></tr>
-          <tr><td>🔴 IE / Legacy</td><td>Any</td><td class="red">❌ None</td><td class="red">❌ None</td><td class="red">❌ Unsupported</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <blockquote><p>⚠️ <strong>Safari note</strong>: WebRTC and Web Audio API support varies. Test before customer demos on macOS/iOS.</p></blockquote>
-
-    <h3>💻 Operating System Support</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>💻 Platform</th><th>🟢 Support Level</th><th>📝 Notes</th></tr></thead>
-        <tbody>
-          <tr><td>🪟 Windows 10/11</td><td class="green">✅ Full</td><td>Recommended for demos</td></tr>
-          <tr><td>🍎 macOS 12+</td><td class="green">✅ Full</td><td>Check Safari mic permissions</td></tr>
-          <tr><td>🐧 Linux (Ubuntu 22+)</td><td class="green">✅ Full</td><td>Chrome/Firefox only</td></tr>
-          <tr><td>☁️ GitHub Codespaces</td><td class="green">✅ Full</td><td>Leave <code>VITE_API_BASE_URL</code> empty</td></tr>
-          <tr><td>🐳 Docker Desktop</td><td class="green">✅ Full</td><td><code>docker-compose up</code> — one command</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ✅ Pre-Demo Checklist ─────────────────────────────────────────── -->
-  <section id="checklist">
-    <h2>✅ Pre-Demo Checklist</h2>
-    <blockquote><p>⏰ Run through this list <strong>5 minutes before</strong> you start the demo.</p></blockquote>
-
-    <div class="progress-group" style="margin-bottom:20px;">
-      <div class="progress-row">
-        <span class="progress-label">Overall Readiness</span>
-        <div class="progress-bar-wrap"><div class="progress-bar" style="width:0%" id="checklist-bar"></div></div>
-        <span class="progress-pct" id="checklist-pct">0%</span>
-        <span class="progress-status" id="checklist-status">← check items below</span>
-      </div>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>#</th><th>🔍 Check</th><th>💡 Detail</th><th style="text-align:center">Done?</th></tr></thead>
-        <tbody>
-          <tr><td>1️⃣</td><td>🌐 <strong>Browser open</strong></td><td>Chrome 90+, Firefox 85+, or Edge 90+</td><td style="text-align:center"><input type="checkbox" class="check-item" style="width:18px;height:18px;accent-color:#7c3aed;cursor:pointer;" /></td></tr>
-          <tr><td>2️⃣</td><td>🎙️ <strong>Microphone tested</strong></td><td>Settings → Privacy → Microphone → Allow</td><td style="text-align:center"><input type="checkbox" class="check-item" style="width:18px;height:18px;accent-color:#7c3aed;cursor:pointer;" /></td></tr>
-          <tr><td>3️⃣</td><td>☁️ <strong>Azure Container App deployed</strong></td><td><code>azd up</code> completed · <a href="https://frontdoor-6wfum6gndxawy-backend.blackflower-446b9850.eastus2.azurecontainerapps.io/api/health" target="_blank"><code>/api/health</code></a> returns <code>healthy</code></td><td style="text-align:center"><input type="checkbox" class="check-item" style="width:18px;height:18px;accent-color:#7c3aed;cursor:pointer;" /></td></tr>
-          <tr><td>4️⃣</td><td>🖼️ <strong>Frontend reachable</strong></td><td>Container App URL loads the UI (or Vite dev if running locally)</td><td style="text-align:center"><input type="checkbox" class="check-item" style="width:18px;height:18px;accent-color:#7c3aed;cursor:pointer;" /></td></tr>
-          <tr><td>5️⃣</td><td>🔑 <strong>Azure subscription active</strong></td><td><code>az account show</code> confirms sub <code>ME-MngEnvMCAP262307-segayle-1</code> · <code>azd auth login</code> completed</td><td style="text-align:center"><input type="checkbox" class="check-item" style="width:18px;height:18px;accent-color:#7c3aed;cursor:pointer;" /></td></tr>
-          <tr><td>6️⃣</td><td>🤖 <strong>Azure OpenAI connected</strong></td><td><code>MOCK_MODE=false</code> · live <code>gpt-4o</code> + <code>gpt-4o-realtime-preview</code> on <code>frontdoor-6wfum6gndxawy-openai</code></td><td style="text-align:center"><input type="checkbox" class="check-item" style="width:18px;height:18px;accent-color:#7c3aed;cursor:pointer;" /></td></tr>
-          <tr><td>7️⃣</td><td>🔊 <strong>Audio output working</strong></td><td>System volume up · headset or speakers confirmed</td><td style="text-align:center"><input type="checkbox" class="check-item" style="width:18px;height:18px;accent-color:#7c3aed;cursor:pointer;" /></td></tr>
-          <tr><td>8️⃣</td><td>🛡️ <strong>Fallback ready</strong></td><td>If voice fails → text chat <strong>always</strong> works · stay calm</td><td style="text-align:center"><input type="checkbox" class="check-item" style="width:18px;height:18px;accent-color:#7c3aed;cursor:pointer;" /></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="progress-group">
-      <div class="progress-row">
-        <span class="progress-label">✅ All 8 checked?</span>
-        <div class="progress-bar-wrap"><div class="progress-bar green" style="width:100%"></div></div>
-        <span class="progress-pct green">100%</span>
-        <span class="progress-status">🟢 Ready to demo!</span>
-      </div>
-      <div class="progress-row">
-        <span class="progress-label">⚠️ 6–7 checked?</span>
-        <div class="progress-bar-wrap"><div class="progress-bar yellow" style="width:80%"></div></div>
-        <span class="progress-pct yellow">80%</span>
-        <span class="progress-status">🟡 Proceed with caution</span>
-      </div>
-      <div class="progress-row">
-        <span class="progress-label">❌ &lt;6 checked?</span>
-        <div class="progress-bar-wrap"><div class="progress-bar red" style="width:40%"></div></div>
-        <span class="progress-pct red">40%</span>
-        <span class="progress-status">🔴 Stop — fix issues first</span>
-      </div>
-    </div>
-    <blockquote><p>💡 <strong>Codespaces?</strong> Leave <code>VITE_API_BASE_URL</code> blank — Vite proxies <code>/api</code> to <code>127.0.0.1:8000</code> automatically. Both port <strong>5173</strong> and port <strong>8000</strong> must be forwarded.</p></blockquote>
-  </section>
-
-  <!-- 🚀 Start Commands ─────────────────────────────────────────────── -->
-  <section id="start-commands">
-    <h2>🚀 Start Commands</h2>
-    <div class="ascii-art">
-<pre><code>┌──────────────────────────────────────────────────────┐
-│  🚀  LAUNCH SEQUENCE — CHOOSE YOUR PATH              │
-├──────────────────────────────────────────────────────┤
-│  Option A  ── ☁️  Azure Container Apps (Recommended) │
-│  Option B  ── 🐳 Docker (local alternative)          │
-│  Option C  ── 💻 Local Dev (debugging fallback)      │
-│  Option D  ── ☁️  GitHub Codespaces (cloud dev)       │
-└──────────────────────────────────────────────────────┘</code></pre>
-    </div>
-
-    <h3>☁️ Option A — Azure Container Apps <em>(Recommended)</em></h3>
-    <p>This is the <strong>primary demo path</strong>. Azure resources are live and verified in <code>rg-vvoice</code> (eastus2).</p>
-<pre><code><span class="cm"># 1️⃣  Authenticate (once per machine)</span>
-azd auth login
-
-<span class="cm"># 2️⃣  Provision + deploy everything (first time, ~5 min)</span>
-azd up
-
-<span class="cm"># 2b️⃣  Subsequent deploys (code changes only)</span>
-azd deploy
-
-<span class="cm"># 3️⃣  Get the live URL</span>
-azd env get-values | grep AZURE_CONTAINERAPP_URL</code></pre>
-<pre><code><span class="cm"># The frontend SPA is served from the same Container App host.</span>
-<span class="cm"># Use the URL returned above — e.g. https://frontdoor-6wfum6gndxawy-backend.blackflower-446b9850.eastus2.azurecontainerapps.io</span></code></pre>
-    <blockquote><p>💡 <strong>Subscription</strong>: <code>ME-MngEnvMCAP262307-segayle-1</code> · <strong>Region</strong>: <code>eastus2</code></p></blockquote>
-
-    <h3>🐳 Option B — Docker <em>(Local Alternative)</em></h3>
-<pre><code>docker-compose up
-<span class="cm"># 🖼️ Frontend: http://localhost:5173</span>
-<span class="cm"># 🖥️ Backend:  http://localhost:8000</span></code></pre>
-
-    <h3>💻 Option C — Local Dev <em>(Debugging Fallback)</em></h3>
-<pre><code><span class="cm"># 🖥️ Terminal 1 — Backend</span>
-cd backend
-cp .env.example .env          <span class="cm"># Set MOCK_MODE=false + Azure creds for live mode</span>
-pip install -r requirements.txt
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload</code></pre>
-<pre><code><span class="cm"># 🖼️ Terminal 2 — Frontend</span>
-cd frontend
-npm install
-npm run dev                   <span class="cm"># Opens http://localhost:5173</span></code></pre>
-
-    <h3>☁️ Option D — GitHub Codespaces</h3>
-<pre><code><span class="cm"># Same as Option C — Vite proxy handles /api routing</span>
-<span class="cm"># ⚠️  DO NOT set VITE_API_BASE_URL to a localhost URL inside Codespaces</span>
-<span class="cm"># Leave it as empty string in frontend/.env.local:</span>
-echo "VITE_API_BASE_URL=" > frontend/.env.local</code></pre>
-
-    <h3>🩺 Health Check <em>(Verify before demoing)</em></h3>
-    <blockquote><p>💡 The live Container App URL is hardcoded below. Both endpoints have been verified ✅.</p></blockquote>
-<pre><code><span class="cm"># ☁️ Azure (primary — LIVE)</span>
-curl https://frontdoor-6wfum6gndxawy-backend.blackflower-446b9850.eastus2.azurecontainerapps.io/api/health
-<span class="cm"># ✅ Verified: LLM connecting, services up: ticketing, knowledge_base, session_store</span>
-
-curl https://frontdoor-6wfum6gndxawy-backend.blackflower-446b9850.eastus2.azurecontainerapps.io/api/realtime/health
-<span class="cm"># ✅ Verified: { "realtime_available": true, "mock_mode": false, "voice_enabled": true }</span>
-
-<span class="cm"># 💻 Local fallback</span>
-<span class="cm"># curl http://localhost:8000/api/health</span>
-<span class="cm"># curl http://localhost:8000/api/realtime/health</span></code></pre>
-
-    <div class="progress-group">
-      <div class="progress-row">
-        <span class="progress-label">Backend Health</span>
-        <div class="progress-bar-wrap"><div class="progress-bar green" style="width:100%"></div></div>
-        <span class="progress-pct green">✅</span>
-        <span class="progress-status">healthy (ticketing ✅ · knowledge_base ✅ · session_store ✅)</span>
-      </div>
-      <div class="progress-row">
-        <span class="progress-label">Realtime Health</span>
-        <div class="progress-bar-wrap"><div class="progress-bar green" style="width:100%"></div></div>
-        <span class="progress-pct green">✅</span>
-        <span class="progress-status">available (mock_mode: false · voice_enabled: true — Azure Live)</span>
-      </div>
-      <div class="progress-row">
-        <span class="progress-label">Frontend Load</span>
-        <div class="progress-bar-wrap"><div class="progress-bar green" style="width:100%"></div></div>
-        <span class="progress-pct green">✅</span>
-        <span class="progress-status">frontdoor-6wfum6gndxawy-backend.blackflower-446b9850.eastus2.azurecontainerapps.io</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- 🎬 Demo Sequence ─────────────────────────────────────────────── -->
-  <section id="demo-sequence">
-    <h2>🎬 Demo Sequence (12–15 Minutes)</h2>
-    <div class="ascii-art">
-<pre><code>┌────────────────────────────────────────────────────────────────────┐
-│  🎬  DEMO TIMELINE                                                 │
-├──────┬──────────────────────────────────────────────┬─────────────┤
-│  ⏱️  │  🎭 Scene                                     │  📊 Progress │
-├──────┼──────────────────────────────────────────────┼─────────────┤
-│ 0–3m │  🎭 Scene 1 — The 47 Doors Problem           │ [████░░░░░░] │
-│ 3–7m │  🎤 Scene 2 — Voice Interaction              │ [████████░░] │
-│ 7–10m│  🔍 Scene 3 — Observability &amp; Trust          │ [████████░░] │
-│10–12m│  🛡️  Scene 4 — Graceful Degradation           │ [████████░░] │
-│12–14m│  🔭 Scene 5 — What's Next                    │ [████████░░] │
-└──────┴──────────────────────────────────────────────┴─────────────┘</code></pre>
-    </div>
-
-    <!-- Scene 1 -->
-    <div class="scene">
-      <h3>🎭 Scene 1 — The 47 Doors Problem <em>(~3 min)</em></h3>
-      <span class="status-note">🟢 Opening act — set the context</span>
-      <p><strong>📺 What to show:</strong> The chat UI with text conversation working normally.</p>
-      <p><strong>🎙️ Talk track:</strong></p>
-      <div class="talk-track">"Imagine being a first-year student at a large university. You have a password problem — but is that IT? Or is it your course portal? Maybe it's your library login? At most universities, there are literally <strong>47 different front doors</strong> for support. Students don't know which door to knock on, so they knock on all of them and wait."</div>
-      <div class="talk-track">"47 Doors is the answer to that. One trusted digital colleague that knows every department, every process, and every knowledge article — and routes your request to exactly the right team."</div>
-      <ol>
-        <li><div>⌨️ <strong>Type</strong> in the chat: <code>"I forgot my password and can't log into Canvas"</code></div></li>
-        <li><div>👀 <strong>Show</strong> the ticket ID returned, the KB articles, and the SLA estimate</div></li>
-        <li><div>📍 <strong>Point out</strong>: One input → intent detected → ticket created → KB surfaced → SLA communicated</div></li>
-      </ol>
-<pre><code>Student types  ──►  🧠 Intent Detection  ──►  🗺️ Router  ──►  🎫 Ticket + 📚 KB + ⏱️ SLA
-                         [████████████]           [████]         [████████████████]</code></pre>
-      <div class="talk-track">"This is what we built for text. Today, I'm going to show you the same experience — but spoken out loud."</div>
-    </div>
-
-    <!-- Scene 2 -->
-    <div class="scene">
-      <h3>🎤 Scene 2 — Voice Interaction <em>(~4 min)</em></h3>
-      <span class="status-note">🟢 The money shot — this is what they came to see</span>
-      <p><strong>📺 What to show:</strong> The full voice round-trip — click mic, speak, hear a response, see the transcript.</p>
-      <div class="talk-track">"Let me show you what it looks like when a student just wants to talk."</div>
-      <ol>
-        <li>
-          <div>👆 <strong>Point to</strong> the 🎤 microphone button in the chat input area
-            <div class="talk-track" style="margin-top:10px;">"One button. That's the entire voice interface."</div>
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- NAVIGATION -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-navy-700/90 border-b border-white/5" role="navigation" aria-label="Main navigation">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-3 group" aria-label="CA AI Accelerators Home">
+          <div class="w-8 h-8 rounded-lg bg-gold-400 flex items-center justify-center shadow-lg shadow-gold-400/20">
+            <svg class="w-4.5 h-4.5 text-navy-700" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M10 2L2 7l8 5 8-5-8-5zM2 13l8 5 8-5M2 17l8 5 8-5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
-        </li>
-        <li>
-          <div>🖱️ <strong>Click the mic button</strong> — the button pulses 🟢 green
-            <div class="talk-track" style="margin-top:10px;">"The browser asks for mic permission — we request it, the student grants it, and we're live. Notice the status banner at the top: it says 'Listening...'"</div>
+          <span class="font-display font-bold text-white tracking-tight text-lg">CA AI <span class="text-gold-400">Accelerators</span></span>
+        </a>
+
+        <!-- Desktop Links -->
+        <div class="hidden md:flex items-center gap-1">
+          <a href="#accelerators" class="px-3 py-2 text-sm font-medium text-white/70 hover:text-gold-400 transition-colors rounded-md">Accelerators</a>
+          <a href="#architecture" class="px-3 py-2 text-sm font-medium text-white/70 hover:text-gold-400 transition-colors rounded-md">Architecture</a>
+          <a href="#tech-stack" class="px-3 py-2 text-sm font-medium text-white/70 hover:text-gold-400 transition-colors rounded-md">Tech Stack</a>
+          <a href="#quick-start" class="px-3 py-2 text-sm font-medium text-white/70 hover:text-gold-400 transition-colors rounded-md">Quick Start</a>
+          <a href="https://github.com/msftsean/ca-hackathon" target="_blank" rel="noopener noreferrer" class="ml-2 inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-navy-700 bg-gold-400 hover:bg-gold-300 rounded-lg transition-colors shadow-lg shadow-gold-400/20">
+            <svg class="w-4 h-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+          </a>
+        </div>
+
+        <!-- Mobile menu button -->
+        <button id="mobile-toggle" class="md:hidden p-2 text-white/70 hover:text-white rounded-lg" aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle navigation menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobile-nav" class="mobile-menu md:hidden border-t border-white/10" role="menu">
+        <a href="#accelerators" class="block px-3 py-2 text-sm font-medium text-white/80 hover:text-gold-400" role="menuitem">Accelerators</a>
+        <a href="#architecture" class="block px-3 py-2 text-sm font-medium text-white/80 hover:text-gold-400" role="menuitem">Architecture</a>
+        <a href="#tech-stack" class="block px-3 py-2 text-sm font-medium text-white/80 hover:text-gold-400" role="menuitem">Tech Stack</a>
+        <a href="#quick-start" class="block px-3 py-2 text-sm font-medium text-white/80 hover:text-gold-400" role="menuitem">Quick Start</a>
+        <a href="https://github.com/msftsean/ca-hackathon" target="_blank" rel="noopener noreferrer" class="block px-3 py-2 text-sm font-medium text-gold-400" role="menuitem">GitHub ↗</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <main id="main">
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- HERO SECTION -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section class="hero-bg pt-32 pb-20 sm:pt-40 sm:pb-28 relative overflow-hidden" aria-labelledby="hero-title">
+      <!-- Decorative California bear silhouette watermark -->
+      <div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] opacity-[0.025] pointer-events-none" aria-hidden="true">
+        <svg viewBox="0 0 100 100" fill="white"><circle cx="50" cy="50" r="48" stroke="white" stroke-width="0.5" fill="none"/><text x="50" y="55" text-anchor="middle" font-size="10" fill="white" font-family="serif">★</text></svg>
+      </div>
+
+      <!-- Gold accent line at very top -->
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold-400 to-transparent opacity-60" aria-hidden="true"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-4xl">
+          <!-- State context badge -->
+          <div class="hero-animate mb-6">
+            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold tracking-wide text-gold-400 uppercase">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse" aria-hidden="true"></span>
+              State of California · AI Innovation
+            </span>
           </div>
-        </li>
-        <li>
-          <div>🗣️ <strong>Speak clearly</strong>: <em>"I forgot my password and can't log into Canvas"</em>
-            <div class="talk-track" style="margin-top:10px;">"Speak naturally. No commands, no keywords — just say what you need."</div>
-            <div class="progress-group" style="margin-top:12px;">
-              <div class="progress-row">
-                <span class="progress-label">🎙️ Listening...</span>
-                <div class="progress-bar-wrap"><div class="progress-bar" style="width:65%"></div></div>
-                <span class="progress-status" style="margin-left:8px;">VAD active · detecting speech</span>
+
+          <h1 id="hero-title" class="font-display font-900 text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight hero-animate">
+            California State AI<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-gold-300 to-poppy-500">Hackathon Accelerators</span>
+          </h1>
+
+          <p class="mt-6 text-lg sm:text-xl text-white/60 max-w-2xl leading-relaxed hero-animate-delay">
+            8 AI-powered solutions for California state agencies — built on the <strong class="text-white/90 font-semibold">3-agent pipeline pattern</strong>. Aligned with Envision&nbsp;2026, EO&nbsp;N&#8209;12&#8209;23, and the Breakthrough&nbsp;Project.
+          </p>
+
+          <!-- CTA Buttons -->
+          <div class="mt-10 flex flex-wrap gap-4 hero-animate-delay-2">
+            <a href="getting-started.html" class="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-bold font-display tracking-wide text-navy-700 bg-gold-400 hover:bg-gold-300 rounded-xl transition-all shadow-xl shadow-gold-400/20 hover:shadow-gold-400/30">
+              Get Started
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </a>
+            <a href="https://github.com/msftsean/ca-hackathon" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-bold font-display tracking-wide text-white border border-white/20 hover:border-white/40 hover:bg-white/5 rounded-xl transition-all">
+              <svg class="w-4 h-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              View on GitHub
+            </a>
+          </div>
+
+          <!-- Stats row -->
+          <div class="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 hero-animate-delay-2">
+            <div>
+              <div class="font-display font-800 text-3xl text-white">8</div>
+              <div class="text-sm text-white/40 mt-0.5">Accelerators</div>
+            </div>
+            <div>
+              <div class="font-display font-800 text-3xl text-white">12+</div>
+              <div class="text-sm text-white/40 mt-0.5">State Agencies</div>
+            </div>
+            <div>
+              <div class="font-display font-800 text-3xl text-white">3</div>
+              <div class="text-sm text-white/40 mt-0.5">Agent Pipeline</div>
+            </div>
+            <div>
+              <div class="font-display font-800 text-3xl text-white">70+</div>
+              <div class="text-sm text-white/40 mt-0.5">Languages</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="gold-rule" aria-hidden="true">
+
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- ACCELERATOR GRID -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="accelerators" class="py-20 sm:py-28 bg-gradient-to-b from-navy-50/50 to-white" aria-labelledby="accel-heading">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <span class="section-label" aria-hidden="true">Accelerators</span>
+          <h2 id="accel-heading" class="mt-4 font-display font-800 text-3xl sm:text-4xl text-navy-700 tracking-tight">
+            8 Solutions. 12+ Agencies. One&nbsp;Platform.
+          </h2>
+          <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">
+            Each accelerator is independently deployable, constitution-governed, and built on the same trusted 3&#8209;agent pipeline.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+          <!-- Card 001 -->
+          <a href="accelerators/001-benefitscal-navigator.html" class="accel-card animate-card group block bg-white rounded-2xl border border-gray-200/80 p-6 relative overflow-hidden" aria-label="Accelerator 001: BenefitsCal Navigator">
+            <div class="flex items-center justify-between mb-4">
+              <span class="card-badge inline-flex items-center justify-center w-10 h-10 rounded-xl bg-navy-700 text-gold-400 font-display font-bold text-xs tracking-wider transition-colors">001</span>
+              <span class="card-arrow text-navy-300 opacity-0 transition-all" aria-hidden="true">→</span>
+            </div>
+            <h3 class="font-display font-700 text-base text-navy-700 leading-snug">BenefitsCal Navigator</h3>
+            <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-navy-50 text-navy-600 text-xs font-semibold">CDSS</span>
+            <p class="mt-3 text-sm text-gray-500 leading-relaxed">Benefits eligibility Q&amp;A with multi-language support</p>
+            <div class="mt-4 flex gap-0.5" role="img" aria-label="Complexity: 3 out of 4 stars">
+              <span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span>
+            </div>
+          </a>
+
+          <!-- Card 002 -->
+          <a href="accelerators/002-wildfire-response-coordinator.html" class="accel-card animate-card group block bg-white rounded-2xl border border-gray-200/80 p-6 relative overflow-hidden" aria-label="Accelerator 002: Wildfire Response Coordinator">
+            <div class="flex items-center justify-between mb-4">
+              <span class="card-badge inline-flex items-center justify-center w-10 h-10 rounded-xl bg-navy-700 text-gold-400 font-display font-bold text-xs tracking-wider transition-colors">002</span>
+              <span class="card-arrow text-navy-300 opacity-0 transition-all" aria-hidden="true">→</span>
+            </div>
+            <h3 class="font-display font-700 text-base text-navy-700 leading-snug">Wildfire Response Coordinator</h3>
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              <span class="inline-block px-2 py-0.5 rounded-md bg-poppy-50 text-poppy-500 text-xs font-semibold">CAL FIRE</span>
+              <span class="inline-block px-2 py-0.5 rounded-md bg-poppy-50 text-poppy-500 text-xs font-semibold">Cal OES</span>
+            </div>
+            <p class="mt-3 text-sm text-gray-500 leading-relaxed">Multi-agency emergency coordination &amp; resource allocation</p>
+            <div class="mt-4 flex gap-0.5" role="img" aria-label="Complexity: 4 out of 4 stars">
+              <span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span>
+            </div>
+          </a>
+
+          <!-- Card 003 -->
+          <a href="accelerators/003-medi-cal-eligibility.html" class="accel-card animate-card group block bg-white rounded-2xl border border-gray-200/80 p-6 relative overflow-hidden" aria-label="Accelerator 003: Medi-Cal Eligibility Agent">
+            <div class="flex items-center justify-between mb-4">
+              <span class="card-badge inline-flex items-center justify-center w-10 h-10 rounded-xl bg-navy-700 text-gold-400 font-display font-bold text-xs tracking-wider transition-colors">003</span>
+              <span class="card-arrow text-navy-300 opacity-0 transition-all" aria-hidden="true">→</span>
+            </div>
+            <h3 class="font-display font-700 text-base text-navy-700 leading-snug">Medi-Cal Eligibility Agent</h3>
+            <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-navy-50 text-navy-600 text-xs font-semibold">DHCS</span>
+            <p class="mt-3 text-sm text-gray-500 leading-relaxed">MAGI-based eligibility screening with document OCR</p>
+            <div class="mt-4 flex gap-0.5" role="img" aria-label="Complexity: 4 out of 4 stars">
+              <span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span>
+            </div>
+          </a>
+
+          <!-- Card 004 -->
+          <a href="accelerators/004-permit-streamliner.html" class="accel-card animate-card group block bg-white rounded-2xl border border-gray-200/80 p-6 relative overflow-hidden" aria-label="Accelerator 004: Permit Streamliner">
+            <div class="flex items-center justify-between mb-4">
+              <span class="card-badge inline-flex items-center justify-center w-10 h-10 rounded-xl bg-navy-700 text-gold-400 font-display font-bold text-xs tracking-wider transition-colors">004</span>
+              <span class="card-arrow text-navy-300 opacity-0 transition-all" aria-hidden="true">→</span>
+            </div>
+            <h3 class="font-display font-700 text-base text-navy-700 leading-snug">Permit Streamliner</h3>
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              <span class="inline-block px-2 py-0.5 rounded-md bg-navy-50 text-navy-600 text-xs font-semibold">OPR</span>
+              <span class="inline-block px-2 py-0.5 rounded-md bg-navy-50 text-navy-600 text-xs font-semibold">HCD</span>
+              <span class="inline-block px-2 py-0.5 rounded-md bg-navy-50 text-navy-600 text-xs font-semibold">DCA</span>
+            </div>
+            <p class="mt-3 text-sm text-gray-500 leading-relaxed">Permit intake classification, SLA tracking, fee estimation</p>
+            <div class="mt-4 flex gap-0.5" role="img" aria-label="Complexity: 3 out of 4 stars">
+              <span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span>
+            </div>
+          </a>
+
+          <!-- Card 005 -->
+          <a href="accelerators/005-genai-procurement-compliance.html" class="accel-card animate-card group block bg-white rounded-2xl border border-gray-200/80 p-6 relative overflow-hidden" aria-label="Accelerator 005: GenAI Procurement Compliance">
+            <div class="flex items-center justify-between mb-4">
+              <span class="card-badge inline-flex items-center justify-center w-10 h-10 rounded-xl bg-navy-700 text-gold-400 font-display font-bold text-xs tracking-wider transition-colors">005</span>
+              <span class="card-arrow text-navy-300 opacity-0 transition-all" aria-hidden="true">→</span>
+            </div>
+            <h3 class="font-display font-700 text-base text-navy-700 leading-snug">GenAI Procurement Compliance</h3>
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              <span class="inline-block px-2 py-0.5 rounded-md bg-navy-50 text-navy-600 text-xs font-semibold">CDT</span>
+              <span class="inline-block px-2 py-0.5 rounded-md bg-navy-50 text-navy-600 text-xs font-semibold">DGS</span>
+            </div>
+            <p class="mt-3 text-sm text-gray-500 leading-relaxed">Vendor attestation scoring against EO&nbsp;N&#8209;5&#8209;26</p>
+            <div class="mt-4 flex gap-0.5" role="img" aria-label="Complexity: 2 out of 4 stars">
+              <span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span>
+            </div>
+          </a>
+
+          <!-- Card 006 -->
+          <a href="accelerators/006-cross-agency-knowledge-hub.html" class="accel-card animate-card group block bg-white rounded-2xl border border-gray-200/80 p-6 relative overflow-hidden" aria-label="Accelerator 006: Cross-Agency Knowledge Hub">
+            <div class="flex items-center justify-between mb-4">
+              <span class="card-badge inline-flex items-center justify-center w-10 h-10 rounded-xl bg-navy-700 text-gold-400 font-display font-bold text-xs tracking-wider transition-colors">006</span>
+              <span class="card-arrow text-navy-300 opacity-0 transition-all" aria-hidden="true">→</span>
+            </div>
+            <h3 class="font-display font-700 text-base text-navy-700 leading-snug">Cross-Agency Knowledge Hub</h3>
+            <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-navy-50 text-navy-600 text-xs font-semibold">GovOps</span>
+            <p class="mt-3 text-sm text-gray-500 leading-relaxed">Federated search across 200+ agency document repos</p>
+            <div class="mt-4 flex gap-0.5" role="img" aria-label="Complexity: 3 out of 4 stars">
+              <span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span>
+            </div>
+          </a>
+
+          <!-- Card 007 -->
+          <a href="accelerators/007-edd-claims-assistant.html" class="accel-card animate-card group block bg-white rounded-2xl border border-gray-200/80 p-6 relative overflow-hidden" aria-label="Accelerator 007: EDD Claims Assistant">
+            <div class="flex items-center justify-between mb-4">
+              <span class="card-badge inline-flex items-center justify-center w-10 h-10 rounded-xl bg-navy-700 text-gold-400 font-display font-bold text-xs tracking-wider transition-colors">007</span>
+              <span class="card-arrow text-navy-300 opacity-0 transition-all" aria-hidden="true">→</span>
+            </div>
+            <h3 class="font-display font-700 text-base text-navy-700 leading-snug">EDD Claims Assistant</h3>
+            <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-navy-50 text-navy-600 text-xs font-semibold">EDD</span>
+            <p class="mt-3 text-sm text-gray-500 leading-relaxed">UI/DI/PFL claims with benefit calculator &amp; voice</p>
+            <div class="mt-4 flex gap-0.5" role="img" aria-label="Complexity: 3 out of 4 stars">
+              <span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span>
+            </div>
+          </a>
+
+          <!-- Card 008 -->
+          <a href="accelerators/008-multilingual-emergency-chat.html" class="accel-card animate-card group block bg-white rounded-2xl border border-gray-200/80 p-6 relative overflow-hidden" aria-label="Accelerator 008: Multilingual Emergency Chatbot">
+            <div class="flex items-center justify-between mb-4">
+              <span class="card-badge inline-flex items-center justify-center w-10 h-10 rounded-xl bg-navy-700 text-gold-400 font-display font-bold text-xs tracking-wider transition-colors">008</span>
+              <span class="card-arrow text-navy-300 opacity-0 transition-all" aria-hidden="true">→</span>
+            </div>
+            <h3 class="font-display font-700 text-base text-navy-700 leading-snug">Multilingual Emergency Chatbot</h3>
+            <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-poppy-50 text-poppy-500 text-xs font-semibold">Cal OES</span>
+            <p class="mt-3 text-sm text-gray-500 leading-relaxed">Emergency info in 70+ languages, low-bandwidth ready</p>
+            <div class="mt-4 flex gap-0.5" role="img" aria-label="Complexity: 2 out of 4 stars">
+              <span class="star-filled" aria-hidden="true">★</span><span class="star-filled" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span><span class="star-empty" aria-hidden="true">★</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- ARCHITECTURE -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="architecture" class="py-20 sm:py-28 bg-navy-700 relative overflow-hidden" aria-labelledby="arch-heading">
+      <!-- Subtle grid pattern -->
+      <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;40&quot; height=&quot;40&quot; viewBox=&quot;0 0 40 40&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;%23fff&quot; fill-rule=&quot;evenodd&quot;%3E%3Cpath d=&quot;M0 0h1v40H0zM40 0h1v40h-1z&quot;/%3E%3Cpath d=&quot;M0 0h40v1H0zM0 40h40v1H0z&quot;/%3E%3C/g%3E%3C/svg%3E');" aria-hidden="true"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="text-center mb-16">
+          <span class="section-label" aria-hidden="true">Architecture</span>
+          <h2 id="arch-heading" class="mt-4 font-display font-800 text-3xl sm:text-4xl text-white tracking-tight">
+            The 3-Agent Pipeline
+          </h2>
+          <p class="mt-4 text-lg text-white/50 max-w-2xl mx-auto">
+            Every accelerator shares the same trusted architecture — a constitution-governed pipeline that ensures consistency, compliance, and safety.
+          </p>
+        </div>
+
+        <!-- Pipeline Diagram -->
+        <div class="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-0">
+
+          <!-- User Input -->
+          <div class="flex-shrink-0 w-full lg:w-auto">
+            <div class="flex items-center justify-center lg:justify-end gap-3 px-5 py-3 rounded-xl bg-white/5 border border-white/10">
+              <svg class="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              <span class="text-sm font-semibold text-white/60 font-display">User Query</span>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="hidden lg:flex items-center px-3" aria-hidden="true">
+            <span class="pipeline-arrow text-gold-400 text-lg font-mono">▸</span>
+            <span class="pipeline-arrow pipeline-arrow-delay-1 text-gold-400 text-lg font-mono -ml-1">▸</span>
+            <span class="pipeline-arrow pipeline-arrow-delay-2 text-gold-400 text-lg font-mono -ml-1">▸</span>
+          </div>
+          <div class="lg:hidden text-gold-400 text-2xl" aria-hidden="true">▾</div>
+
+          <!-- QueryAgent -->
+          <div class="flex-1 max-w-xs w-full">
+            <div class="rounded-2xl bg-gradient-to-br from-blue-600/20 to-blue-800/20 border border-blue-400/20 p-6 text-center">
+              <div class="w-12 h-12 mx-auto rounded-xl bg-blue-500/20 flex items-center justify-center mb-3">
+                <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <h3 class="font-display font-700 text-white text-sm tracking-wide uppercase">QueryAgent</h3>
+              <p class="mt-2 text-xs text-white/40 leading-relaxed">Intent detection · Entity extraction · PII filtering · Input validation</p>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="hidden lg:flex items-center px-3" aria-hidden="true">
+            <span class="pipeline-arrow text-gold-400 text-lg font-mono">▸</span>
+            <span class="pipeline-arrow pipeline-arrow-delay-1 text-gold-400 text-lg font-mono -ml-1">▸</span>
+            <span class="pipeline-arrow pipeline-arrow-delay-2 text-gold-400 text-lg font-mono -ml-1">▸</span>
+          </div>
+          <div class="lg:hidden text-gold-400 text-2xl" aria-hidden="true">▾</div>
+
+          <!-- RouterAgent -->
+          <div class="flex-1 max-w-xs w-full">
+            <div class="rounded-2xl bg-gradient-to-br from-gold-400/20 to-poppy-500/20 border border-gold-400/20 p-6 text-center">
+              <div class="w-12 h-12 mx-auto rounded-xl bg-gold-400/20 flex items-center justify-center mb-3">
+                <svg class="w-6 h-6 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+              </div>
+              <h3 class="font-display font-700 text-white text-sm tracking-wide uppercase">RouterAgent</h3>
+              <p class="mt-2 text-xs text-white/40 leading-relaxed">Agency routing · Priority assignment · Escalation triggers · Load balancing</p>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="hidden lg:flex items-center px-3" aria-hidden="true">
+            <span class="pipeline-arrow text-gold-400 text-lg font-mono">▸</span>
+            <span class="pipeline-arrow pipeline-arrow-delay-1 text-gold-400 text-lg font-mono -ml-1">▸</span>
+            <span class="pipeline-arrow pipeline-arrow-delay-2 text-gold-400 text-lg font-mono -ml-1">▸</span>
+          </div>
+          <div class="lg:hidden text-gold-400 text-2xl" aria-hidden="true">▾</div>
+
+          <!-- ActionAgent -->
+          <div class="flex-1 max-w-xs w-full">
+            <div class="rounded-2xl bg-gradient-to-br from-emerald-600/20 to-emerald-800/20 border border-emerald-400/20 p-6 text-center">
+              <div class="w-12 h-12 mx-auto rounded-xl bg-emerald-500/20 flex items-center justify-center mb-3">
+                <svg class="w-6 h-6 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              </div>
+              <h3 class="font-display font-700 text-white text-sm tracking-wide uppercase">ActionAgent</h3>
+              <p class="mt-2 text-xs text-white/40 leading-relaxed">Knowledge retrieval · Ticket creation · Response formatting · Audit logging</p>
+            </div>
+          </div>
+
+          <!-- Arrow to response -->
+          <div class="hidden lg:flex items-center px-3" aria-hidden="true">
+            <span class="pipeline-arrow text-gold-400 text-lg font-mono">▸</span>
+            <span class="pipeline-arrow pipeline-arrow-delay-1 text-gold-400 text-lg font-mono -ml-1">▸</span>
+            <span class="pipeline-arrow pipeline-arrow-delay-2 text-gold-400 text-lg font-mono -ml-1">▸</span>
+          </div>
+          <div class="lg:hidden text-gold-400 text-2xl" aria-hidden="true">▾</div>
+
+          <!-- Response -->
+          <div class="flex-shrink-0 w-full lg:w-auto">
+            <div class="flex items-center justify-center lg:justify-start gap-3 px-5 py-3 rounded-xl bg-white/5 border border-white/10">
+              <svg class="w-5 h-5 text-emerald-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span class="text-sm font-semibold text-white/60 font-display">Response</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Constitution bar -->
+        <div class="mt-12 mx-auto max-w-3xl">
+          <div class="rounded-xl bg-white/[0.03] border border-white/10 px-6 py-4 flex items-center gap-4">
+            <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-gold-400/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <div>
+              <span class="text-sm font-semibold text-white/70 font-display">Constitution-Governed</span>
+              <p class="text-xs text-white/30 mt-0.5">Every pipeline stage is bounded by <code class="text-gold-400/60">shared/constitution.md</code> — enforcing PII protection, audit logging, agency boundaries, and California compliance at every step.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- TECH STACK -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="tech-stack" class="py-20 sm:py-28 bg-white" aria-labelledby="tech-heading">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <span class="section-label" aria-hidden="true">Technology</span>
+          <h2 id="tech-heading" class="mt-4 font-display font-800 text-3xl sm:text-4xl text-navy-700 tracking-tight">
+            Built on Proven Foundations
+          </h2>
+          <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">
+            Enterprise-grade open-source technologies, Azure AI services, and California-compliant infrastructure.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+          <div class="tech-icon rounded-2xl bg-navy-50/60 border border-navy-100/50 p-6 hover:bg-navy-50 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/></svg>
+            </div>
+            <h3 class="font-display font-700 text-sm text-navy-700">Backend</h3>
+            <p class="mt-2 text-xs text-gray-500 leading-relaxed">Python 3.11+ · FastAPI · Pydantic v2 · Semantic Kernel</p>
+          </div>
+
+          <div class="tech-icon rounded-2xl bg-navy-50/60 border border-navy-100/50 p-6 hover:bg-navy-50 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <h3 class="font-display font-700 text-sm text-navy-700">Frontend</h3>
+            <p class="mt-2 text-xs text-gray-500 leading-relaxed">React 18 · TypeScript 5 · Vite · Tailwind CSS</p>
+          </div>
+
+          <div class="tech-icon rounded-2xl bg-navy-50/60 border border-navy-100/50 p-6 hover:bg-navy-50 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </div>
+            <h3 class="font-display font-700 text-sm text-navy-700">AI / LLM</h3>
+            <p class="mt-2 text-xs text-gray-500 leading-relaxed">Azure OpenAI (GPT-4o) · Azure AI Search</p>
+          </div>
+
+          <div class="tech-icon rounded-2xl bg-navy-50/60 border border-navy-100/50 p-6 hover:bg-navy-50 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+            </div>
+            <h3 class="font-display font-700 text-sm text-navy-700">Voice</h3>
+            <p class="mt-2 text-xs text-gray-500 leading-relaxed">Azure OpenAI Realtime API · WebRTC</p>
+          </div>
+
+          <div class="tech-icon rounded-2xl bg-navy-50/60 border border-navy-100/50 p-6 hover:bg-navy-50 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <h3 class="font-display font-700 text-sm text-navy-700">Document AI</h3>
+            <p class="mt-2 text-xs text-gray-500 leading-relaxed">Azure Document Intelligence</p>
+          </div>
+
+          <div class="tech-icon rounded-2xl bg-navy-50/60 border border-navy-100/50 p-6 hover:bg-navy-50 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            </div>
+            <h3 class="font-display font-700 text-sm text-navy-700">Infrastructure</h3>
+            <p class="mt-2 text-xs text-gray-500 leading-relaxed">Docker · Azure Developer CLI (azd) · Bicep IaC</p>
+          </div>
+
+          <div class="tech-icon rounded-2xl bg-navy-50/60 border border-navy-100/50 p-6 hover:bg-navy-50 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            </div>
+            <h3 class="font-display font-700 text-sm text-navy-700">Testing</h3>
+            <p class="mt-2 text-xs text-gray-500 leading-relaxed">pytest · vitest · Playwright</p>
+          </div>
+
+          <div class="tech-icon rounded-2xl bg-gold-50/80 border border-gold-200/50 p-6 hover:bg-gold-50 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-gold-400 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-navy-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h3 class="font-display font-700 text-sm text-navy-700">Governance</h3>
+            <p class="mt-2 text-xs text-gray-500 leading-relaxed">Constitution-driven · CA compliance · Audit logging</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- CALIFORNIA COMPLIANCE -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="compliance" class="py-20 sm:py-28 bg-navy-50/40" aria-labelledby="compliance-heading">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <span class="section-label" aria-hidden="true">Compliance</span>
+          <h2 id="compliance-heading" class="mt-4 font-display font-800 text-3xl sm:text-4xl text-navy-700 tracking-tight">
+            California Regulatory Alignment
+          </h2>
+          <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">
+            Every accelerator is designed to comply with California's AI governance framework from day one.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+          <div class="rounded-2xl bg-white border border-gray-200/80 p-6">
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center">
+                <span class="text-gold-400 font-display font-bold text-xs">EO</span>
+              </div>
+              <div>
+                <h3 class="font-display font-700 text-sm text-navy-700">EO N-12-23</h3>
+                <p class="mt-1.5 text-xs text-gray-500 leading-relaxed">GenAI guidelines for California state agencies. Defines responsible use, risk assessment, and procurement standards for AI systems.</p>
               </div>
             </div>
           </div>
-        </li>
-        <li>
-          <div>⏳ <strong>While processing</strong> — point to the spinner state
-            <div class="talk-track" style="margin-top:10px;">"The agent heard me finish speaking. Now it's running the same 3-agent pipeline we just saw in text — intent detection, routing, action. That's the WebSocket tool relay working in the background."</div>
-            <div class="progress-group" style="margin-top:12px;">
-              <div class="progress-row">
-                <span class="progress-label">🧠 Processing...</span>
-                <div class="progress-bar-wrap"><div class="progress-bar yellow" style="width:82%"></div></div>
-                <span class="progress-status" style="margin-left:8px;">3-agent pipeline running</span>
+
+          <div class="rounded-2xl bg-white border border-gray-200/80 p-6">
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center">
+                <span class="text-gold-400 font-display font-bold text-xs">EO</span>
+              </div>
+              <div>
+                <h3 class="font-display font-700 text-sm text-navy-700">EO N-5-26</h3>
+                <p class="mt-1.5 text-xs text-gray-500 leading-relaxed">AI procurement and vendor attestation requirements. Mandates transparency scoring and bias audits for all AI vendor contracts.</p>
               </div>
             </div>
           </div>
-        </li>
-        <li>
-          <div>🔊 <strong>When the agent responds</strong> — point to the transcript bubble with 🔊 icon
-            <div class="talk-track" style="margin-top:10px;">"The agent speaks the answer back AND adds it to the chat thread with a speaker icon so there's always a written record. No audio is stored — only this PII-filtered transcript."</div>
-            <div class="progress-group" style="margin-top:12px;">
-              <div class="progress-row">
-                <span class="progress-label">✅ Response ready</span>
-                <div class="progress-bar-wrap"><div class="progress-bar green" style="width:100%"></div></div>
-                <span class="progress-pct green">✅</span>
-                <span class="progress-status">🔊 Audio + 📝 Transcript delivered</span>
+
+          <div class="rounded-2xl bg-white border border-gray-200/80 p-6">
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center">
+                <span class="text-gold-400 font-display font-bold text-xs">SB</span>
+              </div>
+              <div>
+                <h3 class="font-display font-700 text-sm text-navy-700">SB 53</h3>
+                <p class="mt-1.5 text-xs text-gray-500 leading-relaxed">AI safety legislation. Establishes safety requirements, testing mandates, and reporting obligations for high-risk AI deployments.</p>
               </div>
             </div>
           </div>
-        </li>
-        <li>
-          <div>🗣️ <strong>Ask a follow-up verbally</strong>: <em>"Can you check the status of that ticket?"</em>
-            <div class="talk-track" style="margin-top:10px;">"Now I'm asking a follow-up without re-explaining anything. The session context is shared — voice and text are the same session."</div>
-          </div>
-        </li>
-        <li>
-          <div>🖱️ <strong>Click mic button again</strong> to stop — status returns to 💤 idle
-            <div class="talk-track" style="margin-top:10px;">"Done. I stopped talking, the mic is off. I can pick up the conversation in text right now without losing a single message."</div>
-          </div>
-        </li>
-      </ol>
-    </div>
 
-    <!-- Scene 3 -->
-    <div class="scene">
-      <h3>🔍 Scene 3 — Observability &amp; Trust <em>(~3 min)</em></h3>
-      <span class="status-note">🟢 Build confidence for IT administrators</span>
-      <p><strong>📺 What to show:</strong> Health endpoint, audit trail, session sharing.</p>
-      <div class="talk-track">"University IT teams ask: 'How do we know what the AI is doing? How do we audit it?' Great question."</div>
-      <ol>
-        <li>
-          <div>🌐 <strong>Open a new browser tab</strong>, navigate to <code><a href="https://frontdoor-6wfum6gndxawy-backend.blackflower-446b9850.eastus2.azurecontainerapps.io/api/realtime/health" target="_blank">/api/realtime/health</a></code>
-<pre style="margin-top:12px;"><code>{ "realtime_available": true, "mock_mode": false, "voice_enabled": true }</code></pre>
-            <div class="talk-track" style="margin-top:10px;">"This endpoint tells the frontend whether voice is available. If it returns false, the mic button never even appears — there's no broken state to deal with."</div>
+          <div class="rounded-2xl bg-white border border-gray-200/80 p-6">
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center">
+                <span class="text-gold-400 font-display font-bold text-xs">§</span>
+              </div>
+              <div>
+                <h3 class="font-display font-700 text-sm text-navy-700">CCPA / CPRA</h3>
+                <p class="mt-1.5 text-xs text-gray-500 leading-relaxed">California consumer privacy protections. All accelerators enforce PII filtering, data minimization, and consent-aware processing.</p>
+              </div>
+            </div>
           </div>
-        </li>
-        <li>
-          <div>🌐 <strong>Navigate to</strong> <code><a href="https://frontdoor-6wfum6gndxawy-backend.blackflower-446b9850.eastus2.azurecontainerapps.io/api/health" target="_blank">/api/health</a></code>
-            <div class="talk-track" style="margin-top:10px;">"Full health check — every service, including the Realtime API, has a status entry."</div>
-          </div>
-        </li>
-        <li>
-          <div>📜 <strong>Back in the chat</strong>, scroll through the conversation history
-            <div class="talk-track" style="margin-top:10px;">"Every voice interaction is logged with <code>input_modality: voice</code>. Admins can filter logs to see exactly which queries came through voice, when, and what the agent did. No audio, no PII — just a clean audit trail."</div>
-          </div>
-        </li>
-        <li>
-          <div>🔗 <strong>Highlight</strong> that voice and text messages share the same session
-            <div class="talk-track" style="margin-top:10px;">"The session ID is identical whether a student types or speaks. That means support staff see a coherent conversation history, not two separate logs."</div>
-          </div>
-        </li>
-      </ol>
-<pre><code>🔒 Audit Trail:   input_modality: voice  ✅  PII filtered  ✅  No raw audio stored
-🔗 Session Link:  voice_session_id === text_session_id  ✅  Unified history</code></pre>
-    </div>
 
-    <!-- Scene 4 -->
-    <div class="scene">
-      <h3>🛡️ Scene 4 — Graceful Degradation <em>(~2 min)</em></h3>
-      <span class="status-note yellow">🟡 Show resilience — builds institutional trust</span>
-      <p><strong>📺 What to show:</strong> Voice unavailable → text chat continues seamlessly.</p>
-      <div class="talk-track">"The most important thing about a feature like this is what happens when it doesn't work."</div>
-      <ol>
-        <li>
-          <div>🔧 <strong>Temporarily disable voice</strong>: In the Azure Container App, set environment variable <code>VOICE_ENABLED=false</code> via the portal or:
-<pre style="margin-top:12px;"><code>az containerapp update --name frontdoor-6wfum6gndxawy-backend --resource-group rg-vvoice \
-  --set-env-vars VOICE_ENABLED=false</code></pre>
-            <p style="font-size:0.85rem;color:#94a3b8;margin-top:6px;">(If running locally: set <code>VOICE_ENABLED=false</code> in <code>backend/.env</code> and restart uvicorn)</p>
+          <div class="rounded-2xl bg-white border border-gray-200/80 p-6">
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center">
+                <span class="text-gold-400 font-display font-bold text-xs">26</span>
+              </div>
+              <div>
+                <h3 class="font-display font-700 text-sm text-navy-700">Envision 2026</h3>
+                <p class="mt-1.5 text-xs text-gray-500 leading-relaxed">California's digital government strategy. Accelerators align with the vision of modernized, accessible, and AI-augmented public services.</p>
+              </div>
+            </div>
           </div>
-        </li>
-        <li>
-          <div>🔄 <strong>Refresh the frontend</strong> — mic button is <strong>gone entirely</strong>
-            <div class="talk-track" style="margin-top:10px;">"When voice isn't available, we don't show a broken button — we remove it. The student sees a normal, fully functional text chat."</div>
-<pre style="margin-top:12px;"><code>VOICE_ENABLED=false  →  🎤 mic button hidden  →  💬 text chat: fully functional ✅</code></pre>
+
+          <div class="rounded-2xl bg-white border border-gray-200/80 p-6">
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gold-400 flex items-center justify-center">
+                <span class="text-navy-700 font-display font-bold text-xs">BP</span>
+              </div>
+              <div>
+                <h3 class="font-display font-700 text-sm text-navy-700">Breakthrough Project</h3>
+                <p class="mt-1.5 text-xs text-gray-500 leading-relaxed">Permitting modernization initiative. Accelerator 004 directly supports the statewide effort to streamline permit processing.</p>
+              </div>
+            </div>
           </div>
-        </li>
-        <li>
-          <div>⌨️ <strong>Type</strong> a message and get a response
-            <div class="talk-track" style="margin-top:10px;">"Text chat is completely unaffected. Voice uses separate WebRTC and WebSocket connections — there's zero coupling to the text pipeline."</div>
-          </div>
-        </li>
-        <li><div>✅ <strong>Re-enable</strong>: Restore <code>VOICE_ENABLED=true</code> on the Container App — mic button reappears</div></li>
-      </ol>
-      <div class="progress-group">
-        <div class="progress-row">
-          <span class="progress-label">Voice OFF: Text</span>
-          <div class="progress-bar-wrap"><div class="progress-bar green" style="width:100%"></div></div>
-          <span class="progress-pct green">✅</span>
-          <span class="progress-status">💬 Text fully functional · 🎤 Voice hidden</span>
-        </div>
-        <div class="progress-row">
-          <span class="progress-label">Voice ON: Both</span>
-          <div class="progress-bar-wrap"><div class="progress-bar green" style="width:100%"></div></div>
-          <span class="progress-pct green">✅</span>
-          <span class="progress-status">💬 Text fully functional · 🎤 Voice active</span>
+
         </div>
       </div>
-      <div class="talk-track">"Graceful degradation isn't just a buzzword here. It's a constitutional requirement baked into the architecture from day one."</div>
-    </div>
+    </section>
 
-    <!-- Scene 5 -->
-    <div class="scene">
-      <h3>🔭 Scene 5 — What's Next <em>(~2 min)</em></h3>
-      <span class="status-note">🟢 Close strong — leave them excited</span>
-      <div class="talk-track">"What you just saw is running live on Azure — connected to Azure OpenAI GPT-4o Realtime API in East US 2. Here's what the path forward looks like."</div>
-      <div class="progress-group">
-        <div class="progress-row">
-          <span class="progress-label">Phase 1–3</span>
-          <div class="progress-bar-wrap"><div class="progress-bar green" style="width:100%"></div></div>
-          <span class="progress-pct green">✅</span>
-          <span class="progress-status">Complete — Live on Azure</span>
-        </div>
-        <div class="progress-row">
-          <span class="progress-label">Phase 4–6</span>
-          <div class="progress-bar-wrap"><div class="progress-bar yellow" style="width:60%"></div></div>
-          <span class="progress-pct yellow">🟡</span>
-          <span class="progress-status">In progress</span>
-        </div>
-        <div class="progress-row">
-          <span class="progress-label">Phase 7–8</span>
-          <div class="progress-bar-wrap"><div class="progress-bar" style="width:0%"></div></div>
-          <span class="progress-pct" style="color:#64748b;">📋</span>
-          <span class="progress-status">Planned</span>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- QUICK START -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="quick-start" class="py-20 sm:py-28 bg-navy-700 relative overflow-hidden" aria-labelledby="qs-heading">
+      <div class="absolute inset-0 opacity-[0.02]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 20 20&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Ccircle cx=&quot;1&quot; cy=&quot;1&quot; r=&quot;1&quot; fill=&quot;white&quot;/%3E%3C/svg%3E');" aria-hidden="true"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-3xl mx-auto">
+          <div class="text-center mb-12">
+            <span class="section-label" aria-hidden="true">Quick Start</span>
+            <h2 id="qs-heading" class="mt-4 font-display font-800 text-3xl sm:text-4xl text-white tracking-tight">
+              Up and Running in 60&nbsp;Seconds
+            </h2>
+            <p class="mt-4 text-lg text-white/50">
+              No Azure credentials required — mock mode runs everything locally.
+            </p>
+          </div>
+
+          <div class="code-block">
+            <div class="flex items-center gap-2 px-4 py-3 border-b border-white/5">
+              <span class="w-3 h-3 rounded-full bg-white/10" aria-hidden="true"></span>
+              <span class="w-3 h-3 rounded-full bg-white/10" aria-hidden="true"></span>
+              <span class="w-3 h-3 rounded-full bg-white/10" aria-hidden="true"></span>
+              <span class="ml-3 text-xs text-white/20 font-mono">terminal</span>
+            </div>
+            <pre class="p-6 text-sm leading-7 overflow-x-auto"><code><span class="text-white/30"># Clone the repository</span>
+<span class="text-gold-400">$</span> <span class="text-white">git clone https://github.com/msftsean/ca-hackathon</span>
+<span class="text-gold-400">$</span> <span class="text-white">cd ca-hackathon</span>
+
+<span class="text-white/30"># Install dependencies</span>
+<span class="text-gold-400">$</span> <span class="text-white">npm run setup</span>
+
+<span class="text-white/30"># Start in mock mode — no Azure needed</span>
+<span class="text-gold-400">$</span> <span class="text-white">npm start</span>
+
+<span class="text-emerald-400">✓ Platform running at http://localhost:3000</span>
+<span class="text-emerald-400">✓ 8 accelerators ready (mock mode)</span></code></pre>
+          </div>
+
+          <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="getting-started.html" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold font-display text-navy-700 bg-gold-400 hover:bg-gold-300 rounded-xl transition-colors shadow-lg shadow-gold-400/20">
+              Full Getting Started Guide
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </a>
+            <a href="deployment/" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white/60 hover:text-white border border-white/10 hover:border-white/20 rounded-xl transition-colors">
+              Deployment Docs
+            </a>
+          </div>
         </div>
       </div>
-      <ol>
-        <li><div>🏭 <strong>Production hardening</strong>: WCAG 2.1 AA audit, screen reader testing with JAWS/NVDA — the Bicep templates in <code>infra/</code> already include the full deployment</div></li>
-        <li><div>♿ <strong>Accessibility hardening</strong>: Complete WCAG 2.1 AA audit pass</div></li>
-        <li><div>⚡ <strong>Sub-2-second latency</strong>: Fine-tune Azure Container App scaling + WebRTC transport for optimal response times</div></li>
-        <li><div>📊 <strong>Analytics</strong>: Voice vs. text resolution rate comparison, VAD tuning per environment</div></li>
-      </ol>
-      <div class="talk-track">"The architecture is already live. The tests are green — 76 backend tests pass. Scaling this to production tenants is a <strong>configuration change</strong>, not a code change."</div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 🔧 Troubleshooting ─────────────────────────────────────────────── -->
-  <section id="troubleshooting">
-    <h2>🔧 Troubleshooting Table</h2>
-    <div class="ascii-art">
-<pre><code>┌─────────────────────────────────────────────────────────────┐
-│  🔧  TROUBLESHOOTING QUICK REFERENCE                        │
-│  🔴 = Blocking  🟡 = Degraded  🟢 = Self-resolving         │
-└─────────────────────────────────────────────────────────────┘</code></pre>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>🚨 Issue</th><th style="text-align:center;white-space:nowrap;">Sev</th><th>🔍 Cause</th><th>🛠️ Fix</th></tr></thead>
-        <tbody>
-          <tr><td>🚫 Mic permission denied</td><td style="text-align:center" class="red">🔴</td><td>Browser blocked microphone access</td><td>Click 🔒 lock icon in address bar → Allow Microphone → refresh</td></tr>
-          <tr><td>🔌 WebSocket fails / <code>4001</code></td><td style="text-align:center" class="red">🔴</td><td>Ephemeral token expired (TTL ≤ 60 s)</td><td><code>POST /api/realtime/session</code> — hook retries automatically</td></tr>
-          <tr><td>🔌 WebSocket closes <code>4002</code></td><td style="text-align:center" class="red">🔴</td><td><code>session_id</code> not found</td><td>Verify UUID in query params matches a live session; reload</td></tr>
-          <tr><td>🔇 No audio output</td><td style="text-align:center" class="red">🔴</td><td>System volume muted / wrong output device</td><td>Check system audio; try a headset</td></tr>
-          <tr><td>🌊 VAD not triggering / false triggers</td><td style="text-align:center" class="yellow">🟡</td><td>Background noise</td><td>Use headset in quiet room; adjust <code>REALTIME_VAD_THRESHOLD_MS</code> in <code>.env</code></td></tr>
-          <tr><td>🎤 "Voice unavailable" banner</td><td style="text-align:center" class="yellow">🟡</td><td>Backend not running or voice disabled</td><td>Confirm Container App is running; check <code>VOICE_ENABLED=true</code> env var</td></tr>
-          <tr><td>🚫 <code>503</code> on <code>POST /session</code></td><td style="text-align:center" class="red">🔴</td><td><code>VOICE_ENABLED=false</code> in config</td><td>Set <code>VOICE_ENABLED=true</code> on Container App → restart revision</td></tr>
-          <tr><td>🎤 Mic button not shown</td><td style="text-align:center" class="yellow">🟡</td><td><code>realtime_available: false</code> from health check</td><td><code>GET /api/realtime/health</code>; confirm Container App running</td></tr>
-          <tr><td>📝 Transcript not appearing</td><td style="text-align:center" class="yellow">🟡</td><td>Azure OpenAI Realtime API requires explicit <code>input_audio_transcription</code> config</td><td>Verify <code>input_audio_transcription: {model: "whisper-1"}</code> is set in session config (backend <code>realtime.py</code>); check that <code>dc.onopen</code> sends <code>session.update</code> with transcription config (frontend <code>useVoice.ts</code>)</td></tr>
-          <tr><td>💬 Text chat broken after voice</td><td style="text-align:center" class="red">🔴</td><td>Should not happen (separate connections)</td><td>Hard-reload; file a bug if persists — check <code>ChatContainer.tsx</code> state isolation</td></tr>
-          <tr><td>🔒 WebRTC ICE failure</td><td style="text-align:center" class="red">🔴</td><td>Azure endpoint/region misconfigured</td><td>Verify <code>AZURE_OPENAI_ENDPOINT</code> + <code>AZURE_OPENAI_REALTIME_DEPLOYMENT</code> in env vars</td></tr>
-          <tr><td>🌐 Codespaces: API calls fail</td><td style="text-align:center" class="red">🔴</td><td><code>VITE_API_BASE_URL</code> set to localhost</td><td>Clear <code>VITE_API_BASE_URL</code> — Vite proxy handles <code>/api</code> routing</td></tr>
-          <tr><td>📦 Container App not starting</td><td style="text-align:center" class="red">🔴</td><td>Image build failure or missing env vars</td><td><code>azd deploy --debug</code>; check Container App logs in Azure Portal</td></tr>
-          <tr><td>🛑 <code>azd up</code> failure</td><td style="text-align:center" class="red">🔴</td><td>Quota, permissions, or Bicep error</td><td>Check <code>azd</code> output; verify subscription <code>ME-MngEnvMCAP262307-segayle-1</code> and role assignments</td></tr>
-          <tr><td>🤖 Azure OpenAI quota exceeded</td><td style="text-align:center" class="red">🔴</td><td>TPM/RPM limit hit on <code>frontdoor-6wfum6gndxawy-openai</code></td><td>Check quota in Azure Portal → <code>rg-vvoice</code> → OpenAI resource → Deployments</td></tr>
-          <tr><td>🐌 Cold start delay (first request)</td><td style="text-align:center" class="yellow">🟡</td><td>Container App scaling from zero</td><td>Wait 10–15 s; send a warm-up request to <code>/api/health</code> before the demo</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card" style="margin-top:16px;">
-      <strong>Legend</strong>
-      <ul style="list-style:none;padding-left:0;margin-top:10px;">
-        <li style="margin-bottom:6px;"><span class="red">🔴 Blocking</span> — demo cannot continue without fix</li>
-        <li style="margin-bottom:6px;"><span class="yellow">🟡 Degraded</span> — demo can proceed with workaround</li>
-        <li><span class="green">🟢 Self-resolving</span> — wait or retry</li>
-      </ul>
-    </div>
-  </section>
 
-  <!-- 🏫 EDU Framing ─────────────────────────────────────────────────── -->
-  <section id="edu-framing">
-    <h2>🏫 EDU Reusable Framing</h2>
-    <div class="ascii-art">
-<pre><code>╔══════════════════════════════════════════════════════════════╗
-║  🎓  THE PITCH — COPY-PASTE READY TALKING POINTS            ║
-╚══════════════════════════════════════════════════════════════╝</code></pre>
-    </div>
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- FOOTER -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <footer class="bg-navy-900 border-t border-white/5 py-16" role="contentinfo">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
 
-    <h3>🚪 The "47 Front Doors" Problem</h3>
-    <p>Universities are not monolithic. A typical large institution has separate portals for: IT support, financial aid, housing, dining, registrar, library, advising, health services, parking, athletics, career services... and more. Students waste hours figuring out <strong>which door to knock on</strong> — and often knock on the wrong one.</p>
-<pre><code>Before 47 Doors:
-🚪IT  🚪FinAid  🚪Housing  🚪Dining  🚪Registrar  🚪Library  🚪Advising  🚪Health ...
-Student → "Which door?!" → knocks on all → waits on all → frustrated
+          <!-- Brand -->
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 rounded-lg bg-gold-400 flex items-center justify-center">
+                <svg class="w-4.5 h-4.5 text-navy-700" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M10 2L2 7l8 5 8-5-8-5zM2 13l8 5 8-5M2 17l8 5 8-5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="font-display font-bold text-white text-lg">CA AI Accelerators</span>
+            </div>
+            <p class="text-sm text-white/30 leading-relaxed max-w-xs">
+              Built for the California State AI Hackathon. 8 accelerators powering the next generation of state government services.
+            </p>
+          </div>
 
-After 47 Doors:
-              🏠 ONE DOOR
-Student → speaks or types → instant routing → right team → resolved ✅</code></pre>
-    <blockquote><p>💬 <strong>The pitch</strong>: <em>"What if there was one door? One place where any student question — regardless of department — is heard, understood, and routed correctly?"</em></p></blockquote>
+          <!-- Links -->
+          <div>
+            <h3 class="font-display font-600 text-xs text-white/50 uppercase tracking-wider mb-4">Documentation</h3>
+            <nav aria-label="Footer documentation links">
+              <ul class="space-y-2.5">
+                <li><a href="getting-started.html" class="text-sm text-white/40 hover:text-gold-400 transition-colors">Getting Started</a></li>
+                <li><a href="architecture/" class="text-sm text-white/40 hover:text-gold-400 transition-colors">Architecture</a></li>
+                <li><a href="deployment/" class="text-sm text-white/40 hover:text-gold-400 transition-colors">Deployment</a></li>
+                <li><a href="customization/" class="text-sm text-white/40 hover:text-gold-400 transition-colors">Customization</a></li>
+              </ul>
+            </nav>
+          </div>
 
-    <h3>🤝 The "Trusted Digital Colleague" Narrative</h3>
-    <p>47 Doors is not a chatbot. It is a <strong>digital colleague</strong> — one that:</p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>🧠 Capability</th><th>📝 Description</th></tr></thead>
-        <tbody>
-          <tr><td>🗺️ Knows the org chart</td><td>Routes every query to the right team automatically</td></tr>
-          <tr><td>📚 Knows the knowledge base</td><td>Surfaces relevant articles with RAG-powered search</td></tr>
-          <tr><td>⚠️ Knows when to escalate</td><td>Policy triggers, sensitivity detection, human handoff</td></tr>
-          <tr><td>💾 Remembers the conversation</td><td>Session context across turns <strong>and</strong> modalities</td></tr>
-          <tr><td>🔒 Never stores what it shouldn't</td><td>No raw audio · PII-filtered transcripts · audit-ready logs</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p>Voice makes this colleague feel <strong>present</strong> — not like filling out a form, but like asking a knowledgeable colleague in the hallway.</p>
+          <!-- Links -->
+          <div>
+            <h3 class="font-display font-600 text-xs text-white/50 uppercase tracking-wider mb-4">Resources</h3>
+            <nav aria-label="Footer resource links">
+              <ul class="space-y-2.5">
+                <li><a href="https://github.com/msftsean/ca-hackathon" target="_blank" rel="noopener noreferrer" class="text-sm text-white/40 hover:text-gold-400 transition-colors">GitHub Repository ↗</a></li>
+                <li><a href="https://github.com/msftsean/ca-hackathon/issues" target="_blank" rel="noopener noreferrer" class="text-sm text-white/40 hover:text-gold-400 transition-colors">Report an Issue ↗</a></li>
+                <li><a href="https://github.com/msftsean/ca-hackathon/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer" class="text-sm text-white/40 hover:text-gold-400 transition-colors">Changelog ↗</a></li>
+              </ul>
+            </nav>
+          </div>
 
-    <h3>🌍 Applicable to Any University</h3>
-    <p>This architecture is institution-agnostic. The 3-agent pipeline (<code>QueryAgent → RouterAgent → ActionAgent</code>) maps to any university's department taxonomy. With live Azure deployment via <code>azd up</code>, any institution can demo it today against real Azure OpenAI — and scale to production deployment after seeing it work for their specific use cases.</p>
-    <blockquote><p>💬 <strong>The close</strong>: <em>"You're not buying a chatbot. You're giving every student a trusted digital colleague who is always available, always accurate, and always gets them to the right place — whether they type or talk."</em></p></blockquote>
-  </section>
+        </div>
 
-</main>
+        <hr class="my-10 border-white/5" aria-hidden="true">
 
-<!-- ─── Footer ────────────────────────────────────────────────────── -->
-<footer>
-  <code class="footer-ascii">╔══════════════════════════════════════════════════════════════════════════════╗
-║  📋  Runbook maintained by the 47 Doors engineering team                    ║
-║  🐛  Issues? Open a GitHub issue on the repository                          ║
-║  ☁️   Azure-first: `azd up` → live on Azure OpenAI (MOCK_MODE=false)         ║
-╚══════════════════════════════════════════════════════════════════════════════╝</code>
-  <p>47 Doors Voice Runbook · <a href="https://github.com/msftsean/47doors">msftsean/47doors</a> · Styled with Anthropic/Claude design language</p>
-</footer>
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-xs text-white/20 text-center sm:text-left leading-relaxed max-w-lg">
+            This project is provided as-is for demonstration and hackathon purposes. Not an official product of the State of California. All California state agency names and references are used for illustrative purposes in the context of the AI Hackathon.
+          </p>
+          <p class="text-xs text-white/20 whitespace-nowrap">
+            &copy; 2025 CA AI Hackathon
+          </p>
+        </div>
+      </div>
+    </footer>
+  </main>
 
-<!-- ─── Back to Top ───────────────────────────────────────────────── -->
-<button id="back-top" aria-label="Back to top" title="Scroll to top">↑</button>
 
-<!-- ─── Scripts ───────────────────────────────────────────────────── -->
-<script>
-  // Back to Top
-  const backTop = document.getElementById('back-top');
-  window.addEventListener('scroll', () => {
-    backTop.classList.toggle('visible', window.scrollY > 400);
-  }, { passive: true });
-  backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- SCRIPTS -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <script>
+    // Mobile menu toggle
+    const toggle = document.getElementById('mobile-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    const menuIcon = document.getElementById('menu-icon');
 
-  // Active Nav Highlighting
-  const navLinks = document.querySelectorAll('.nav-links a');
-  const sections = document.querySelectorAll('main section[id]');
-  function updateNav() {
-    let current = '';
-    const offset = window.scrollY + 100;
-    sections.forEach(s => { if (s.offsetTop <= offset) current = s.id; });
-    navLinks.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    toggle.addEventListener('click', () => {
+      const isOpen = mobileNav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen);
+      menuIcon.setAttribute('d', isOpen
+        ? 'M6 18L18 6M6 6l12 12'
+        : 'M4 6h16M4 12h16M4 18h16'
+      );
     });
-  }
-  window.addEventListener('scroll', updateNav, { passive: true });
-  updateNav();
 
-  // Live Checklist Progress Bar
-  const checks  = document.querySelectorAll('.check-item');
-  const bar     = document.getElementById('checklist-bar');
-  const pct     = document.getElementById('checklist-pct');
-  const status  = document.getElementById('checklist-status');
-  function updateChecklist() {
-    const done    = [...checks].filter(c => c.checked).length;
-    const total   = checks.length;
-    const percent = Math.round(done / total * 100);
-    bar.style.width = percent + '%';
-    pct.textContent = percent + '%';
-    bar.className = 'progress-bar';
-    pct.className = 'progress-pct';
-    if (done === total) {
-      bar.classList.add('green'); pct.classList.add('green');
-      status.textContent = '🟢 Ready to demo!';
-    } else if (done >= 6) {
-      bar.classList.add('yellow'); pct.classList.add('yellow');
-      status.textContent = '🟡 Proceed with caution';
-    } else if (done < 4) {
-      bar.classList.add('red'); pct.classList.add('red');
-      status.textContent = '🔴 Stop — fix issues first';
-    } else {
-      bar.classList.add('yellow'); pct.classList.add('yellow');
-      status.textContent = '🟡 Keep going...';
-    }
-  }
-  checks.forEach(c => c.addEventListener('change', updateChecklist));
-  updateChecklist();
+    // Close mobile menu on link click
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+      });
+    });
 
-  // Auth — fetch /.auth/me and show user info in nav
-  (async () => {
-    try {
-      const res = await fetch('/.auth/me', { cache: 'no-store' });
-      if (!res.ok) return; // local dev — hide silently
-      const data = await res.json();
-      const principal = data?.clientPrincipal;
-      if (!principal) return; // unauthenticated or local dev
-      const name = principal.userDetails || principal.userId || 'Authenticated';
-      const authNav = document.getElementById('nav-auth');
-      const authName = document.getElementById('auth-name');
-      if (authNav && authName) {
-        authName.textContent = name;
-        authNav.style.display = 'flex';
-      }
-    } catch (_) {
-      // /.auth/me unavailable locally — silent no-op
+    // Smooth scroll offset for fixed header
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const target = document.querySelector(targetId);
+        if (target) {
+          e.preventDefault();
+          const offset = 80;
+          const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Intersection Observer for card animations (replay on scroll)
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.animate-card').forEach(card => {
+        observer.observe(card);
+      });
     }
-  })();
-</script>
+  </script>
+
 </body>
 </html>

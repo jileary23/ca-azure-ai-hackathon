@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Overview — CA Hackathon Accelerators</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#1B2A4A',
+            'navy-light': '#243659',
+            'navy-dark': '#111D33',
+            'ca-blue': '#003366',
+            gold: '#FDB515',
+            'gold-light': '#FEC84B',
+            'gold-dark': '#D4960E',
+            poppy: '#E87722',
+            'poppy-light': '#F09A56',
+            slate: '#4A5568',
+            'warm-gray': '#F7F5F2',
+            'warm-gray-dark': '#EDE9E3',
+          },
+          fontFamily: {
+            display: ['"DM Serif Display"', 'Georgia', 'serif'],
+            body: ['"Source Sans 3"', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Source Sans 3', system-ui, sans-serif; }
+
+    /* Subtle grain texture overlay */
+    .grain::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Pipeline diagram animations */
+    @keyframes flowPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+    .flow-dot {
+      animation: flowPulse 2s ease-in-out infinite;
+    }
+    .flow-dot:nth-child(2) { animation-delay: 0.3s; }
+    .flow-dot:nth-child(3) { animation-delay: 0.6s; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-up {
+      animation: slideUp 0.6s ease-out both;
+    }
+    .animate-up-d1 { animation-delay: 0.1s; }
+    .animate-up-d2 { animation-delay: 0.2s; }
+    .animate-up-d3 { animation-delay: 0.3s; }
+    .animate-up-d4 { animation-delay: 0.4s; }
+    .animate-up-d5 { animation-delay: 0.5s; }
+
+    /* Code block styling */
+    .code-block {
+      position: relative;
+      background: #1B2A4A;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .code-block pre {
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      line-height: 1.7;
+      color: #E2E8F0;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+    .code-block .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #94A3B8;
+      border-radius: 6px;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Source Sans 3', system-ui, sans-serif;
+    }
+    .code-block .copy-btn:hover {
+      background: rgba(255,255,255,0.15);
+      color: #FDB515;
+    }
+
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* Table styling */
+    .data-table th {
+      background: #1B2A4A;
+      color: white;
+      font-weight: 600;
+      text-align: left;
+    }
+    .data-table td {
+      border-bottom: 1px solid #EDE9E3;
+    }
+    .data-table tr:hover td {
+      background: #FEFCF7;
+    }
+
+    /* Nav active indicator */
+    .nav-link {
+      position: relative;
+      transition: color 0.2s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #FDB515;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* Pipeline connector arrows */
+    .pipeline-arrow {
+      position: relative;
+    }
+    .pipeline-arrow::after {
+      content: '';
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 10px solid #FDB515;
+    }
+
+    /* Section divider */
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(90deg, #FDB515, #E87722, transparent);
+      border: none;
+    }
+
+    /* Focus styles for accessibility */
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid #FDB515;
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    /* Mobile nav toggle */
+    .mobile-nav { display: none; }
+    @media (max-width: 768px) {
+      .desktop-nav { display: none; }
+      .mobile-nav { display: block; }
+      .mobile-menu { display: none; }
+      .mobile-menu.open { display: flex; }
+    }
+  </style>
+</head>
+<body class="bg-warm-gray text-navy antialiased">
+
+  <!-- Skip to content link for accessibility -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-gold text-navy px-4 py-2 rounded font-semibold z-50">
+    Skip to main content
+  </a>
+
+  <!-- Navigation -->
+  <nav class="bg-navy text-white sticky top-0 z-40 shadow-lg" role="navigation" aria-label="Main navigation">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo / Brand -->
+        <a href="index.html" class="flex items-center gap-3 group" aria-label="CA Hackathon Accelerators Home">
+          <div class="w-9 h-9 bg-gold rounded-lg flex items-center justify-center font-display text-navy text-lg font-bold group-hover:scale-105 transition-transform" aria-hidden="true">CA</div>
+          <div class="hidden sm:block">
+            <span class="font-display text-lg text-gold">CA Hackathon</span>
+            <span class="text-white/60 text-sm ml-1">Accelerators</span>
+          </div>
+        </a>
+
+        <!-- Desktop Nav Links -->
+        <div class="desktop-nav flex items-center gap-8">
+          <a href="index.html" class="nav-link text-white/80 hover:text-gold text-sm font-medium tracking-wide">Home</a>
+          <a href="index.html#accelerators" class="nav-link text-white/80 hover:text-gold text-sm font-medium tracking-wide">Accelerators</a>
+          <a href="architecture.html" class="nav-link active text-gold text-sm font-medium tracking-wide" aria-current="page">Architecture</a>
+          <a href="getting-started.html" class="nav-link text-white/80 hover:text-gold text-sm font-medium tracking-wide">Getting Started</a>
+        </div>
+
+        <!-- Mobile Nav Toggle -->
+        <div class="mobile-nav">
+          <button onclick="document.getElementById('mobileMenu').classList.toggle('open')" class="text-white/80 hover:text-gold p-2" aria-expanded="false" aria-controls="mobileMenu" aria-label="Toggle navigation menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu flex-col bg-navy-dark border-t border-white/10 px-4 pb-4">
+      <a href="index.html" class="block py-3 text-white/80 hover:text-gold text-sm font-medium border-b border-white/5">Home</a>
+      <a href="index.html#accelerators" class="block py-3 text-white/80 hover:text-gold text-sm font-medium border-b border-white/5">Accelerators</a>
+      <a href="architecture.html" class="block py-3 text-gold text-sm font-medium border-b border-white/5" aria-current="page">Architecture</a>
+      <a href="getting-started.html" class="block py-3 text-white/80 hover:text-gold text-sm font-medium">Getting Started</a>
+    </div>
+  </nav>
+
+  <!-- Hero Header -->
+  <header class="relative bg-gradient-to-br from-navy via-ca-blue to-navy-dark text-white overflow-hidden grain">
+    <div class="absolute inset-0 opacity-5" aria-hidden="true">
+      <svg width="100%" height="100%"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <div class="animate-up">
+        <p class="text-gold font-semibold text-sm tracking-widest uppercase mb-3">Technical Documentation</p>
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl mb-4">Architecture Overview</h1>
+        <p class="text-white/70 text-lg sm:text-xl max-w-2xl leading-relaxed">
+          How California's AI accelerators are built — from the 3-agent pipeline to Azure Container Apps deployment.
+        </p>
+      </div>
+      <!-- On-page TOC -->
+      <nav class="mt-10 animate-up animate-up-d2 flex flex-wrap gap-3" aria-label="Page sections">
+        <a href="#pipeline" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓵</span> 3-Agent Pipeline
+        </a>
+        <a href="#accelerators" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓶</span> Accelerator Extensions
+        </a>
+        <a href="#modes" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓷</span> Mock vs Azure
+        </a>
+        <a href="#deployment" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓸</span> Deployment
+        </a>
+        <a href="#techstack" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓹</span> Tech Stack
+        </a>
+        <a href="#constitution" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓺</span> Constitution
+        </a>
+      </nav>
+    </div>
+    <!-- Gold accent bar -->
+    <div class="h-1 bg-gradient-to-r from-gold via-poppy to-gold" aria-hidden="true"></div>
+  </header>
+
+  <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 1: The 3-Agent Pipeline             -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="pipeline" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">1</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">The 3-Agent Pipeline</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        Every accelerator follows a consistent three-stage processing pipeline. User queries flow through intent detection, intelligent routing, and domain-specific action — ensuring reliable, governed responses.
+      </p>
+
+      <!-- Pipeline Diagram -->
+      <div class="bg-white rounded-2xl shadow-sm border border-warm-gray-dark p-6 sm:p-10 overflow-x-auto mb-10" role="img" aria-label="3-agent pipeline diagram showing data flow from User Query through QueryAgent, RouterAgent, and ActionAgent to Response">
+        <!-- Flow: User → QueryAgent → RouterAgent → ActionAgent → Response -->
+        <div class="flex flex-col lg:flex-row items-stretch gap-4 lg:gap-0 min-w-[320px]">
+
+          <!-- User Query -->
+          <div class="flex-shrink-0 flex flex-col items-center justify-center lg:mr-2">
+            <div class="w-32 bg-warm-gray border-2 border-navy/20 rounded-xl p-4 text-center shadow-sm">
+              <div class="text-2xl mb-1" aria-hidden="true">👤</div>
+              <div class="font-semibold text-navy text-sm">User Query</div>
+            </div>
+          </div>
+
+          <!-- Arrow 1 -->
+          <div class="hidden lg:flex items-center mx-1" aria-hidden="true">
+            <div class="flex items-center gap-1">
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </div>
+          </div>
+          <div class="lg:hidden flex justify-center" aria-hidden="true">
+            <svg class="w-5 h-5 text-gold rotate-90" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </div>
+
+          <!-- QueryAgent -->
+          <div class="flex-1 min-w-[200px]">
+            <div class="bg-gradient-to-b from-ca-blue to-navy rounded-xl p-5 text-white shadow-lg h-full border-b-4 border-gold">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-7 h-7 bg-gold/20 rounded-lg flex items-center justify-center" aria-hidden="true">
+                  <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </div>
+                <h3 class="font-bold text-base">QueryAgent</h3>
+              </div>
+              <ul class="space-y-2 text-sm text-white/85" role="list">
+                <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Intent Detection</li>
+                <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Entity Extraction</li>
+                <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> PII Filtering</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Arrow 2 -->
+          <div class="hidden lg:flex items-center mx-1" aria-hidden="true">
+            <div class="flex items-center gap-1">
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </div>
+          </div>
+          <div class="lg:hidden flex justify-center" aria-hidden="true">
+            <svg class="w-5 h-5 text-gold rotate-90" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </div>
+
+          <!-- RouterAgent -->
+          <div class="flex-1 min-w-[200px]">
+            <div class="bg-gradient-to-b from-poppy to-poppy/80 rounded-xl p-5 text-white shadow-lg h-full border-b-4 border-gold">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-7 h-7 bg-white/15 rounded-lg flex items-center justify-center" aria-hidden="true">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                </div>
+                <h3 class="font-bold text-base">RouterAgent</h3>
+              </div>
+              <ul class="space-y-2 text-sm text-white/90" role="list">
+                <li class="flex items-start gap-2"><span class="text-gold-light mt-0.5" aria-hidden="true">▸</span> Agency Routing</li>
+                <li class="flex items-start gap-2"><span class="text-gold-light mt-0.5" aria-hidden="true">▸</span> Priority Setting</li>
+                <li class="flex items-start gap-2"><span class="text-gold-light mt-0.5" aria-hidden="true">▸</span> Escalation Triggers</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Arrow 3 -->
+          <div class="hidden lg:flex items-center mx-1" aria-hidden="true">
+            <div class="flex items-center gap-1">
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </div>
+          </div>
+          <div class="lg:hidden flex justify-center" aria-hidden="true">
+            <svg class="w-5 h-5 text-gold rotate-90" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </div>
+
+          <!-- ActionAgent -->
+          <div class="flex-1 min-w-[200px]">
+            <div class="bg-gradient-to-b from-navy-dark to-navy rounded-xl p-5 text-white shadow-lg h-full border-b-4 border-poppy">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-7 h-7 bg-poppy/20 rounded-lg flex items-center justify-center" aria-hidden="true">
+                  <svg class="w-4 h-4 text-poppy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <h3 class="font-bold text-base">ActionAgent</h3>
+              </div>
+              <ul class="space-y-2 text-sm text-white/85" role="list">
+                <li class="flex items-start gap-2"><span class="text-poppy-light mt-0.5" aria-hidden="true">▸</span> Knowledge Retrieval</li>
+                <li class="flex items-start gap-2"><span class="text-poppy-light mt-0.5" aria-hidden="true">▸</span> Ticket Creation</li>
+                <li class="flex items-start gap-2"><span class="text-poppy-light mt-0.5" aria-hidden="true">▸</span> Response Formatting</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Arrow 4 -->
+          <div class="hidden lg:flex items-center mx-1" aria-hidden="true">
+            <div class="flex items-center gap-1">
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <div class="w-2 h-2 rounded-full bg-gold flow-dot"></div>
+              <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </div>
+          </div>
+          <div class="lg:hidden flex justify-center" aria-hidden="true">
+            <svg class="w-5 h-5 text-gold rotate-90" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </div>
+
+          <!-- Response -->
+          <div class="flex-shrink-0 flex flex-col items-center justify-center lg:ml-2">
+            <div class="w-32 bg-gold/10 border-2 border-gold rounded-xl p-4 text-center shadow-sm">
+              <div class="text-2xl mb-1" aria-hidden="true">✅</div>
+              <div class="font-semibold text-navy text-sm">Response</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="mt-8 pt-6 border-t border-warm-gray-dark flex flex-wrap gap-6 text-xs text-slate">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded bg-ca-blue" aria-hidden="true"></div>
+            <span>Query Processing</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded bg-poppy" aria-hidden="true"></div>
+            <span>Routing &amp; Orchestration</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded bg-navy-dark" aria-hidden="true"></div>
+            <span>Action Execution</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="flex gap-0.5" aria-hidden="true">
+              <div class="w-2 h-2 rounded-full bg-gold"></div>
+              <div class="w-2 h-2 rounded-full bg-gold"></div>
+              <div class="w-2 h-2 rounded-full bg-gold"></div>
+            </div>
+            <span>Data Flow</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pipeline detail cards -->
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 bg-ca-blue/10 rounded-lg flex items-center justify-center mb-4" aria-hidden="true">
+            <svg class="w-5 h-5 text-ca-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-navy mb-2">QueryAgent</h3>
+          <p class="text-slate text-sm leading-relaxed">
+            The first line of defense. Parses natural language, extracts structured entities (names, case numbers, dates), classifies intent, and <strong>strips PII</strong> before data proceeds downstream. Ensures no sensitive information leaks into logs or AI model contexts.
+          </p>
+        </div>
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 bg-poppy/10 rounded-lg flex items-center justify-center mb-4" aria-hidden="true">
+            <svg class="w-5 h-5 text-poppy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-navy mb-2">RouterAgent</h3>
+          <p class="text-slate text-sm leading-relaxed">
+            Intelligent traffic controller. Maps classified intents to the correct state agency, assigns priority levels (P1–P4), and triggers escalation workflows when human intervention is required. Respects cross-agency boundaries defined in the constitution.
+          </p>
+        </div>
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-10 h-10 bg-navy/10 rounded-lg flex items-center justify-center mb-4" aria-hidden="true">
+            <svg class="w-5 h-5 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="font-display text-xl text-navy mb-2">ActionAgent</h3>
+          <p class="text-slate text-sm leading-relaxed">
+            The workhorse. Executes RAG queries against domain-specific knowledge bases, creates support tickets, formats multilingual responses, and performs agency-specific actions — all while enforcing the output constitution.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 2: How Accelerators Extend          -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="accelerators" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">2</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">How Accelerators Extend the Pipeline</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        All 8 accelerators inherit the same 3-agent architecture. Each one customizes <strong>intent detection</strong>, <strong>routing rules</strong>, and <strong>domain actions</strong> for its specific California agency.
+      </p>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-warm-gray-dark overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="data-table w-full text-sm">
+            <thead>
+              <tr>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">ID</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">Accelerator</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">Agency</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">QueryAgent Focus</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">RouterAgent Focus</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">ActionAgent Focus</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="px-5 py-3.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-ca-blue/10 text-ca-blue font-semibold text-xs">001</span></td>
+                <td class="px-5 py-3.5 font-medium text-navy">BenefitsCal Navigator</td>
+                <td class="px-5 py-3.5 text-slate">CDSS</td>
+                <td class="px-5 py-3.5 text-slate">Benefits eligibility intents</td>
+                <td class="px-5 py-3.5 text-slate">Program-specific routing</td>
+                <td class="px-5 py-3.5 text-slate">Eligibility checks, application help</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-poppy/10 text-poppy font-semibold text-xs">002</span></td>
+                <td class="px-5 py-3.5 font-medium text-navy">Wildfire Response Coordinator</td>
+                <td class="px-5 py-3.5 text-slate">CAL FIRE / Cal OES</td>
+                <td class="px-5 py-3.5 text-slate">Emergency &amp; location parsing</td>
+                <td class="px-5 py-3.5 text-slate">Urgency-based priority</td>
+                <td class="px-5 py-3.5 text-slate">Evacuation info, resource dispatch</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-ca-blue/10 text-ca-blue font-semibold text-xs">003</span></td>
+                <td class="px-5 py-3.5 font-medium text-navy">Medi-Cal Eligibility Agent</td>
+                <td class="px-5 py-3.5 text-slate">DHCS</td>
+                <td class="px-5 py-3.5 text-slate">Healthcare coverage intents</td>
+                <td class="px-5 py-3.5 text-slate">Plan &amp; provider routing</td>
+                <td class="px-5 py-3.5 text-slate">Coverage lookup, enrollment aid</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-poppy/10 text-poppy font-semibold text-xs">004</span></td>
+                <td class="px-5 py-3.5 font-medium text-navy">Permit Streamliner</td>
+                <td class="px-5 py-3.5 text-slate">OPR / HCD / DCA</td>
+                <td class="px-5 py-3.5 text-slate">Permit type classification</td>
+                <td class="px-5 py-3.5 text-slate">Multi-agency coordination</td>
+                <td class="px-5 py-3.5 text-slate">Application tracking, doc assembly</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-ca-blue/10 text-ca-blue font-semibold text-xs">005</span></td>
+                <td class="px-5 py-3.5 font-medium text-navy">GenAI Procurement Compliance</td>
+                <td class="px-5 py-3.5 text-slate">CDT / DGS</td>
+                <td class="px-5 py-3.5 text-slate">Procurement policy intents</td>
+                <td class="px-5 py-3.5 text-slate">Compliance rule matching</td>
+                <td class="px-5 py-3.5 text-slate">Vendor attestation, policy checks</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-poppy/10 text-poppy font-semibold text-xs">006</span></td>
+                <td class="px-5 py-3.5 font-medium text-navy">Cross-Agency Knowledge Hub</td>
+                <td class="px-5 py-3.5 text-slate">GovOps</td>
+                <td class="px-5 py-3.5 text-slate">Cross-domain topic detection</td>
+                <td class="px-5 py-3.5 text-slate">Inter-agency routing</td>
+                <td class="px-5 py-3.5 text-slate">Federated search, knowledge graph</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-ca-blue/10 text-ca-blue font-semibold text-xs">007</span></td>
+                <td class="px-5 py-3.5 font-medium text-navy">EDD Claims Assistant</td>
+                <td class="px-5 py-3.5 text-slate">EDD</td>
+                <td class="px-5 py-3.5 text-slate">Unemployment claim intents</td>
+                <td class="px-5 py-3.5 text-slate">Claim type prioritization</td>
+                <td class="px-5 py-3.5 text-slate">Status lookup, filing assistance</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-poppy/10 text-poppy font-semibold text-xs">008</span></td>
+                <td class="px-5 py-3.5 font-medium text-navy">Multilingual Emergency Chatbot</td>
+                <td class="px-5 py-3.5 text-slate">Cal OES</td>
+                <td class="px-5 py-3.5 text-slate">Language detection, crisis parsing</td>
+                <td class="px-5 py-3.5 text-slate">Language + urgency routing</td>
+                <td class="px-5 py-3.5 text-slate">Multilingual response, alert broadcast</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 3: Mock Mode vs Azure Mode          -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="modes" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">3</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Mock Mode vs Azure Mode</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        A single environment variable switches between local development and cloud-powered production. The API contracts stay identical — your code doesn't change.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-8">
+        <!-- Mock Mode -->
+        <div class="bg-white rounded-2xl border-2 border-dashed border-ca-blue/30 p-8 relative overflow-hidden">
+          <div class="absolute top-0 right-0 bg-ca-blue text-white text-xs font-bold px-3 py-1 rounded-bl-lg">LOCAL DEV</div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-ca-blue/10 rounded-xl flex items-center justify-center" aria-hidden="true">
+              <svg class="w-6 h-6 text-ca-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <h3 class="font-display text-2xl text-navy">Mock Mode</h3>
+          </div>
+          <div class="code-block mb-4">
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+            <pre>USE_MOCK_SERVICES=true</pre>
+          </div>
+          <ul class="space-y-2 text-sm text-slate" role="list">
+            <li class="flex items-start gap-2"><span class="text-ca-blue font-bold" aria-hidden="true">✓</span> In-memory mock services — zero cloud dependencies</li>
+            <li class="flex items-start gap-2"><span class="text-ca-blue font-bold" aria-hidden="true">✓</span> Perfect for hackathon development &amp; demos</li>
+            <li class="flex items-start gap-2"><span class="text-ca-blue font-bold" aria-hidden="true">✓</span> Instant startup, no API keys needed</li>
+            <li class="flex items-start gap-2"><span class="text-ca-blue font-bold" aria-hidden="true">✓</span> Deterministic responses for testing</li>
+          </ul>
+        </div>
+
+        <!-- Azure Mode -->
+        <div class="bg-white rounded-2xl border-2 border-solid border-poppy/30 p-8 relative overflow-hidden">
+          <div class="absolute top-0 right-0 bg-poppy text-white text-xs font-bold px-3 py-1 rounded-bl-lg">PRODUCTION</div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-poppy/10 rounded-xl flex items-center justify-center" aria-hidden="true">
+              <svg class="w-6 h-6 text-poppy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+            </div>
+            <h3 class="font-display text-2xl text-navy">Azure Mode</h3>
+          </div>
+          <div class="code-block mb-4">
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+            <pre>USE_MOCK_SERVICES=false</pre>
+          </div>
+          <ul class="space-y-2 text-sm text-slate" role="list">
+            <li class="flex items-start gap-2"><span class="text-poppy font-bold" aria-hidden="true">✓</span> Azure OpenAI for intelligent responses</li>
+            <li class="flex items-start gap-2"><span class="text-poppy font-bold" aria-hidden="true">✓</span> Azure AI Search for RAG retrieval</li>
+            <li class="flex items-start gap-2"><span class="text-poppy font-bold" aria-hidden="true">✓</span> Cosmos DB for persistent state</li>
+            <li class="flex items-start gap-2"><span class="text-poppy font-bold" aria-hidden="true">✓</span> Production-grade security &amp; scale</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-gold/10 border border-gold/30 rounded-xl p-5 flex items-start gap-3">
+        <svg class="w-5 h-5 text-gold-dark flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+        <p class="text-sm text-navy leading-relaxed">
+          <strong>Key insight:</strong> Both modes expose identical REST API contracts. You can develop and test locally in mock mode, then flip the switch to Azure for production — no code changes required. Labs 00–03 run entirely in mock mode.
+        </p>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 4: Deployment Architecture          -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="deployment" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">4</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Deployment Architecture</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        Each accelerator deploys as an independent Azure Container App. Infrastructure is defined as code with Bicep and provisioned via <code class="bg-warm-gray-dark px-1.5 py-0.5 rounded text-sm font-mono text-navy">azd up</code>.
+      </p>
+
+      <!-- ACA Features Grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+        <div class="bg-white rounded-xl p-5 border border-warm-gray-dark text-center">
+          <div class="w-12 h-12 bg-navy/8 rounded-xl flex items-center justify-center mx-auto mb-3" aria-hidden="true">
+            <svg class="w-6 h-6 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          </div>
+          <h4 class="font-bold text-navy text-sm mb-1">Independent Container Apps</h4>
+          <p class="text-xs text-slate">Each accelerator runs in its own Container App for isolation</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-warm-gray-dark text-center">
+          <div class="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center mx-auto mb-3" aria-hidden="true">
+            <svg class="w-6 h-6 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+          </div>
+          <h4 class="font-bold text-navy text-sm mb-1">Scale-to-Zero</h4>
+          <p class="text-xs text-slate">No idle compute costs — scales down when not in use</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-warm-gray-dark text-center">
+          <div class="w-12 h-12 bg-ca-blue/10 rounded-xl flex items-center justify-center mx-auto mb-3" aria-hidden="true">
+            <svg class="w-6 h-6 text-ca-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <h4 class="font-bold text-navy text-sm mb-1">Managed Identity</h4>
+          <p class="text-xs text-slate">DefaultAzureCredential — no secrets in code</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-warm-gray-dark text-center">
+          <div class="w-12 h-12 bg-poppy/10 rounded-xl flex items-center justify-center mx-auto mb-3" aria-hidden="true">
+            <svg class="w-6 h-6 text-poppy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+          </div>
+          <h4 class="font-bold text-navy text-sm mb-1">Bicep IaC</h4>
+          <p class="text-xs text-slate">All infrastructure defined in <code class="font-mono text-xs">infra/main.bicep</code></p>
+        </div>
+      </div>
+
+      <!-- Port Mapping Table -->
+      <h3 class="font-display text-xl text-navy mb-4">Port Mapping (Local Development)</h3>
+      <div class="bg-white rounded-2xl shadow-sm border border-warm-gray-dark overflow-hidden mb-6">
+        <div class="overflow-x-auto">
+          <table class="data-table w-full text-sm">
+            <thead>
+              <tr>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">Service</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">Backend Port</th>
+                <th class="px-5 py-3.5 text-xs tracking-wider uppercase">Frontend Port</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="px-5 py-3 font-medium text-navy">Core Platform</td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">8000</code></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">3000</code></td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3 font-medium text-navy">Accelerator 001 <span class="text-slate font-normal">— BenefitsCal</span></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">8001</code></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">3001</code></td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3 font-medium text-navy">Accelerator 002 <span class="text-slate font-normal">— Wildfire</span></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">8002</code></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">3002</code></td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3 font-medium text-navy">Accelerator 003 <span class="text-slate font-normal">— Medi-Cal</span></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">8003</code></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">3003</code></td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3 font-medium text-navy">Accelerator 004 <span class="text-slate font-normal">— Permit</span></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">8004</code></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">3004</code></td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3 font-medium text-navy">Accelerator 005 <span class="text-slate font-normal">— Procurement</span></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">8005</code></td>
+                <td class="px-5 py-3 text-slate/50">—</td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3 font-medium text-navy">Accelerator 006 <span class="text-slate font-normal">— Knowledge Hub</span></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">8006</code></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">3006</code></td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3 font-medium text-navy">Accelerator 007 <span class="text-slate font-normal">— EDD Claims</span></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">8007</code></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">3007</code></td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3 font-medium text-navy">Accelerator 008 <span class="text-slate font-normal">— Multilingual</span></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">8008</code></td>
+                <td class="px-5 py-3"><code class="bg-warm-gray px-2 py-0.5 rounded text-xs font-mono">3008</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Deployment Commands -->
+      <h3 class="font-display text-xl text-navy mb-4">Deployment Commands</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
+        <pre><span style="color:#94A3B8"># Full deployment (provision + deploy all services)</span>
+azd up
+
+<span style="color:#94A3B8"># Deploy single accelerator backend</span>
+azd deploy accel-001
+
+<span style="color:#94A3B8"># Deploy single accelerator frontend</span>
+azd deploy accel-001-fe
+
+<span style="color:#94A3B8"># Deploy everything via helper script</span>
+./scripts/azd-deploy.sh all
+
+<span style="color:#94A3B8"># Deploy specific accelerator (backend + frontend)</span>
+./scripts/azd-deploy.sh 001</pre>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 5: Tech Stack                       -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="techstack" class="mb-20 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">5</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Tech Stack</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        Purpose-driven technology choices — each selected for its fit with California's government compliance requirements and developer experience.
+      </p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Backend -->
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark hover:border-ca-blue/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-ca-blue/10 rounded-lg flex items-center justify-center group-hover:bg-ca-blue/15 transition-colors" aria-hidden="true">
+              <span class="text-lg">🐍</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy text-sm">Python 3.11+</h4>
+              <p class="text-xs text-slate">Backend runtime</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate leading-relaxed">Type-safe, well-supported in government IT. Strong AI/ML ecosystem for Semantic Kernel integration.</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark hover:border-ca-blue/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-ca-blue/10 rounded-lg flex items-center justify-center group-hover:bg-ca-blue/15 transition-colors" aria-hidden="true">
+              <span class="text-lg">⚡</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy text-sm">FastAPI 0.109+</h4>
+              <p class="text-xs text-slate">API framework</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate leading-relaxed">Async-first, auto-generates OpenAPI docs. Built-in validation via Pydantic v2 models.</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark hover:border-ca-blue/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-ca-blue/10 rounded-lg flex items-center justify-center group-hover:bg-ca-blue/15 transition-colors" aria-hidden="true">
+              <span class="text-lg">🧠</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy text-sm">Semantic Kernel</h4>
+              <p class="text-xs text-slate">AI orchestration</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate leading-relaxed">Microsoft's AI SDK for agent orchestration. Manages prompts, plugins, and memory across all three pipeline agents.</p>
+        </div>
+
+        <!-- Frontend -->
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark hover:border-poppy/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-poppy/10 rounded-lg flex items-center justify-center group-hover:bg-poppy/15 transition-colors" aria-hidden="true">
+              <span class="text-lg">⚛️</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy text-sm">React 18 + TypeScript 5</h4>
+              <p class="text-xs text-slate">Frontend</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate leading-relaxed">Strict TypeScript with functional components and hooks. Accessible UI meeting WCAG AA for government compliance.</p>
+        </div>
+
+        <!-- AI Services -->
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark hover:border-gold/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-gold/10 rounded-lg flex items-center justify-center group-hover:bg-gold/15 transition-colors" aria-hidden="true">
+              <span class="text-lg">☁️</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy text-sm">Azure OpenAI</h4>
+              <p class="text-xs text-slate">LLM provider</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate leading-relaxed">Enterprise-grade, FedRAMP-compliant LLM access. Data stays in Azure — critical for government data sovereignty.</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark hover:border-gold/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-gold/10 rounded-lg flex items-center justify-center group-hover:bg-gold/15 transition-colors" aria-hidden="true">
+              <span class="text-lg">🔍</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy text-sm">Azure AI Search</h4>
+              <p class="text-xs text-slate">RAG retrieval</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate leading-relaxed">Vector + keyword hybrid search powers the RAG pipeline. Domain-specific indexes per accelerator.</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark hover:border-gold/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-gold/10 rounded-lg flex items-center justify-center group-hover:bg-gold/15 transition-colors" aria-hidden="true">
+              <span class="text-lg">📄</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy text-sm">Document Intelligence</h4>
+              <p class="text-xs text-slate">Document processing</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate leading-relaxed">Extracts structured data from government forms, permits, and applications for knowledge base ingestion.</p>
+        </div>
+
+        <!-- Infra -->
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark hover:border-navy/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-navy/8 rounded-lg flex items-center justify-center group-hover:bg-navy/12 transition-colors" aria-hidden="true">
+              <span class="text-lg">🐳</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy text-sm">Azure Container Apps</h4>
+              <p class="text-xs text-slate">Deployment platform</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate leading-relaxed">Serverless containers with scale-to-zero. Managed HTTPS, revisions, and traffic splitting built in.</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 border border-warm-gray-dark hover:border-navy/30 transition-colors group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-navy/8 rounded-lg flex items-center justify-center group-hover:bg-navy/12 transition-colors" aria-hidden="true">
+              <span class="text-lg">💪</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-navy text-sm">Bicep + azd</h4>
+              <p class="text-xs text-slate">Infrastructure as Code</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate leading-relaxed">Declarative Azure infrastructure. One <code class="font-mono text-xs bg-warm-gray px-1 rounded">azd up</code> provisions all resources with repeatable, auditable deployments.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider mb-20" aria-hidden="true">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- Section 6: Constitution-Driven Development  -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="constitution" class="mb-16 scroll-mt-24">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gold/15 text-gold font-bold text-sm" aria-hidden="true">6</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-navy">Constitution-Driven Development</h2>
+      </div>
+      <p class="text-slate text-lg mb-10 max-w-3xl leading-relaxed">
+        Every agent response is governed by a shared constitution — a machine-readable policy document that enforces California's AI compliance framework at runtime.
+      </p>
+
+      <div class="grid lg:grid-cols-5 gap-6">
+        <!-- Constitution card -->
+        <div class="lg:col-span-2 bg-gradient-to-br from-navy via-ca-blue to-navy-dark text-white rounded-2xl p-8 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full -translate-y-12 translate-x-12" aria-hidden="true"></div>
+          <h3 class="font-display text-2xl mb-3">The Constitution</h3>
+          <p class="text-white/70 text-sm leading-relaxed mb-6">
+            Located at <code class="bg-white/10 px-2 py-0.5 rounded text-xs">shared/constitution.md</code>, the constitution defines agent boundaries, output policies, escalation rules, and compliance requirements.
+          </p>
+          <p class="text-white/70 text-sm leading-relaxed mb-6">
+            Agents reference the constitution before every response. It acts as a system-level guardrail that cannot be overridden by user prompts.
+          </p>
+          <a href="../shared/constitution.md" class="inline-flex items-center gap-2 bg-gold text-navy font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-gold-light transition-colors">
+            View Constitution
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+
+        <!-- Compliance Framework -->
+        <div class="lg:col-span-3 space-y-4">
+          <h3 class="font-display text-xl text-navy mb-1">California AI Compliance Framework</h3>
+          <p class="text-slate text-sm mb-4">All accelerators must comply with these mandates:</p>
+
+          <div class="space-y-3">
+            <div class="bg-white rounded-xl p-5 border border-warm-gray-dark flex items-start gap-4">
+              <div class="w-10 h-10 bg-ca-blue/10 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                <span class="text-base">📋</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-navy text-sm">EO N-12-23 — GenAI Executive Order</h4>
+                <p class="text-xs text-slate mt-0.5">Guidelines for responsible use of generative AI by California state agencies. Requires risk assessments and human oversight.</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl p-5 border border-warm-gray-dark flex items-start gap-4">
+              <div class="w-10 h-10 bg-poppy/10 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                <span class="text-base">🏛️</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-navy text-sm">EO N-5-26 — AI Procurement</h4>
+                <p class="text-xs text-slate mt-0.5">Vendor attestation requirements and procurement standards for AI systems used in state government.</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl p-5 border border-warm-gray-dark flex items-start gap-4">
+              <div class="w-10 h-10 bg-gold/10 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                <span class="text-base">⚖️</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-navy text-sm">SB 53 — AI Safety Legislation</h4>
+                <p class="text-xs text-slate mt-0.5">Safety testing and reporting requirements for frontier AI models deployed in public-facing applications.</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl p-5 border border-warm-gray-dark flex items-start gap-4">
+              <div class="w-10 h-10 bg-navy/8 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                <span class="text-base">🔒</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-navy text-sm">CCPA / CPRA — Privacy</h4>
+                <p class="text-xs text-slate mt-0.5">California Consumer Privacy Act and its amendment. Governs PII handling, data minimization, and consumer rights.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-navy text-white/60 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid sm:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 bg-gold rounded-lg flex items-center justify-center font-display text-navy text-sm font-bold" aria-hidden="true">CA</div>
+            <span class="font-display text-gold text-base">CA Hackathon Accelerators</span>
+          </div>
+          <p class="text-sm leading-relaxed">AI accelerators for California state government agencies. Built with Azure, governed by constitution.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white text-sm mb-3">Documentation</h4>
+          <nav class="space-y-2 text-sm" aria-label="Footer documentation links">
+            <a href="architecture.html" class="block hover:text-gold transition-colors" aria-current="page">Architecture Overview</a>
+            <a href="getting-started.html" class="block hover:text-gold transition-colors">Getting Started</a>
+            <a href="deployment/COST_ESTIMATION.md" class="block hover:text-gold transition-colors">Cost Estimation</a>
+            <a href="customization/CUSTOMIZATION.md" class="block hover:text-gold transition-colors">Customization Guide</a>
+          </nav>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white text-sm mb-3">References</h4>
+          <nav class="space-y-2 text-sm" aria-label="Footer reference links">
+            <a href="../shared/constitution.md" class="block hover:text-gold transition-colors">Agent Constitution</a>
+            <a href="../CHANGELOG.md" class="block hover:text-gold transition-colors">Changelog</a>
+            <a href="../README.md" class="block hover:text-gold transition-colors">README</a>
+          </nav>
+        </div>
+      </div>
+      <div class="border-t border-white/10 mt-8 pt-6 text-xs text-center">
+        <p>State of California · AI Hackathon Accelerators · Built for CA state agencies</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Copy-to-clipboard Script -->
+  <script>
+    function copyCode(btn) {
+      const pre = btn.parentElement.querySelector('pre');
+      const text = pre.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.color = '#FDB515';
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.color = '';
+        }, 2000);
+      });
+    }
+
+    // Mobile menu toggle aria-expanded
+    document.querySelector('[aria-controls="mobileMenu"]')?.addEventListener('click', function() {
+      const expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', String(!expanded));
+    });
+  </script>
+
+</body>
+</html>

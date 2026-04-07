@@ -4,14 +4,14 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.40.2.10011",
-      "templateHash": "767179505999262238"
+      "version": "0.41.2.15936",
+      "templateHash": "11887631496436389178"
     }
   },
   "parameters": {
     "resourcePrefix": {
       "type": "string",
-      "defaultValue": "frontdoor",
+      "defaultValue": "cahack",
       "metadata": {
         "description": "Name prefix for all resources"
       }
@@ -58,6 +58,22 @@
         "description": "Enable mock mode (no external service connections)"
       }
     },
+    "acceleratorIds": {
+      "type": "array",
+      "defaultValue": [
+        "001",
+        "002",
+        "003",
+        "004",
+        "005",
+        "006",
+        "007",
+        "008"
+      ],
+      "metadata": {
+        "description": "List of accelerator IDs to deploy"
+      }
+    },
     "deploymentDate": {
       "type": "string",
       "defaultValue": "[utcNow('yyyy-MM-dd')]",
@@ -72,12 +88,57 @@
     "keyVaultName": "[take(replace(format('{0}{1}kv', parameters('resourcePrefix'), variables('resourceToken')), '-', ''), 24)]",
     "cosmosToken": "[toLower(uniqueString(subscription().id, resourceGroup().id, parameters('cosmosLocation')))]",
     "cosmosAccountName": "[format('{0}-{1}-cosmos', parameters('resourcePrefix'), variables('cosmosToken'))]",
+    "acceleratorConfig": [
+      {
+        "id": "001",
+        "name": "benefitscal-navigator",
+        "hasFrontend": true
+      },
+      {
+        "id": "002",
+        "name": "wildfire-response",
+        "hasFrontend": true
+      },
+      {
+        "id": "003",
+        "name": "medi-cal-eligibility",
+        "hasFrontend": true
+      },
+      {
+        "id": "004",
+        "name": "permit-streamliner",
+        "hasFrontend": true
+      },
+      {
+        "id": "005",
+        "name": "procurement-compliance",
+        "hasFrontend": false
+      },
+      {
+        "id": "006",
+        "name": "knowledge-hub",
+        "hasFrontend": true
+      },
+      {
+        "id": "007",
+        "name": "edd-claims",
+        "hasFrontend": true
+      },
+      {
+        "id": "008",
+        "name": "emergency-chat",
+        "hasFrontend": true
+      }
+    ],
+    "activeAccelerators": "[filter(variables('acceleratorConfig'), lambda('config', contains(parameters('acceleratorIds'), lambdaVariables('config').id)))]",
     "tags": {
       "azd-env-name": "[parameters('resourcePrefix')]",
-      "solution-accelerator": "university-front-door-agent",
+      "solution-accelerator": "ca-hackathon-accelerator",
       "deployment-date": "[parameters('deploymentDate')]"
     },
-    "cognitiveServicesOpenAIUserRoleId": "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd"
+    "cognitiveServicesOpenAIUserRoleId": "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd",
+    "acsContributorRoleId": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+    "searchIndexDataReaderRoleId": "1407120a-92aa-4202-b7e9-c0e197c71c8f"
   },
   "resources": [
     {
@@ -163,10 +224,10 @@
       "condition": "[not(parameters('mockMode'))]",
       "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
       "apiVersion": "2023-11-15",
-      "name": "[format('{0}/{1}', variables('cosmosAccountName'), 'frontdoor')]",
+      "name": "[format('{0}/{1}', variables('cosmosAccountName'), 'cahackathon')]",
       "properties": {
         "resource": {
-          "id": "frontdoor"
+          "id": "cahackathon"
         }
       },
       "dependsOn": [
@@ -177,7 +238,7 @@
       "condition": "[not(parameters('mockMode'))]",
       "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
       "apiVersion": "2023-11-15",
-      "name": "[format('{0}/{1}/{2}', variables('cosmosAccountName'), 'frontdoor', 'sessions')]",
+      "name": "[format('{0}/{1}/{2}', variables('cosmosAccountName'), 'cahackathon', 'sessions')]",
       "properties": {
         "resource": {
           "id": "sessions",
@@ -191,14 +252,14 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosAccountName'), 'frontdoor')]"
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosAccountName'), 'cahackathon')]"
       ]
     },
     {
       "condition": "[not(parameters('mockMode'))]",
       "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
       "apiVersion": "2023-11-15",
-      "name": "[format('{0}/{1}/{2}', variables('cosmosAccountName'), 'frontdoor', 'audit_logs')]",
+      "name": "[format('{0}/{1}/{2}', variables('cosmosAccountName'), 'cahackathon', 'audit_logs')]",
       "properties": {
         "resource": {
           "id": "audit_logs",
@@ -211,7 +272,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosAccountName'), 'frontdoor')]"
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosAccountName'), 'cahackathon')]"
       ]
     },
     {
@@ -227,6 +288,46 @@
         "replicaCount": 1,
         "partitionCount": 1,
         "hostingMode": "default"
+      }
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2023-10-01-preview",
+      "name": "[format('{0}-translator', variables('prefix'))]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('tags')]",
+      "kind": "TextTranslation",
+      "sku": {
+        "name": "S1"
+      },
+      "properties": {
+        "customSubDomainName": "[format('{0}-translator', variables('prefix'))]",
+        "publicNetworkAccess": "Enabled"
+      }
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2023-10-01-preview",
+      "name": "[format('{0}-docintl', variables('prefix'))]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('tags')]",
+      "kind": "FormRecognizer",
+      "sku": {
+        "name": "S0"
+      },
+      "properties": {
+        "customSubDomainName": "[format('{0}-docintl', variables('prefix'))]",
+        "publicNetworkAccess": "Enabled"
+      }
+    },
+    {
+      "type": "Microsoft.Communication/communicationServices",
+      "apiVersion": "2023-04-01",
+      "name": "[format('{0}-acs', variables('prefix'))]",
+      "location": "global",
+      "tags": "[variables('tags')]",
+      "properties": {
+        "dataLocation": "unitedstates"
       }
     },
     {
@@ -303,6 +404,18 @@
       ]
     },
     {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2023-07-01",
+      "name": "[format('{0}/{1}', variables('keyVaultName'), 'acs-connection-string')]",
+      "properties": {
+        "value": "[listKeys(resourceId('Microsoft.Communication/communicationServices', format('{0}-acs', variables('prefix'))), '2023-04-01').primaryConnectionString]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Communication/communicationServices', format('{0}-acs', variables('prefix')))]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+      ]
+    },
+    {
       "type": "Microsoft.ContainerRegistry/registries",
       "apiVersion": "2023-07-01",
       "name": "[replace(format('{0}acr', variables('prefix')), '-', '')]",
@@ -344,6 +457,10 @@
             {
               "name": "search-api-key",
               "value": "[listAdminKeys(resourceId('Microsoft.Search/searchServices', format('{0}-search', variables('prefix'))), '2023-11-01').primaryKey]"
+            },
+            {
+              "name": "acs-connection-string",
+              "value": "[if(parameters('mockMode'), '', listKeys(resourceId('Microsoft.Communication/communicationServices', format('{0}-acs', variables('prefix'))), '2023-04-01').primaryConnectionString)]"
             }
           ],
           "registries": [
@@ -390,7 +507,7 @@
                 },
                 {
                   "name": "AZURE_COSMOS_DATABASE",
-                  "value": "[if(parameters('mockMode'), 'frontdoor', 'frontdoor')]"
+                  "value": "[if(parameters('mockMode'), 'cahackathon', 'cahackathon')]"
                 },
                 {
                   "name": "AZURE_SEARCH_ENDPOINT",
@@ -399,6 +516,14 @@
                 {
                   "name": "AZURE_SEARCH_KEY",
                   "secretRef": "search-api-key"
+                },
+                {
+                  "name": "AZURE_ACS_ENDPOINT",
+                  "value": "[if(parameters('mockMode'), '', format('https://{0}', reference(resourceId('Microsoft.Communication/communicationServices', format('{0}-acs', variables('prefix'))), '2023-04-01').hostName))]"
+                },
+                {
+                  "name": "AZURE_ACS_CONNECTION_STRING",
+                  "secretRef": "acs-connection-string"
                 }
               ],
               "resources": {
@@ -414,10 +539,11 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Communication/communicationServices', format('{0}-acs', variables('prefix')))]",
         "[resourceId('Microsoft.App/managedEnvironments', format('{0}-env', variables('prefix')))]",
         "[resourceId('Microsoft.ContainerRegistry/registries', replace(format('{0}acr', variables('prefix')), '-', ''))]",
         "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosAccountName'))]",
-        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosAccountName'), 'frontdoor')]",
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosAccountName'), 'cahackathon')]",
         "[resourceId('Microsoft.CognitiveServices/accounts', format('{0}-openai', variables('prefix')))]",
         "[resourceId('Microsoft.CognitiveServices/accounts/deployments', format('{0}-openai', variables('prefix')), parameters('openAiModel'))]",
         "[resourceId('Microsoft.CognitiveServices/accounts/deployments', format('{0}-openai', variables('prefix')), 'gpt-4o-realtime-preview')]",
@@ -437,6 +563,21 @@
       "dependsOn": [
         "[resourceId('Microsoft.App/containerApps', format('{0}-backend', variables('prefix')))]",
         "[resourceId('Microsoft.CognitiveServices/accounts', format('{0}-openai', variables('prefix')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.Communication/communicationServices', format('{0}-acs', variables('prefix')))]",
+      "name": "[guid(resourceId('Microsoft.Communication/communicationServices', format('{0}-acs', variables('prefix'))), resourceId('Microsoft.App/containerApps', format('{0}-backend', variables('prefix'))), variables('acsContributorRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('acsContributorRoleId'))]",
+        "principalId": "[reference(resourceId('Microsoft.App/containerApps', format('{0}-backend', variables('prefix'))), '2023-08-01-preview', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Communication/communicationServices', format('{0}-acs', variables('prefix')))]",
+        "[resourceId('Microsoft.App/containerApps', format('{0}-backend', variables('prefix')))]"
       ]
     },
     {
@@ -495,6 +636,186 @@
         "[resourceId('Microsoft.App/managedEnvironments', format('{0}-env', variables('prefix')))]",
         "[resourceId('Microsoft.ContainerRegistry/registries', replace(format('{0}acr', variables('prefix')), '-', ''))]"
       ]
+    },
+    {
+      "copy": {
+        "name": "accelBackends",
+        "count": "[length(variables('activeAccelerators'))]"
+      },
+      "type": "Microsoft.App/containerApps",
+      "apiVersion": "2023-08-01-preview",
+      "name": "[format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id)]",
+      "location": "[parameters('location')]",
+      "tags": "[union(variables('tags'), createObject('azd-service-name', format('accel-{0}', variables('activeAccelerators')[copyIndex()].id)))]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments', format('{0}-env', variables('prefix')))]",
+        "configuration": {
+          "ingress": {
+            "external": true,
+            "targetPort": 8000,
+            "transport": "auto"
+          },
+          "secrets": [
+            {
+              "name": "acr-password",
+              "value": "[listCredentials(resourceId('Microsoft.ContainerRegistry/registries', replace(format('{0}acr', variables('prefix')), '-', '')), '2023-07-01').passwords[0].value]"
+            }
+          ],
+          "registries": [
+            {
+              "server": "[reference(resourceId('Microsoft.ContainerRegistry/registries', replace(format('{0}acr', variables('prefix')), '-', '')), '2023-07-01').loginServer]",
+              "username": "[listCredentials(resourceId('Microsoft.ContainerRegistry/registries', replace(format('{0}acr', variables('prefix')), '-', '')), '2023-07-01').username]",
+              "passwordSecretRef": "acr-password"
+            }
+          ]
+        },
+        "template": {
+          "containers": [
+            {
+              "name": "backend",
+              "image": "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest",
+              "env": [
+                {
+                  "name": "USE_MOCK_SERVICES",
+                  "value": "[string(parameters('mockMode'))]"
+                },
+                {
+                  "name": "AZURE_OPENAI_ENDPOINT",
+                  "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', format('{0}-openai', variables('prefix'))), '2023-10-01-preview').endpoint]"
+                },
+                {
+                  "name": "AZURE_OPENAI_DEPLOYMENT",
+                  "value": "[parameters('openAiModel')]"
+                },
+                {
+                  "name": "AZURE_SEARCH_ENDPOINT",
+                  "value": "[format('https://{0}.search.windows.net', format('{0}-search', variables('prefix')))]"
+                }
+              ],
+              "resources": {
+                "cpu": "[json('0.5')]",
+                "memory": "1Gi"
+              }
+            }
+          ],
+          "scale": {
+            "minReplicas": 0,
+            "maxReplicas": 2
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.App/managedEnvironments', format('{0}-env', variables('prefix')))]",
+        "[resourceId('Microsoft.ContainerRegistry/registries', replace(format('{0}acr', variables('prefix')), '-', ''))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', format('{0}-openai', variables('prefix')))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts/deployments', format('{0}-openai', variables('prefix')), parameters('openAiModel'))]",
+        "[resourceId('Microsoft.Search/searchServices', format('{0}-search', variables('prefix')))]"
+      ]
+    },
+    {
+      "copy": {
+        "name": "accelFrontends",
+        "count": "[length(variables('activeAccelerators'))]"
+      },
+      "condition": "[variables('activeAccelerators')[copyIndex()].hasFrontend]",
+      "type": "Microsoft.App/containerApps",
+      "apiVersion": "2023-08-01-preview",
+      "name": "[format('{0}-accel-{1}-fe', variables('prefix'), variables('activeAccelerators')[copyIndex()].id)]",
+      "location": "[parameters('location')]",
+      "tags": "[union(variables('tags'), createObject('azd-service-name', format('accel-{0}-fe', variables('activeAccelerators')[copyIndex()].id)))]",
+      "properties": {
+        "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments', format('{0}-env', variables('prefix')))]",
+        "configuration": {
+          "ingress": {
+            "external": true,
+            "targetPort": 80,
+            "transport": "auto"
+          },
+          "secrets": [
+            {
+              "name": "acr-password",
+              "value": "[listCredentials(resourceId('Microsoft.ContainerRegistry/registries', replace(format('{0}acr', variables('prefix')), '-', '')), '2023-07-01').passwords[0].value]"
+            }
+          ],
+          "registries": [
+            {
+              "server": "[reference(resourceId('Microsoft.ContainerRegistry/registries', replace(format('{0}acr', variables('prefix')), '-', '')), '2023-07-01').loginServer]",
+              "username": "[listCredentials(resourceId('Microsoft.ContainerRegistry/registries', replace(format('{0}acr', variables('prefix')), '-', '')), '2023-07-01').username]",
+              "passwordSecretRef": "acr-password"
+            }
+          ]
+        },
+        "template": {
+          "containers": [
+            {
+              "name": "frontend",
+              "image": "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest",
+              "env": [
+                {
+                  "name": "BACKEND_URL",
+                  "value": "[format('https://{0}', reference(resourceId('Microsoft.App/containerApps', format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id)), '2023-08-01-preview').configuration.ingress.fqdn)]"
+                }
+              ],
+              "resources": {
+                "cpu": "[json('0.25')]",
+                "memory": "0.5Gi"
+              }
+            }
+          ],
+          "scale": {
+            "minReplicas": 0,
+            "maxReplicas": 2
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.App/containerApps', format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id))]",
+        "[resourceId('Microsoft.App/managedEnvironments', format('{0}-env', variables('prefix')))]",
+        "[resourceId('Microsoft.ContainerRegistry/registries', replace(format('{0}acr', variables('prefix')), '-', ''))]"
+      ]
+    },
+    {
+      "copy": {
+        "name": "accelOpenAIRoles",
+        "count": "[length(variables('activeAccelerators'))]"
+      },
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.CognitiveServices/accounts', format('{0}-openai', variables('prefix')))]",
+      "name": "[guid(resourceId('Microsoft.CognitiveServices/accounts', format('{0}-openai', variables('prefix'))), resourceId('Microsoft.App/containerApps', format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id)), variables('cognitiveServicesOpenAIUserRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('cognitiveServicesOpenAIUserRoleId'))]",
+        "principalId": "[reference(resourceId('Microsoft.App/containerApps', format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id)), '2023-08-01-preview', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.App/containerApps', format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id))]",
+        "[resourceId('Microsoft.App/containerApps', format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', format('{0}-openai', variables('prefix')))]"
+      ]
+    },
+    {
+      "copy": {
+        "name": "accelSearchRoles",
+        "count": "[length(variables('activeAccelerators'))]"
+      },
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.Search/searchServices', format('{0}-search', variables('prefix')))]",
+      "name": "[guid(resourceId('Microsoft.Search/searchServices', format('{0}-search', variables('prefix'))), resourceId('Microsoft.App/containerApps', format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id)), variables('searchIndexDataReaderRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('searchIndexDataReaderRoleId'))]",
+        "principalId": "[reference(resourceId('Microsoft.App/containerApps', format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id)), '2023-08-01-preview', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.App/containerApps', format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id))]",
+        "[resourceId('Microsoft.App/containerApps', format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id))]",
+        "[resourceId('Microsoft.Search/searchServices', format('{0}-search', variables('prefix')))]"
+      ]
     }
   ],
   "outputs": {
@@ -516,7 +837,7 @@
     },
     "AZURE_COSMOS_DATABASE": {
       "type": "string",
-      "value": "[if(parameters('mockMode'), 'frontdoor', 'frontdoor')]"
+      "value": "[if(parameters('mockMode'), 'cahackathon', 'cahackathon')]"
     },
     "AZURE_SEARCH_ENDPOINT": {
       "type": "string",
@@ -546,9 +867,24 @@
       "type": "string",
       "value": "[variables('keyVaultName')]"
     },
+    "AZURE_ACS_ENDPOINT": {
+      "type": "string",
+      "value": "[if(parameters('mockMode'), '', format('https://{0}', reference(resourceId('Microsoft.Communication/communicationServices', format('{0}-acs', variables('prefix'))), '2023-04-01').hostName))]"
+    },
     "MOCK_MODE": {
       "type": "bool",
       "value": "[parameters('mockMode')]"
+    },
+    "ACCELERATOR_BACKEND_URLS": {
+      "type": "array",
+      "copy": {
+        "count": "[length(variables('activeAccelerators'))]",
+        "input": {
+          "id": "[variables('activeAccelerators')[copyIndex()].id]",
+          "name": "[variables('activeAccelerators')[copyIndex()].name]",
+          "url": "[format('https://{0}', reference(resourceId('Microsoft.App/containerApps', format('{0}-accel-{1}-be', variables('prefix'), variables('activeAccelerators')[copyIndex()].id)), '2023-08-01-preview').configuration.ingress.fqdn)]"
+        }
+      }
     }
   }
 }

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>007 — EDD Claims Assistant | CA AI Accelerators</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#1B2A4A',
+                        'ca-blue': '#003366',
+                        gold: '#FDB515',
+                        poppy: '#E87722',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-navy text-white sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <span class="text-gold font-bold text-xl tracking-tight">CA AI Accelerators</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <a href="../index.html" class="hover:text-gold transition-colors">Home</a>
+                    <a href="../index.html#accelerators" class="text-gold border-b-2 border-gold pb-0.5">Accelerators</a>
+                    <a href="../architecture.html" class="hover:text-gold transition-colors">Architecture</a>
+                    <a href="../getting-started.html" class="hover:text-gold transition-colors">Getting Started</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded hover:bg-white/10" aria-label="Open menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden border-t border-white/10">
+            <div class="px-4 py-3 space-y-2 text-sm">
+                <a href="../index.html" class="block py-1 hover:text-gold">Home</a>
+                <a href="../index.html#accelerators" class="block py-1 text-gold">Accelerators</a>
+                <a href="../architecture.html" class="block py-1 hover:text-gold">Architecture</a>
+                <a href="../getting-started.html" class="block py-1 hover:text-gold">Getting Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <nav aria-label="Breadcrumb" class="flex items-center text-sm text-gray-500 space-x-2">
+                <a href="../index.html" class="hover:text-ca-blue transition-colors">Home</a>
+                <span aria-hidden="true">/</span>
+                <a href="../index.html#accelerators" class="hover:text-ca-blue transition-colors">Accelerators</a>
+                <span aria-hidden="true">/</span>
+                <span class="text-navy font-medium">EDD Claims Assistant</span>
+            </nav>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+        <!-- Back Link -->
+        <a href="../index.html#accelerators" class="inline-flex items-center text-sm text-ca-blue hover:text-poppy font-medium mb-8 transition-colors">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            Back to All Accelerators
+        </a>
+
+        <!-- Header -->
+        <header class="mb-12">
+            <div class="flex flex-wrap items-start gap-3 mb-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-ca-blue text-white tracking-wide">ACCEL-007</span>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gold/20 text-yellow-800 border border-gold/40">EDD</span>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">UI · DI · PFL</span>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-navy leading-tight">EDD Claims Assistant</h1>
+            <p class="mt-3 text-lg text-gray-600 max-w-3xl">AI-powered claims assistance for Unemployment Insurance, Disability Insurance, and Paid Family Leave with real-time benefit calculations.</p>
+        </header>
+
+        <!-- Problem Statement -->
+        <section id="problem" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">1</span>
+                Problem Statement
+            </h2>
+            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <p class="text-gray-700 leading-relaxed">California's Employment Development Department (EDD) is the state's <strong>most-criticized agency</strong>. Unemployment Insurance (UI), Disability Insurance (DI), and Paid Family Leave (PFL) claims face persistent processing delays. Phone wait times regularly exceed <strong>60 minutes</strong>, and confusing eligibility rules frustrate claimants who are already in financial distress. The system needs intelligent self-service tools that can answer questions instantly and accurately.</p>
+            </div>
+        </section>
+
+        <!-- Solution Overview -->
+        <section id="solution" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">2</span>
+                Solution Overview
+            </h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="text-poppy font-bold text-sm uppercase tracking-wide mb-2">Benefit Calculator</div>
+                    <p class="text-gray-700 text-sm">Real-time UI/DI/PFL benefit calculations using 2024 California rates with min/max caps and quarterly earnings inputs.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="text-poppy font-bold text-sm uppercase tracking-wide mb-2">Claim Status Lookup</div>
+                    <p class="text-gray-700 text-sm">Instant claim status retrieval with processing stage tracking and estimated completion timelines.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="text-poppy font-bold text-sm uppercase tracking-wide mb-2">Eligibility Screening</div>
+                    <p class="text-gray-700 text-sm">Pre-screening tool that evaluates eligibility criteria before formal application, reducing rejected claims.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="text-poppy font-bold text-sm uppercase tracking-wide mb-2">Document Checklists</div>
+                    <p class="text-gray-700 text-sm">Personalized document requirement lists based on claim type, ensuring complete submissions from the start.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="text-poppy font-bold text-sm uppercase tracking-wide mb-2">Processing Timelines</div>
+                    <p class="text-gray-700 text-sm">Transparent timeline visibility for each claim type so claimants can set realistic expectations.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="text-poppy font-bold text-sm uppercase tracking-wide mb-2">Smart Escalation</div>
+                    <p class="text-gray-700 text-sm">Confidence-based escalation to live agents with full context transfer — no repeating information.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture -->
+        <section id="architecture" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">3</span>
+                Architecture — 3-Agent Pipeline
+            </h2>
+            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-14 h-14 rounded-full bg-ca-blue text-white flex items-center justify-center mx-auto mb-3 text-xl font-bold">Q</div>
+                        <h3 class="font-bold text-navy">QueryAgent</h3>
+                        <p class="text-sm text-gray-600 mt-1">Detects claim type (UI/DI/PFL), extracts earnings data, identifies claimant intent (status check, calculator, eligibility), and filters PII from conversations.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-14 h-14 rounded-full bg-gold text-navy flex items-center justify-center mx-auto mb-3 text-xl font-bold">R</div>
+                        <h3 class="font-bold text-navy">RouterAgent</h3>
+                        <p class="text-sm text-gray-600 mt-1">Routes to benefit calculator, claim status, eligibility checker, or document checklist. Triggers escalation when confidence drops below threshold.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-14 h-14 rounded-full bg-poppy text-white flex items-center justify-center mx-auto mb-3 text-xl font-bold">A</div>
+                        <h3 class="font-bold text-navy">ActionAgent</h3>
+                        <p class="text-sm text-gray-600 mt-1">Calculates benefits with 2024 CA rates, retrieves claim statuses, generates document checklists, and creates escalation tickets with full conversation context.</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center justify-center gap-2 text-gray-400" aria-hidden="true">
+                    <div class="w-20 h-0.5 bg-ca-blue/30"></div>
+                    <svg class="w-4 h-4 text-ca-blue/40" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                    <div class="w-20 h-0.5 bg-gold/30"></div>
+                    <svg class="w-4 h-4 text-gold/60" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                    <div class="w-20 h-0.5 bg-poppy/30"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Endpoints -->
+        <section id="api" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">4</span>
+                API Endpoints
+            </h2>
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-navy text-white text-left">
+                            <th class="px-4 py-3 font-semibold">Method</th>
+                            <th class="px-4 py-3 font-semibold">Path</th>
+                            <th class="px-4 py-3 font-semibold">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/health</td>
+                            <td class="px-4 py-3 text-gray-700">Health check</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/chat</td>
+                            <td class="px-4 py-3 text-gray-700">Main chat interface</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/status</td>
+                            <td class="px-4 py-3 text-gray-700">Service status</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/claim-status</td>
+                            <td class="px-4 py-3 text-gray-700">Claim status lookup</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/eligibility</td>
+                            <td class="px-4 py-3 text-gray-700">Eligibility check</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/document-checklist</td>
+                            <td class="px-4 py-3 text-gray-700">Required documents</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/benefits/calculate</td>
+                            <td class="px-4 py-3 text-gray-700">UI/DI/PFL benefit calculator</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/claims/{type}/timeline</td>
+                            <td class="px-4 py-3 text-gray-700">Processing timeline</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/claims/{type}/requirements</td>
+                            <td class="px-4 py-3 text-gray-700">Claim requirements</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                            <td class="px-4 py-3 font-mono text-xs text-ca-blue">/api/escalate</td>
+                            <td class="px-4 py-3 text-gray-700">Live agent escalation</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Data Models -->
+        <section id="models" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">5</span>
+                Data Models
+            </h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h3 class="font-bold text-navy text-lg mb-2">BenefitCalculationRequest</h3>
+                    <p class="text-sm text-gray-600 mb-3">Input for benefit calculations with quarterly earnings.</p>
+                    <pre class="bg-gray-900 text-green-400 text-xs rounded-lg p-4 overflow-x-auto"><code>{
+  "claim_type": "ui | di | pfl",
+  "quarterly_earnings": [0.00, 0.00, 0.00, 0.00],
+  "base_period_start": "YYYY-MM-DD",
+  "base_period_end": "YYYY-MM-DD"
+}</code></pre>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h3 class="font-bold text-navy text-lg mb-2">BenefitCalculationResponse</h3>
+                    <p class="text-sm text-gray-600 mb-3">Calculated benefit amounts with CA rate caps.</p>
+                    <pre class="bg-gray-900 text-green-400 text-xs rounded-lg p-4 overflow-x-auto"><code>{
+  "weekly_benefit": 450.00,
+  "max_weekly": 450.00,
+  "min_weekly": 50.00,
+  "total_benefit": 11700.00,
+  "duration_weeks": 26,
+  "highest_quarter": 7500.00
+}</code></pre>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h3 class="font-bold text-navy text-lg mb-2">ClaimStatus / ClaimTimeline</h3>
+                    <p class="text-sm text-gray-600 mb-3">Current claim state and processing milestones.</p>
+                    <pre class="bg-gray-900 text-green-400 text-xs rounded-lg p-4 overflow-x-auto"><code>{
+  "claim_id": "string",
+  "type": "ui | di | pfl",
+  "status": "filed | under_review | approved
+    | denied | appealed",
+  "timeline": [
+    { "stage": "string", "days": 0 }
+  ]
+}</code></pre>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h3 class="font-bold text-navy text-lg mb-2">EscalationResponse</h3>
+                    <p class="text-sm text-gray-600 mb-3">Live agent handoff with full context transfer.</p>
+                    <pre class="bg-gray-900 text-green-400 text-xs rounded-lg p-4 overflow-x-auto"><code>{
+  "ticket_id": "string",
+  "queue_position": 12,
+  "estimated_wait_minutes": 15,
+  "context_transferred": true,
+  "reason": "string",
+  "priority": "normal | high | urgent"
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section id="quickstart" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">6</span>
+                Quick Start
+            </h2>
+            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <p class="text-sm text-gray-600 mb-4">Start the backend API and frontend application:</p>
+                <div class="bg-gray-900 rounded-lg p-4 mb-4">
+                    <code class="text-green-400 text-sm">docker-compose -f docker-compose.accelerators.yml up accel-007-backend accel-007-frontend</code>
+                </div>
+                <div class="flex flex-wrap gap-4 text-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-navy">Backend Port:</span>
+                        <span class="font-mono bg-gray-100 px-2 py-0.5 rounded">8007</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-navy">Frontend Port:</span>
+                        <span class="font-mono bg-gray-100 px-2 py-0.5 rounded">3007</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compliance -->
+        <section id="compliance" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">7</span>
+                Compliance &amp; Governance
+            </h2>
+            <div class="grid sm:grid-cols-3 gap-4">
+                <div class="bg-ca-blue/5 border border-ca-blue/20 rounded-xl p-4 text-center">
+                    <div class="text-ca-blue font-bold text-sm">EO N-12-23</div>
+                    <p class="text-xs text-gray-600 mt-1">GenAI guidelines for state agencies</p>
+                </div>
+                <div class="bg-ca-blue/5 border border-ca-blue/20 rounded-xl p-4 text-center">
+                    <div class="text-ca-blue font-bold text-sm">Envision 2026 Goal 1</div>
+                    <p class="text-xs text-gray-600 mt-1">Human-centered digital services</p>
+                </div>
+                <div class="bg-ca-blue/5 border border-ca-blue/20 rounded-xl p-4 text-center">
+                    <div class="text-ca-blue font-bold text-sm">EDD Privacy</div>
+                    <p class="text-xs text-gray-600 mt-1">Claimant data protection standards</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Source Code -->
+        <section id="source" class="mb-12">
+            <h2 class="text-2xl font-bold text-navy mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-poppy/10 text-poppy flex items-center justify-center text-lg">8</span>
+                Source Code
+            </h2>
+            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <p class="font-mono text-sm text-ca-blue">accelerators/007-edd-claims-assistant/</p>
+                    <p class="text-xs text-gray-500 mt-1">Full-stack — Python / FastAPI backend + React frontend</p>
+                </div>
+                <a href="https://github.com" class="inline-flex items-center gap-2 px-4 py-2 bg-navy text-white rounded-lg text-sm font-medium hover:bg-ca-blue transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    View on GitHub
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-navy text-white mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid md:grid-cols-3 gap-8 text-sm">
+                <div>
+                    <h3 class="font-bold text-gold mb-3">CA AI Accelerators</h3>
+                    <p class="text-gray-300 leading-relaxed">Open-source AI accelerators for California state government agencies. Built for the California State AI Hackathon.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gold mb-3">Quick Links</h3>
+                    <ul class="space-y-1.5 text-gray-300">
+                        <li><a href="../index.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="../architecture.html" class="hover:text-white transition-colors">Architecture</a></li>
+                        <li><a href="../getting-started.html" class="hover:text-white transition-colors">Getting Started</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gold mb-3">Compliance</h3>
+                    <ul class="space-y-1.5 text-gray-300">
+                        <li>EO N-12-23 · EO N-5-26</li>
+                        <li>SB 53 · CCPA/CPRA</li>
+                        <li>WCAG 2.1 AA Accessible</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 mt-8 pt-6 text-center text-xs text-gray-400">
+                &copy; 2025 California State AI Hackathon. Built with transparency and public trust.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

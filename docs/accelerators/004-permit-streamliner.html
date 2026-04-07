@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Permit Streamliner — CA AI Accelerators</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#1B2A4A',
+            'ca-blue': '#003366',
+            gold: '#FDB515',
+            poppy: '#E87722',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .gradient-hero { background: linear-gradient(135deg, #1B2A4A 0%, #003366 100%); }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased">
+
+  <!-- Navigation -->
+  <nav class="bg-navy text-white sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2">
+          <span class="text-gold font-bold text-xl tracking-tight" aria-label="California AI Accelerators">CA AI Accelerators</span>
+        </div>
+        <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+          <a href="../index.html" class="hover:text-gold transition-colors">Home</a>
+          <a href="#" class="text-gold border-b-2 border-gold pb-0.5" aria-current="page">Accelerators</a>
+          <a href="../architecture.html" class="hover:text-gold transition-colors">Architecture</a>
+          <a href="../getting-started.html" class="hover:text-gold transition-colors">Getting Started</a>
+        </div>
+        <button id="mobile-toggle" class="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-gold" aria-label="Toggle menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-menu" class="md:hidden hidden bg-navy border-t border-white/10 px-4 pb-4 space-y-2 text-sm">
+      <a href="../index.html" class="block py-2 hover:text-gold transition-colors">Home</a>
+      <a href="#" class="block py-2 text-gold">Accelerators</a>
+      <a href="../architecture.html" class="block py-2 hover:text-gold transition-colors">Architecture</a>
+      <a href="../getting-started.html" class="block py-2 hover:text-gold transition-colors">Getting Started</a>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <nav aria-label="Breadcrumb" class="text-sm text-gray-500">
+        <ol class="flex items-center space-x-2">
+          <li><a href="../index.html" class="hover:text-ca-blue transition-colors">Home</a></li>
+          <li><span aria-hidden="true">/</span></li>
+          <li><a href="../index.html" class="hover:text-ca-blue transition-colors">Accelerators</a></li>
+          <li><span aria-hidden="true">/</span></li>
+          <li class="text-navy font-medium" aria-current="page">Permit Streamliner</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Hero Header -->
+  <header class="gradient-hero text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+        <div class="flex-1">
+          <div class="flex flex-wrap items-center gap-3 mb-4">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gold text-navy tracking-wide">ACCEL-004</span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-white border border-white/25">OPR</span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-white border border-white/25">HCD</span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-white border border-white/25">DCA</span>
+          </div>
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3">Permit Streamliner</h1>
+          <p class="text-lg md:text-xl text-blue-100 max-w-2xl">OPR, HCD &amp; DCA — AI-powered permitting classification, SLA tracking &amp; fee estimation</p>
+        </div>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 font-mono">Port 8004 / 3004</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+    <!-- Problem Statement -->
+    <section id="problem" aria-labelledby="problem-heading">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-poppy/10 text-poppy" aria-hidden="true">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
+          </span>
+          <h2 id="problem-heading" class="text-2xl font-bold text-navy">Problem Statement</h2>
+        </div>
+        <p class="text-gray-700 leading-relaxed max-w-3xl">
+          The Governor's <strong class="text-navy">Breakthrough Project</strong> mandates AI-streamlined permitting across California. Construction permits, business licenses, and environmental reviews face <strong class="text-navy">chronic backlogs</strong> that delay housing construction and economic development. Applicants navigate a maze of overlapping jurisdictions — OPR, HCD, DCA, and local agencies — with inconsistent requirements and opaque timelines.
+        </p>
+      </div>
+    </section>
+
+    <!-- Solution Overview -->
+    <section id="solution" aria-labelledby="solution-heading">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-ca-blue/10 text-ca-blue" aria-hidden="true">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/></svg>
+          </span>
+          <h2 id="solution-heading" class="text-2xl font-bold text-navy">Solution Overview</h2>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="rounded-xl border border-gray-100 bg-gray-50 p-5 hover:border-gold/50 transition-colors">
+            <h3 class="font-semibold text-navy mb-1">Project Classification</h3>
+            <p class="text-sm text-gray-600">Automatically classify projects across 10 permit types with the correct lead agency and jurisdiction.</p>
+          </div>
+          <div class="rounded-xl border border-gray-100 bg-gray-50 p-5 hover:border-gold/50 transition-colors">
+            <h3 class="font-semibold text-navy mb-1">Dynamic Checklists</h3>
+            <p class="text-sm text-gray-600">Generate tailored document checklists based on project type, location, and applicable regulations.</p>
+          </div>
+          <div class="rounded-xl border border-gray-100 bg-gray-50 p-5 hover:border-gold/50 transition-colors">
+            <h3 class="font-semibold text-navy mb-1">SLA Tracking</h3>
+            <p class="text-sm text-gray-600">Real-time tracking with constraint modifiers for project complexity, environmental review, and seasonal factors.</p>
+          </div>
+          <div class="rounded-xl border border-gray-100 bg-gray-50 p-5 hover:border-gold/50 transition-colors">
+            <h3 class="font-semibold text-navy mb-1">Fee Estimation</h3>
+            <p class="text-sm text-gray-600">Accurate fee calculation with modifiers for project value, zone, expedited processing, and agency surcharges.</p>
+          </div>
+          <div class="rounded-xl border border-gray-100 bg-gray-50 p-5 hover:border-gold/50 transition-colors">
+            <h3 class="font-semibold text-navy mb-1">Zoning Verification</h3>
+            <p class="text-sm text-gray-600">Address-based zoning lookups to pre-validate project compatibility before application submission.</p>
+          </div>
+          <div class="rounded-xl border border-gray-100 bg-gray-50 p-5 hover:border-gold/50 transition-colors">
+            <h3 class="font-semibold text-navy mb-1">10 Permit Types</h3>
+            <p class="text-sm text-gray-600">Building, electrical, plumbing, mechanical, grading, demolition, environmental, business license, conditional use, variance.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture -->
+    <section id="architecture" aria-labelledby="arch-heading">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-navy/10 text-navy" aria-hidden="true">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L12 12.75 6.429 9.75m11.142 0 4.179 2.25-9.75 5.25-9.75-5.25 4.179-2.25"/></svg>
+          </span>
+          <h2 id="arch-heading" class="text-2xl font-bold text-navy">3-Agent Pipeline Architecture</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="relative rounded-xl border-2 border-ca-blue/20 bg-ca-blue/5 p-6 hover:border-ca-blue/40 transition-colors">
+            <div class="absolute -top-3 left-4 px-2 bg-white text-xs font-bold text-ca-blue tracking-wider">STAGE 1</div>
+            <h3 class="font-bold text-ca-blue text-lg mb-2">QueryAgent</h3>
+            <ul class="text-sm text-gray-700 space-y-1.5">
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Intent detection (new permit, status check, fee inquiry)</li>
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Entity extraction (project type, address, scope)</li>
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Address parsing &amp; geocoding</li>
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Project scope characterization</li>
+            </ul>
+          </div>
+          <div class="relative rounded-xl border-2 border-gold/30 bg-gold/5 p-6 hover:border-gold/50 transition-colors">
+            <div class="absolute -top-3 left-4 px-2 bg-white text-xs font-bold text-gold tracking-wider">STAGE 2</div>
+            <h3 class="font-bold text-poppy text-lg mb-2">RouterAgent</h3>
+            <ul class="text-sm text-gray-700 space-y-1.5">
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Route to lead agency (OPR, HCD, DCA, local)</li>
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Permit type classification</li>
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Complexity assessment</li>
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Environmental review triggers</li>
+            </ul>
+          </div>
+          <div class="relative rounded-xl border-2 border-poppy/20 bg-poppy/5 p-6 hover:border-poppy/40 transition-colors">
+            <div class="absolute -top-3 left-4 px-2 bg-white text-xs font-bold text-poppy tracking-wider">STAGE 3</div>
+            <h3 class="font-bold text-navy text-lg mb-2">ActionAgent</h3>
+            <ul class="text-sm text-gray-700 space-y-1.5">
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Application creation &amp; tracking</li>
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Dynamic checklist generation</li>
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> Fee calculation with modifiers</li>
+              <li class="flex items-start gap-2"><span class="text-gold mt-0.5" aria-hidden="true">▸</span> SLA estimation &amp; status updates</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- API Endpoints -->
+    <section id="api" aria-labelledby="api-heading">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-gold/10 text-gold" aria-hidden="true">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5"/></svg>
+          </span>
+          <h2 id="api-heading" class="text-2xl font-bold text-navy">API Endpoints</h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm" role="table">
+            <thead>
+              <tr class="border-b-2 border-navy/10">
+                <th scope="col" class="text-left py-3 px-4 font-semibold text-navy">Method</th>
+                <th scope="col" class="text-left py-3 px-4 font-semibold text-navy">Path</th>
+                <th scope="col" class="text-left py-3 px-4 font-semibold text-navy">Description</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-3 px-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                <td class="py-3 px-4 font-mono text-sm text-ca-blue">/health</td>
+                <td class="py-3 px-4 text-gray-700">Health check</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-3 px-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                <td class="py-3 px-4 font-mono text-sm text-ca-blue">/api/chat</td>
+                <td class="py-3 px-4 text-gray-700">Main chat interface</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-3 px-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                <td class="py-3 px-4 font-mono text-sm text-ca-blue">/api/status</td>
+                <td class="py-3 px-4 text-gray-700">Service status</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-3 px-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                <td class="py-3 px-4 font-mono text-sm text-ca-blue">/api/applications</td>
+                <td class="py-3 px-4 text-gray-700">List applications</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-3 px-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                <td class="py-3 px-4 font-mono text-sm text-ca-blue">/api/zoning/check?address=</td>
+                <td class="py-3 px-4 text-gray-700">Zoning info</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-3 px-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                <td class="py-3 px-4 font-mono text-sm text-ca-blue">/api/intake/classify</td>
+                <td class="py-3 px-4 text-gray-700">Classify project type</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-3 px-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                <td class="py-3 px-4 font-mono text-sm text-ca-blue">/api/applications/create</td>
+                <td class="py-3 px-4 text-gray-700">Create application</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-3 px-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                <td class="py-3 px-4 font-mono text-sm text-ca-blue">/api/applications/{id}/checklist</td>
+                <td class="py-3 px-4 text-gray-700">Document checklist</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-3 px-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">GET</span></td>
+                <td class="py-3 px-4 font-mono text-sm text-ca-blue">/api/applications/{id}/status</td>
+                <td class="py-3 px-4 text-gray-700">SLA tracking</td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="py-3 px-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">POST</span></td>
+                <td class="py-3 px-4 font-mono text-sm text-ca-blue">/api/fees/estimate</td>
+                <td class="py-3 px-4 text-gray-700">Fee estimation</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data Models -->
+    <section id="models" aria-labelledby="models-heading">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-poppy/10 text-poppy" aria-hidden="true">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>
+          </span>
+          <h2 id="models-heading" class="text-2xl font-bold text-navy">Data Models</h2>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="rounded-xl bg-gray-900 text-gray-100 p-5 font-mono text-sm overflow-x-auto">
+            <div class="text-gold mb-2 font-sans font-bold text-xs tracking-wider uppercase">ClassifyResponse</div>
+            <pre class="leading-relaxed"><span class="text-blue-300">class</span> <span class="text-green-300">ClassifyResponse</span>(BaseModel):
+    project_type: <span class="text-yellow-300">str</span>  <span class="text-gray-500"># 10 types</span>
+    agency: <span class="text-yellow-300">str</span>
+    sla_days: <span class="text-yellow-300">int</span>
+    estimated_fees: <span class="text-yellow-300">float</span></pre>
+          </div>
+          <div class="rounded-xl bg-gray-900 text-gray-100 p-5 font-mono text-sm overflow-x-auto">
+            <div class="text-gold mb-2 font-sans font-bold text-xs tracking-wider uppercase">PermitApplication</div>
+            <pre class="leading-relaxed"><span class="text-blue-300">class</span> <span class="text-green-300">PermitApplication</span>(BaseModel):
+    id: <span class="text-yellow-300">str</span>
+    project_type: <span class="text-yellow-300">str</span>
+    address: <span class="text-yellow-300">str</span>
+    status: <span class="text-yellow-300">str</span>
+    submitted_at: <span class="text-yellow-300">datetime</span></pre>
+          </div>
+          <div class="rounded-xl bg-gray-900 text-gray-100 p-5 font-mono text-sm overflow-x-auto">
+            <div class="text-gold mb-2 font-sans font-bold text-xs tracking-wider uppercase">FeeEstimate</div>
+            <pre class="leading-relaxed"><span class="text-blue-300">class</span> <span class="text-green-300">FeeEstimate</span>(BaseModel):
+    base_fee: <span class="text-yellow-300">float</span>
+    modifiers: list[<span class="text-green-300">FeeModifier</span>]
+    total: <span class="text-yellow-300">float</span>
+    breakdown: <span class="text-yellow-300">dict</span></pre>
+          </div>
+          <div class="rounded-xl bg-gray-900 text-gray-100 p-5 font-mono text-sm overflow-x-auto">
+            <div class="text-gold mb-2 font-sans font-bold text-xs tracking-wider uppercase">ZoningResult</div>
+            <pre class="leading-relaxed"><span class="text-blue-300">class</span> <span class="text-green-300">ZoningResult</span>(BaseModel):
+    zone_code: <span class="text-yellow-300">str</span>
+    zone_name: <span class="text-yellow-300">str</span>
+    permitted_uses: list[<span class="text-yellow-300">str</span>]
+    restrictions: list[<span class="text-yellow-300">str</span>]</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section id="quickstart" aria-labelledby="qs-heading">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-green-100 text-green-700" aria-hidden="true">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
+          </span>
+          <h2 id="qs-heading" class="text-2xl font-bold text-navy">Quick Start</h2>
+        </div>
+        <div class="rounded-xl bg-gray-900 text-gray-100 p-5 font-mono text-sm overflow-x-auto">
+          <span class="text-gray-500 select-none">$ </span><span class="text-green-300">docker-compose</span> -f docker-compose.accelerators.yml up accel-004-backend accel-004-frontend
+        </div>
+        <div class="mt-4 flex flex-wrap gap-4 text-sm">
+          <div class="flex items-center gap-2 text-gray-600">
+            <span class="w-2 h-2 rounded-full bg-green-500" aria-hidden="true"></span>
+            Backend: <span class="font-mono font-semibold text-navy">http://localhost:8004</span>
+          </div>
+          <div class="flex items-center gap-2 text-gray-600">
+            <span class="w-2 h-2 rounded-full bg-blue-500" aria-hidden="true"></span>
+            Frontend: <span class="font-mono font-semibold text-navy">http://localhost:3004</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compliance -->
+    <section id="compliance" aria-labelledby="compliance-heading">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-ca-blue/10 text-ca-blue" aria-hidden="true">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
+          </span>
+          <h2 id="compliance-heading" class="text-2xl font-bold text-navy">Compliance</h2>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="flex items-start gap-3 p-4 rounded-lg bg-gray-50 border border-gray-100">
+            <span class="text-gold text-lg" aria-hidden="true">✦</span>
+            <div>
+              <h3 class="font-semibold text-navy text-sm">Breakthrough Project</h3>
+              <p class="text-xs text-gray-600 mt-0.5">Governor's initiative to modernize permitting statewide using AI and digital tools.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-4 rounded-lg bg-gray-50 border border-gray-100">
+            <span class="text-gold text-lg" aria-hidden="true">✦</span>
+            <div>
+              <h3 class="font-semibold text-navy text-sm">Envision 2026 — Goal 5</h3>
+              <p class="text-xs text-gray-600 mt-0.5">Streamlined, digital-first interactions for permitting and licensing services.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Source Code -->
+    <section id="source" aria-labelledby="source-heading">
+      <div class="bg-gradient-to-r from-navy to-ca-blue rounded-2xl shadow-sm p-8 text-white hover:shadow-md transition-shadow">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 id="source-heading" class="text-2xl font-bold mb-1">Source Code</h2>
+            <p class="text-blue-200 font-mono text-sm">accelerators/004-permit-streamliner/</p>
+          </div>
+          <a href="https://github.com" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gold text-navy font-bold text-sm hover:bg-yellow-400 transition-colors focus:outline-none focus:ring-2 focus:ring-white">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-navy text-white mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <p class="font-bold text-gold">CA AI Accelerators</p>
+          <p class="text-sm text-blue-200 mt-1">Built for California state agencies under EO N-12-23</p>
+        </div>
+        <div class="text-sm text-blue-300">
+          &copy; 2025 California State AI Hackathon. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('mobile-toggle').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+  </script>
+</body>
+</html>
