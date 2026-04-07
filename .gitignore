@@ -69,3 +69,5 @@ htmlcov/
 .squad/sessions/
 # Squad: SubSquad activation file (local to this machine)
 .squad-workstream
+infra/main.json
+infra/azuredeploy.json

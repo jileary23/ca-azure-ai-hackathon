@@ -40,7 +40,7 @@ class AzurePhoneService(PhoneServiceInterface):
     """
     Production implementation using Azure Communication Services Call Automation.
     Answers inbound PSTN calls and connects audio to the Azure OpenAI Realtime API
-    via WebSocket media streaming, reusing the same gpt-4o-realtime deployment.
+    via WebSocket media streaming, reusing the same gpt-realtime deployment.
     """
 
     def __init__(

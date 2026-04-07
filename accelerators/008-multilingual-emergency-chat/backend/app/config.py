@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     use_mock_services: bool = True
     azure_openai_endpoint: str = ""
     azure_openai_api_key: str = ""
-    azure_openai_deployment: str = "gpt-4o"
+    azure_openai_deployment: str = "gpt-5.4"
     azure_translator_key: str = ""
     azure_translator_endpoint: str = ""
     azure_translator_region: str = "westus2"

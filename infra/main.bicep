@@ -11,13 +11,13 @@ param location string = resourceGroup().location
 param cosmosLocation string = 'canadacentral'
 
 @description('Azure OpenAI deployment model')
-param openAiModel string = 'gpt-4o'
+param openAiModel string = 'gpt-5.4'
 
 @description('OpenAI model version')
-param openAiModelVersion string = '2024-11-20'
+param openAiModelVersion string = '2026-03-05'
 
-@description('GPT-4o Realtime model version')
-param realtimeModelVersion string = '2024-12-17'
+@description('GPT Realtime model version')
+param realtimeModelVersion string = '2025-08-28'
 
 @description('Enable mock mode (no external service connections)')
 param mockMode bool = false
@@ -102,12 +102,12 @@ resource openAiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023
 
 resource openAiRealtimeDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = {
   parent: openAi
-  name: 'gpt-4o-realtime-preview'
+  name: 'gpt-realtime'
   dependsOn: [openAiDeployment]
   properties: {
     model: {
       format: 'OpenAI'
-      name: 'gpt-4o-realtime-preview'
+      name: 'gpt-realtime'
       version: realtimeModelVersion
     }
   }

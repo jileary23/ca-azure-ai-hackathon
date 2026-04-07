@@ -26,7 +26,7 @@ class MockRealtimeService(RealtimeServiceInterface):
         self._last_session_config = {
             "session": {
                 "type": "realtime",
-                "model": "gpt-4o-realtime-preview",
+                "model": "gpt-realtime",
                 "audio": {"output": {"voice": voice}},
                 "input_audio_transcription": {"model": "whisper-1"},
                 "instructions": instructions or VOICE_SYSTEM_PROMPT,
@@ -37,7 +37,7 @@ class MockRealtimeService(RealtimeServiceInterface):
             token=f"eph_mock_{uuid4()}",
             expires_at=datetime.now(timezone.utc) + timedelta(seconds=60),
             endpoint="http://localhost:8000/mock",
-            deployment="gpt-4o-realtime-preview",
+            deployment="gpt-realtime",
         )
 
     async def get_tool_definitions(self) -> list[ToolDefinition]:

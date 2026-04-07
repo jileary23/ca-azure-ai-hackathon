@@ -20,7 +20,7 @@ vi.mock('../api/client', () => ({
     token: 'eph_mock_token',
     expiresAt: new Date(Date.now() + 60_000).toISOString(),
     endpoint: 'http://localhost:8000/mock',
-    deployment: 'gpt-4o-realtime-preview',
+    deployment: 'gpt-realtime',
   }),
 }));
 

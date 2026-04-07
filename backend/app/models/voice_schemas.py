@@ -86,7 +86,7 @@ class RealtimeSessionResponse(BaseModel):
     )
     deployment: str = Field(
         ...,
-        description="Model deployment name (e.g. gpt-4o-realtime-preview)"
+        description="Model deployment name (e.g. gpt-realtime)"
     )
 
 

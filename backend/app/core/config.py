@@ -54,7 +54,7 @@ class Settings(BaseSettings):
         description="Azure OpenAI API key (optional - uses managed identity if not provided)"
     )
     azure_openai_deployment: str = Field(
-        default="gpt-4o",
+        default="gpt-5.4",
         description="Azure OpenAI deployment name"
     )
     azure_openai_api_version: str = Field(
@@ -183,7 +183,7 @@ class Settings(BaseSettings):
     )
     azure_openai_realtime_deployment: str = Field(
         default="",
-        description="Azure OpenAI Realtime API deployment name (e.g. gpt-4o-realtime-preview)"
+        description="Azure OpenAI Realtime API deployment name (e.g. gpt-realtime)"
     )
     azure_openai_realtime_api_version: str = Field(
         default="2025-04-01-preview",

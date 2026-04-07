@@ -138,7 +138,7 @@ class TestRealtimeSessionResponse:
             token="ephemeral-token-abc123",
             expires_at=datetime.now(timezone.utc),
             endpoint="https://eastus.openai.azure.com/openai/realtime",
-            deployment="gpt-4o-realtime-preview",
+            deployment="gpt-realtime",
         )
         defaults.update(overrides)
         return RealtimeSessionResponse(**defaults)
@@ -158,7 +158,7 @@ class TestRealtimeSessionResponse:
                 session_id=str(uuid4()),
                 expires_at=datetime.now(timezone.utc),
                 endpoint="https://example.com",
-                deployment="gpt-4o-realtime-preview",
+                deployment="gpt-realtime",
             )
 
     def test_session_id_stored(self):
