@@ -14,7 +14,7 @@ param cosmosLocation string = 'canadacentral'
 param openAiModel string = 'gpt-4o'
 
 @description('OpenAI model version')
-param openAiModelVersion string = '2024-05-13'
+param openAiModelVersion string = '2024-11-20'
 
 @description('GPT-4o Realtime model version')
 param realtimeModelVersion string = '2024-12-17'
@@ -190,7 +190,7 @@ resource auditContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/cont
 // ============================================================================
 resource searchService 'Microsoft.Search/searchServices@2023-11-01' = {
   name: '${prefix}-search'
-  location: location
+  location: 'eastus'  // AI Search may have capacity limits in some regions
   tags: tags
   sku: {
     name: 'basic'
