@@ -57,7 +57,7 @@ var acceleratorConfig = [
 ]
 
 // Filter to only deploy requested accelerators
-var activeAccelerators = [for config in acceleratorConfig: config if contains(acceleratorIds, config.id)]
+var activeAccelerators = filter(acceleratorConfig, config => contains(acceleratorIds, config.id))
 
 // Tags for all resources
 var tags = {
@@ -301,7 +301,7 @@ resource cosmosKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = if (!m
   parent: keyVault
   name: 'cosmos-db-key'
   properties: {
-    value: cosmosAccount.listKeys().primaryMasterKey
+    value: cosmosAccount!.listKeys().primaryMasterKey
   }
 }
 
@@ -363,7 +363,7 @@ resource backendContainerApp 'Microsoft.App/containerApps@2023-08-01-preview' = 
         }
         {
           name: 'cosmos-db-key'
-          value: mockMode ? 'mock' : cosmosAccount.listKeys().primaryMasterKey
+          value: mockMode ? 'mock' : cosmosAccount!.listKeys().primaryMasterKey
         }
         {
           name: 'search-api-key'
@@ -410,7 +410,7 @@ resource backendContainerApp 'Microsoft.App/containerApps@2023-08-01-preview' = 
             }
             {
               name: 'AZURE_COSMOS_ENDPOINT'
-              value: mockMode ? '' : cosmosAccount.properties.documentEndpoint
+              value: mockMode ? '' : cosmosAccount!.properties.documentEndpoint
             }
             {
               name: 'AZURE_COSMOS_KEY'
@@ -697,7 +697,7 @@ resource accelSearchRoles 'Microsoft.Authorization/roleAssignments@2022-04-01' =
 output AZURE_OPENAI_ENDPOINT string = openAi.properties.endpoint
 output AZURE_OPENAI_DEPLOYMENT string = openAiDeployment.name
 output AZURE_OPENAI_REALTIME_DEPLOYMENT string = openAiRealtimeDeployment.name
-output AZURE_COSMOS_ENDPOINT string = mockMode ? '' : cosmosAccount.properties.documentEndpoint
+output AZURE_COSMOS_ENDPOINT string = mockMode ? '' : cosmosAccount!.properties.documentEndpoint
 output AZURE_COSMOS_DATABASE string = mockMode ? 'cahackathon' : cosmosDatabase.name
 output AZURE_SEARCH_ENDPOINT string = 'https://${searchService.name}.search.windows.net'
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.properties.loginServer
