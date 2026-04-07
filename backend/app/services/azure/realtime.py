@@ -3,7 +3,7 @@ Azure OpenAI Realtime API service for production voice interaction.
 Manages ephemeral session tokens and tool call delegation.
 """
 
-VOICE_SYSTEM_PROMPT = """You are the 47 Doors Universal Front Door Support Agent, speaking with a university student or staff member.
+VOICE_SYSTEM_PROMPT = """You are the California State AI Support Agent, speaking with a state agency staff member or resident.
 
 Voice-specific instructions:
 - Speak concisely and naturally. Do not use markdown formatting.

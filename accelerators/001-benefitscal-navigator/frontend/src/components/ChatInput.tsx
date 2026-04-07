@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 
 const LANGUAGES = [
   { code: "en", name: "English" },
@@ -36,6 +36,7 @@ export default function ChatInput({ onSend, disabled }: Props) {
         onChange={(e) => setLanguage(e.target.value)}
         className="rounded-lg border border-gray-300 px-2 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         aria-label="Select language"
+        data-testid="language-select"
       >
         {LANGUAGES.map((lang) => (
           <option key={lang.code} value={lang.code}>
@@ -51,10 +52,12 @@ export default function ChatInput({ onSend, disabled }: Props) {
         disabled={disabled}
         className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
         aria-label="Message input"
+        data-testid="chat-input"
       />
       <button
         type="submit"
         disabled={disabled || !text.trim()}
+        data-testid="chat-send"
         className="bg-blue-700 hover:bg-blue-800 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {disabled ? "..." : "Send"}

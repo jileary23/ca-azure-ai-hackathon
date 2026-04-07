@@ -100,6 +100,27 @@
       "input": "Check my certification status and pending issues",
       "expected_intent": "claim_status",
       "expected_min_confidence": 0.7
+    },
+    {
+      "id": "eval-007-016",
+      "input": "How much will I get in unemployment benefits? I earned $12,000 last quarter",
+      "expected_intent": "benefit_calculation",
+      "expected_claim_type": "UI",
+      "expected_min_confidence": 0.5
+    },
+    {
+      "id": "eval-007-017",
+      "input": "How long will it take to process my disability claim?",
+      "expected_intent": "claim_timeline",
+      "expected_claim_type": "DI",
+      "expected_min_confidence": 0.5
+    },
+    {
+      "id": "eval-007-018",
+      "input": "Am I eligible for Paid Family Leave to care for my mother?",
+      "expected_intent": "eligibility_check",
+      "expected_claim_type": "PFL",
+      "expected_min_confidence": 0.5
     }
   ]
 }

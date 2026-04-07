@@ -9,7 +9,7 @@
 
 ---
 
-> 🌟 **STRETCH GOAL**: This lab is for participants who finish Labs 01-06 early. Completing this lab is optional and will not affect your ability to pass the boot camp.
+> 🌟 **STRETCH GOAL**: This lab is for participants who finish Labs 01-06 early. Completing this lab is optional and will not affect your ability to pass the hackathon.
 
 ---
 
@@ -31,14 +31,14 @@ Checkpoints:
 
 ## 🌟 Overview
 
-Transform your 47 Doors FastAPI backend into a Model Context Protocol (MCP) server, enabling direct integration with AI assistants like GitHub Copilot in VS Code.
+Transform your California State AI Accelerators FastAPI backend into a Model Context Protocol (MCP) server, enabling direct integration with AI assistants like GitHub Copilot in VS Code.
 
 ## 🎯 Learning Objectives
 
 By the end of this lab, you will be able to:
 
 1. 📚 **Understand the MCP Tool/Resource Model** - Learn how AI assistants discover and invoke tools through MCP
-2. 🔌 **Expose 47 Doors as an MCP Server** - Convert your existing FastAPI endpoints into MCP-compatible tools
+2. 🔌 **Expose California State AI Accelerators as an MCP Server** - Convert your existing FastAPI endpoints into MCP-compatible tools
 3. 🧪 **Test with Copilot Agent Mode** - Use your MCP server directly from VS Code's Copilot chat
 
 ## 🤔 What is MCP (Model Context Protocol)?
@@ -49,7 +49,7 @@ The Model Context Protocol (MCP) is an open standard that defines how AI assista
 
 | 📋 Concept | 📝 Description |
 |-----------|-------------|
-| 🔧 **Tools** | Functions that AI can invoke (e.g., `university_support_query`, `list_categories`) |
+| 🔧 **Tools** | Functions that AI can invoke (e.g., `state_government_query`, `list_categories`) |
 | 📚 **Resources** | Data sources that AI can read (e.g., FAQ database, ticket history) |
 | 📝 **Prompts** | Pre-defined templates for common interactions |
 | 🖥️ **Server** | Your application that exposes tools and resources via MCP |
@@ -94,7 +94,7 @@ Create a new file `backend/app/mcp_server.py`:
 
 ```python
 """
-🔌 MCP Server for 47 Doors University Support
+🔌 MCP Server for California State AI Accelerators
 Exposes RAG-powered support tools via Model Context Protocol
 """
 import asyncio
@@ -113,7 +113,7 @@ from app.services.rag_service import RAGService
 from app.core.config import get_settings
 
 # 🔌 Initialize MCP server
-server = Server("47doors-university-support")
+server = Server("ca-accelerators-state-government-services")
 
 # 🔍 Initialize RAG service (reuse your existing implementation)
 rag_service = None
@@ -136,10 +136,10 @@ async def handle_list_tools() -> list[Tool]:
     """
     return [
         Tool(
-            name="university_support_query",
-            description="🎓 Answer university support questions using the 47 Doors knowledge base. "
+            name="state_government_query",
+            description="🎓 Answer state government services questions using the California State AI Accelerators knowledge base. "
                        "Use this for questions about admissions, financial aid, housing, "
-                       "registration, student services, and general university policies.",
+                       "registration, student services, and general state government policies.",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -181,7 +181,7 @@ async def handle_list_tools() -> list[Tool]:
         Tool(
             name="submit_support_ticket",
             description="🎫 Create a support ticket when the knowledge base cannot answer a question. "
-                       "Use this as a fallback when university_support_query returns low confidence.",
+                       "Use this as a fallback when state_government_query returns low confidence.",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -216,7 +216,7 @@ async def handle_call_tool(name: str, arguments: dict[str, Any]) -> list[TextCon
     """
     rag = await get_rag_service()
 
-    if name == "university_support_query":
+    if name == "state_government_query":
         question = arguments["question"]
         category = arguments.get("category")
 
@@ -281,9 +281,9 @@ async def handle_list_resources() -> list[Resource]:
     """
     return [
         Resource(
-            uri="47doors://faq/all",
+            uri="ca-accelerators://faq/all",
             name="All FAQs",
-            description="Complete FAQ database for university support",
+            description="Complete FAQ database for state government services",
             mimeType="application/json"
         )
     ]
@@ -308,7 +308,7 @@ Create `backend/mcp_main.py` to run the MCP server:
 
 ```python
 """
-🚀 Entry point for running 47 Doors as an MCP server.
+🚀 Entry point for running California State AI Accelerators as an MCP server.
 """
 import asyncio
 import sys
@@ -330,7 +330,7 @@ Create or update `.vscode/mcp.json` in your project root:
 ```json
 {
   "mcpServers": {
-    "47doors": {
+    "ca-accelerators": {
       "command": "python",
       "args": ["backend/mcp_main.py"],
       "env": {
@@ -350,7 +350,7 @@ Your MCP server should expose these four tools:
 
 | 🔧 Tool | 📝 Purpose | 📥 Input |
 |------|---------|-------|
-| `university_support_query` | RAG-powered Q&A | question, optional category |
+| `state_government_query` | RAG-powered Q&A | question, optional category |
 | `list_faq_categories` | List all categories | none |
 | `get_category_faqs` | Get FAQs by category | category name |
 | `submit_support_ticket` | Create support ticket | subject, description, email, priority |
@@ -365,7 +365,7 @@ The code in Step 2 implements all four. Customize them to match your existing se
 
 3. ✅ **Verify MCP Server Connection**:
    - In the chat input, click the **Tools** icon to see available MCP tools
-   - You should see tools from your `47doors` MCP server listed (e.g., `university_support_query`, `list_faq_categories`)
+   - You should see tools from your `ca-accelerators` MCP server listed (e.g., `state_government_query`, `list_faq_categories`)
    - MCP tools are automatically discovered in Agent Mode -- no `@` prefix is needed
 
 4. 🧪 **Test Each Tool**:
@@ -404,7 +404,7 @@ The code in Step 2 implements all four. Customize them to match your existing se
 When you complete this lab, verify the following:
 
 - [ ] 🚀 MCP server starts without errors
-- [ ] 🔧 `university_support_query` tool responds to questions
+- [ ] 🔧 `state_government_query` tool responds to questions
 - [ ] 💬 Copilot Agent Mode invokes your MCP tools correctly
 - [ ] ✅ All four tools are discoverable and functional
 
@@ -458,7 +458,7 @@ Error: Azure OpenAI endpoint not configured
                                          │ stdio
                                          ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    47 Doors MCP Server                          │
+│                    California State AI Accelerators MCP Server                          │
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │                     mcp_server.py                         │  │
 │  │  • 📋 list_tools() → Expose 4 tools                      │  │
@@ -524,7 +524,7 @@ Consider these extensions:
 
 <div align="center">
 
-[← Lab 06](../06-deploy-with-azd/README.md) | **Lab 07** | 🏆 Boot Camp Complete!
+[← Lab 06](../06-deploy-with-azd/README.md) | **Lab 07** | 🏆 Hackathon Complete!
 
 📅 Last Updated: 2026-02-26 | 📝 Version: 1.1.0
 

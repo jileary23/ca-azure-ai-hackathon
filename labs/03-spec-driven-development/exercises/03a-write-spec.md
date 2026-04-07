@@ -74,7 +74,7 @@ Address these constraint categories:
 
 1. Create a new file called `your-constitution.md` in the lab directory
 2. Use the template from `templates/constitution-template.md` as your starting point
-3. Complete the following sections for the Higher Education context
+3. Complete the following sections for the State Government context
 
 #### Required Sections
 

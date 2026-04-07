@@ -92,3 +92,63 @@ class AgentResponse(BaseModel):
     citations: list[Citation] = Field(default_factory=list)
     eligibility: EligibilityScreening | None = None
     application: ApplicationStatus | None = None
+
+
+# --- Domain Endpoint Models ---
+
+class EligibilityScreenRequest(BaseModel):
+    household_size: int
+    monthly_income: float
+    age: int
+    pregnant: bool = False
+    disabled: bool = False
+    foster_youth: bool = False
+
+
+class EligibleCategory(BaseModel):
+    category: str
+    threshold_pct: int
+    income_limit: float
+    eligible: bool
+
+
+class EligibilityScreenResponse(BaseModel):
+    eligible_categories: list[dict]
+    fpl_percentage: float
+    magi_income: float
+    household_fpl: int
+    confidence: float
+    next_steps: list[str]
+
+
+class DocumentAnalyzeRequest(BaseModel):
+    document_type: str
+    content: str = ""
+
+
+class DocumentAnalyzeResponse(BaseModel):
+    document_type: str
+    extracted_data: dict
+    confidence: float
+    fields_found: int
+
+
+class CompletenessRequest(BaseModel):
+    submitted_documents: list[str]
+    application_type: str = "standard"
+
+
+class CompletenessResponse(BaseModel):
+    complete: bool
+    missing: list[str]
+    submitted: list[str]
+    progress_pct: float
+
+
+class MediCalProgram(BaseModel):
+    name: str
+    description: str
+    category: str
+    fpl_threshold: int
+    age_range: str
+    special_requirements: list[str]

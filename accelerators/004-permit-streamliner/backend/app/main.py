@@ -1,12 +1,22 @@
 """Permit Streamliner — FastAPI application."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.models.schemas import ChatRequest, ChatResponse, ZoningResult
+from app.models.schemas import (
+    ChatRequest,
+    ChatResponse,
+    ClassifyRequest,
+    ClassifyResponse,
+    CreateApplicationRequest,
+    FeeEstimateRequest,
+    PermitApplication,
+    ZoningResult,
+)
 from app.pipeline import PermitPipeline
 from app.services.mock_service import MockPermitService
+from app.services import intake_service, checklist_service, sla_service, fee_service
 
 settings = get_settings()
 
@@ -26,6 +36,9 @@ app.add_middleware(
 
 pipeline = PermitPipeline()
 mock_service = MockPermitService()
+
+# In-memory store for created applications (mock mode)
+_applications: dict[str, PermitApplication] = {}
 
 
 @app.get("/health")
@@ -61,3 +74,57 @@ async def list_applications():
 @app.get("/api/zoning/check")
 async def zoning_check(address: str = "123 Main St") -> dict:
     return mock_service.get_zoning_info(address)
+
+
+# --- Domain endpoints ---
+
+
+@app.post("/api/intake/classify", response_model=ClassifyResponse)
+async def classify_project(request: ClassifyRequest) -> ClassifyResponse:
+    """Classify project type and determine responsible agency."""
+    result = intake_service.classify_project(request.description)
+    return ClassifyResponse(**result)
+
+
+@app.post("/api/applications/create", response_model=PermitApplication)
+async def create_application(request: CreateApplicationRequest) -> PermitApplication:
+    """Create a new permit application."""
+    application = intake_service.create_application(
+        project_type=request.project_type,
+        description=request.project_description,
+        address=request.address,
+        applicant=request.applicant_name,
+        project_value=request.project_value,
+    )
+    _applications[application.app_id] = application
+    return application
+
+
+@app.get("/api/applications/{app_id}/checklist")
+async def get_application_checklist(app_id: str):
+    """Get document checklist for an application."""
+    application = _applications.get(app_id)
+    if not application:
+        raise HTTPException(status_code=404, detail=f"Application {app_id} not found")
+    cl = checklist_service.generate_checklist(application.project_type)
+    return cl
+
+
+@app.get("/api/applications/{app_id}/status")
+async def get_application_status(app_id: str):
+    """Get application status with SLA tracking."""
+    application = _applications.get(app_id)
+    if not application:
+        raise HTTPException(status_code=404, detail=f"Application {app_id} not found")
+    return sla_service.get_sla_status(application)
+
+
+@app.post("/api/fees/estimate")
+async def estimate_fees(request: FeeEstimateRequest):
+    """Estimate permit fees for a project."""
+    return fee_service.estimate_fees(
+        project_type=request.project_type,
+        project_value=request.project_value,
+        expedited=request.expedited,
+        constraints=request.constraints,
+    )

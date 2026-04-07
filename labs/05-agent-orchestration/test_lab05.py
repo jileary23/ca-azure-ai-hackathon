@@ -18,7 +18,7 @@ OPENAI_ENDPOINT = os.environ.get("AZURE_OPENAI_ENDPOINT")
 OPENAI_KEY = os.environ.get("AZURE_OPENAI_API_KEY")
 SEARCH_ENDPOINT = os.environ.get("AZURE_SEARCH_ENDPOINT")
 SEARCH_KEY = os.environ.get("AZURE_SEARCH_KEY")
-INDEX_NAME = os.environ.get("AZURE_SEARCH_INDEX_NAME", "university-kb")
+INDEX_NAME = os.environ.get("AZURE_SEARCH_INDEX_NAME", "state-government-kb")
 
 requires_azure = pytest.mark.skipif(
     not OPENAI_ENDPOINT or not OPENAI_KEY,
@@ -135,7 +135,7 @@ async def test_full_pipeline():
     # Multi-turn conversation
     conversation = [
         "Hi there!",
-        "How do I reset my university password?",
+        "How do I reset my state government password?",
         "What if the self-service portal doesn't work?",
         "Thanks, that helps!",
     ]

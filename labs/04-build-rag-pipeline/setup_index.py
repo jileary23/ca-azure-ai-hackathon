@@ -29,7 +29,7 @@ from openai import AzureOpenAI
 # Configuration from environment
 SEARCH_ENDPOINT = os.environ.get("AZURE_SEARCH_ENDPOINT")
 SEARCH_KEY = os.environ.get("AZURE_SEARCH_KEY")
-INDEX_NAME = os.environ.get("AZURE_SEARCH_INDEX_NAME", "university-kb")
+INDEX_NAME = os.environ.get("AZURE_SEARCH_INDEX_NAME", "state-government-kb")
 
 OPENAI_ENDPOINT = os.environ.get("AZURE_OPENAI_ENDPOINT")
 OPENAI_KEY = os.environ.get("AZURE_OPENAI_API_KEY")

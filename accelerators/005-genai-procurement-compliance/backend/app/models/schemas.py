@@ -96,3 +96,58 @@ class ChatResponse(BaseModel):
     confidence: float = 0.0
     citations: list[Citation] = Field(default_factory=list)
     compliance_data: dict | None = None
+
+
+# ---- Domain-specific models for new endpoints ----
+
+
+class AttestationRequest(BaseModel):
+    text: str
+    vendor_name: str
+    system_description: str
+
+
+class ComplianceScoreDetail(BaseModel):
+    overall_score: float = Field(ge=0, le=100)
+    risk_tier: Literal["low", "medium", "high", "critical"]
+    category_scores: dict[str, float] = Field(default_factory=dict)
+    gaps: list[dict[str, str]] = Field(default_factory=list)
+    recommendations: list[str] = Field(default_factory=list)
+
+
+class ComplianceRuleDetail(BaseModel):
+    id: str
+    category: str
+    requirement: str
+    source: str
+    severity: Literal["critical", "high", "medium", "low"]
+    keywords: list[str] = Field(default_factory=list)
+
+
+class RuleMatch(BaseModel):
+    rule_id: str
+    category: str
+    matched_keywords: list[str] = Field(default_factory=list)
+    confidence: float = 0.0
+
+
+class NistControl(BaseModel):
+    control_id: str
+    function: str
+    title: str
+    description: str
+
+
+class NistClassification(BaseModel):
+    risk_tier: Literal["low", "medium", "high"]
+    applicable_functions: list[str] = Field(default_factory=list)
+    controls: list[NistControl] = Field(default_factory=list)
+
+
+class ComplianceReport(BaseModel):
+    attestation_id: str
+    vendor_name: str
+    timestamp: str
+    score: ComplianceScoreDetail
+    rule_matches: list[RuleMatch] = Field(default_factory=list)
+    nist_classification: NistClassification | None = None

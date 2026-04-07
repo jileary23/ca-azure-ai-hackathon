@@ -34,7 +34,7 @@ Checkpoints:
 By the end of this lab, you will be able to:
 
 - 🖥️ Launch and configure your GitHub Codespaces development environment
-- 🔑 Configure Azure credentials for the boot camp environment
+- 🔑 Configure Azure credentials for the hackathon environment
 - 🤖 Test GitHub Copilot functionality in Codespaces
 - 🌐 Verify CORS configuration for Codespaces URLs
 - ✅ Confirm your development environment is ready for the remaining labs
@@ -45,7 +45,7 @@ Before starting this lab, ensure you have:
 
 | ✅ Requirement       | 📝 Details                                      |
 | -------------------- | ----------------------------------------------- |
-| 🐙 GitHub Account    | With access to the 47doors repository           |
+| 🐙 GitHub Account    | With access to the ca-accelerators repository           |
 | 🤖 GitHub Copilot    | Active subscription (required for labs)         |
 | ☁️ Azure Credentials | Provided by your instructor for labs 04, 05, 07 |
 | 🌐 Web Browser       | Chrome, Edge, or Firefox (latest version)       |
@@ -68,7 +68,7 @@ GitHub Codespaces provides:
 
 ### 🔹 Step 1: Launch GitHub Codespaces
 
-1. 🔗 Navigate to the [47doors repository](https://github.com/EstablishedCorp/47doors) on GitHub
+1. 🔗 Navigate to the [ca-accelerators repository](https://github.com/EstablishedCorp/ca-accelerators) on GitHub
 2. 🟢 Click the green **Code** button
 3. 📑 Select the **Codespaces** tab
 4. ➕ Click **Create codespace on main**
@@ -292,7 +292,7 @@ Or construct the URL manually:
 https://<your-codespace-name>-5173.app.github.dev
 ```
 
-You should see the **47 Doors - University Support** interface with the logo. 🎉
+You should see the **California State AI Accelerators - State Government Services** interface with the logo. 🎉
 
 ### 🔹 Step 11: Test the Chat Interface
 
@@ -498,7 +498,7 @@ Once all checklist items are complete, proceed to:
 
 ## 🆘 Need Help?
 
-Raise your hand or ask in the boot camp chat channel. 💬
+Raise your hand or ask in the hackathon chat channel. 💬
 
 ---
 

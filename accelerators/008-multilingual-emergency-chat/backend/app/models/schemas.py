@@ -100,3 +100,54 @@ class ChatResponse(BaseModel):
     citations: list[Citation] = Field(default_factory=list)
     alerts: list[EmergencyAlert] | None = None
     shelters: list[ShelterInfo] | None = None
+
+
+# ---- Domain endpoint models ------------------------------------------------
+
+class Alert(BaseModel):
+    id: str
+    type: Literal["fire", "earthquake", "flood", "tsunami"]
+    severity: Literal["extreme", "severe", "moderate", "minor"]
+    headline: str
+    description: str
+    areas_affected: list[str] = Field(default_factory=list)
+    issued_at: datetime | None = None
+    expires_at: datetime | None = None
+
+
+class Shelter(BaseModel):
+    id: str
+    name: str
+    address: str
+    city: str
+    zip_code: str
+    lat: float
+    lng: float
+    capacity: int
+    current_occupancy: int = 0
+    accepts_pets: bool = False
+    ada_accessible: bool = True
+    services: list[str] = Field(default_factory=list)
+    phone: str = ""
+    distance_miles: float | None = None
+
+
+class AirQualityReading(BaseModel):
+    zip_code: str
+    aqi: int = Field(ge=0)
+    category: str
+    dominant_pollutant: str = "PM2.5"
+    health_guidance: str = ""
+    updated_at: datetime | None = None
+
+
+class TranslateRequest(BaseModel):
+    text: str
+    target_lang: str
+    source_lang: str = "en"
+
+
+class TranslateResponse(BaseModel):
+    translated_text: str
+    source_lang: str
+    target_lang: str

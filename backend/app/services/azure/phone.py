@@ -15,7 +15,7 @@ from app.services.interfaces import PhoneServiceInterface
 
 logger = logging.getLogger(__name__)
 
-PHONE_SYSTEM_PROMPT = """You are the 47 Doors Universal Front Door Support Agent, speaking with a university student or staff member.
+PHONE_SYSTEM_PROMPT = """You are the California State AI Support Agent, speaking with a state agency staff member or resident.
 
 You're speaking with someone who called the university support line. They are on a phone, not a computer, so keep your responses brief and easy to follow by ear.
 

@@ -113,6 +113,30 @@
       "language": "en",
       "expected_intent": "general_info",
       "min_confidence": 0.0
+    },
+    {
+      "id": "TC-016",
+      "message": "What are the current alerts in 90210?",
+      "language": "en",
+      "expected_intent": "active_alerts",
+      "expected_location": "90210",
+      "min_confidence": 0.80
+    },
+    {
+      "id": "TC-017",
+      "message": "Find shelters near 95814",
+      "language": "en",
+      "expected_intent": "shelter_search",
+      "expected_location": "95814",
+      "min_confidence": 0.80
+    },
+    {
+      "id": "TC-018",
+      "message": "Air quality in 92101",
+      "language": "en",
+      "expected_intent": "air_quality",
+      "expected_location": "92101",
+      "min_confidence": 0.80
     }
   ]
 }

@@ -33,7 +33,7 @@ def verify_index():
     # Check environment variables
     endpoint = os.getenv("AZURE_SEARCH_ENDPOINT")
     api_key = os.getenv("AZURE_SEARCH_API_KEY")
-    index_name = os.getenv("AZURE_SEARCH_INDEX_NAME", "university-kb")
+    index_name = os.getenv("AZURE_SEARCH_INDEX_NAME", "state-government-kb")
 
     if not endpoint or not api_key:
         print("❌ Missing environment variables!")

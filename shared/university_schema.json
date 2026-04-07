@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "University Support System Schema",
-  "description": "JSON Schema definitions for 47 Doors university support entities",
+  "description": "JSON Schema definitions for California State AI Hackathon support entities",
   "version": "1.0",
   "definitions": {
     "Department": {

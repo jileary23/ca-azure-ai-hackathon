@@ -97,6 +97,28 @@
       "input": "Where can I find the Sacramento county office?",
       "expected_intent": "county_info",
       "expected_route": "county_services"
+    },
+    {
+      "id": "eval-016",
+      "input": "Am I eligible for Medi-Cal? Family of 3, $2800/month income, age 35",
+      "expected_intent": "eligibility_check",
+      "expected_eligible": true,
+      "expected_program": "MAGI_Adult",
+      "expected_endpoint": "/api/eligibility/screen"
+    },
+    {
+      "id": "eval-017",
+      "input": "I uploaded my W-2, what information was extracted?",
+      "expected_intent": "document_help",
+      "expected_route": "document_verification",
+      "expected_endpoint": "/api/documents/analyze"
+    },
+    {
+      "id": "eval-018",
+      "input": "What documents do I still need to submit for my Medi-Cal application?",
+      "expected_intent": "document_help",
+      "expected_route": "document_verification",
+      "expected_endpoint": "/api/documents/completeness"
     }
   ]
 }

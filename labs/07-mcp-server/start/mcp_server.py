@@ -1,7 +1,7 @@
 """
-MCP Server for University Support System - Lab 07
+MCP Server for State Government Services System - Lab 07
 
-This server exposes tools for interacting with the university support system,
+This server exposes tools for interacting with the state government services system,
 including querying the support pipeline, checking department hours,
 creating support tickets, and searching the knowledge base.
 
@@ -125,23 +125,23 @@ def load_department_routing() -> Optional[dict]:
 # Create the MCP Server
 # -----------------------------------------------------------------------------
 mcp = FastMCP(
-    name="university-support",
-    instructions="MCP server providing university student support tools. "
+    name="state-government-services",
+    instructions="MCP server providing state government services tools. "
                  "Use these tools to help students with support queries, "
                  "department information, support tickets, and knowledge base searches."
 )
 
 
 # =============================================================================
-# Tool 1: university_support_query
+# Tool 1: state_government_query
 # =============================================================================
 @mcp.tool()
-async def university_support_query(
+async def state_government_query(
     query: str,
     session_id: Optional[str] = None
 ) -> str:
     """
-    Process a university support query through the full agent pipeline.
+    Process a state government services query through the full agent pipeline.
 
     This tool routes queries to the AgentPipeline for comprehensive handling,
     including intent classification, department routing, and response generation.
@@ -206,7 +206,7 @@ async def university_support_query(
 @mcp.tool()
 async def check_department_hours(department: str) -> dict:
     """
-    Get information about a specific university department.
+    Get information about a specific state government department.
 
     Retrieves department details including name, operating hours,
     and contact information.
@@ -234,7 +234,7 @@ async def check_department_hours(department: str) -> dict:
         return {
             "error": "Department information unavailable",
             "message": "Unable to load department data. Please contact the main "
-                      "university switchboard at 555-123-4000."
+                      "state government switchboard at 555-123-4000."
         }
 
     departments = routing_data.get("departments", [])
@@ -400,7 +400,7 @@ async def search_knowledge_base(
     max_results: int = 5
 ) -> list[dict]:
     """
-    Search the university knowledge base directly.
+    Search the state government knowledge base directly.
 
     Performs a semantic search across university documentation, FAQs,
     and support articles using Azure AI Search.
@@ -429,8 +429,8 @@ async def search_knowledge_base(
             "error": "Knowledge base search unavailable",
             "message": "The search system is currently unavailable. "
                       "This may be because Azure AI Search is not configured. "
-                      "Please try the university_support_query tool instead.",
-            "fallback_suggestion": "Use university_support_query for general questions"
+                      "Please try the state_government_query tool instead.",
+            "fallback_suggestion": "Use state_government_query for general questions"
         }]
 
     try:
@@ -477,7 +477,7 @@ async def search_knowledge_base(
 @mcp.tool()
 async def list_departments() -> str:
     """
-    List all available university departments and their IDs.
+    List all available state government departments and their IDs.
 
     Use this to discover which departments are available before calling
     check_department_hours or create_support_ticket.
@@ -516,7 +516,7 @@ async def main() -> None:
     """
     Run the MCP server using stdio transport.
     """
-    logger.info("Starting University Support MCP Server...")
+    logger.info("Starting State Government Services MCP Server...")
     logger.info(f"Lab 04 path: {LAB04_SOLUTION}")
     logger.info(f"Lab 05 path: {LAB05_SOLUTION}")
     logger.info(f"Shared data path: {SHARED_DIR}")

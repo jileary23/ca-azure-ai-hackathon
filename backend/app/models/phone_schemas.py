@@ -1,5 +1,5 @@
 """
-Pydantic schemas for the 47 Doors phone call feature.
+Pydantic schemas for the CA Hackathon phone call feature.
 Covers ACS Call Automation webhook events, call state, and health responses.
 """
 

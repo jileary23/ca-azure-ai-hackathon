@@ -58,3 +58,17 @@ export interface ChatMessage {
   document_checklist?: DocumentItem[];
   confidence?: number;
 }
+
+export interface BenefitCalculation {
+  weekly_benefit_amount: number;
+  max_benefit_amount: number;
+  benefit_duration_weeks: number;
+}
+
+export interface TimelineStep {
+  step_name: string;
+  estimated_days: number;
+  description: string;
+}
+
+export type TimelineResponse = TimelineStep[];

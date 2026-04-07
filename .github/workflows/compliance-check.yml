@@ -1,0 +1,45 @@
+name: CA Compliance Check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  constitution-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify constitution exists
+        run: test -f shared/constitution.md
+
+      - name: Check CA compliance references
+        run: |
+          echo "Checking constitution for required compliance frameworks..."
+          grep -q "EO N-12-23" shared/constitution.md || (echo "FAIL: Missing EO N-12-23 reference" && exit 1)
+          grep -q "EO N-5-26" shared/constitution.md || (echo "FAIL: Missing EO N-5-26 reference" && exit 1)
+          grep -q "SB 53" shared/constitution.md || (echo "FAIL: Missing SB 53 reference" && exit 1)
+          grep -q "CCPA" shared/constitution.md || (echo "FAIL: Missing CCPA reference" && exit 1)
+          echo "✅ All compliance frameworks referenced"
+
+      - name: Check no 47doors branding remnants
+        run: |
+          echo "Checking for old branding..."
+          if grep -r "47 Doors\|47doors\|47-doors" --include="*.py" --include="*.ts" --include="*.tsx" --include="*.md" --include="*.json" labs/ accelerators/ shared/ backend/ frontend/ 2>/dev/null; then
+            echo "FAIL: Found 47doors branding remnants"
+            exit 1
+          fi
+          echo "✅ No branding remnants found"
+
+      - name: Verify accelerator structure
+        run: |
+          echo "Checking accelerator directory structure..."
+          for dir in 001-benefitscal-navigator 002-wildfire-response-coordinator 003-medi-cal-eligibility 004-permit-streamliner 005-genai-procurement-compliance 006-cross-agency-knowledge-hub 007-edd-claims-assistant 008-multilingual-emergency-chat; do
+            test -d "accelerators/$dir/backend" || (echo "FAIL: Missing accelerators/$dir/backend" && exit 1)
+            test -f "accelerators/$dir/backend/requirements.txt" || (echo "FAIL: Missing requirements.txt in $dir" && exit 1)
+            test -f "accelerators/$dir/README.md" || (echo "FAIL: Missing README.md in $dir" && exit 1)
+            echo "  ✅ $dir structure OK"
+          done
+          echo "✅ All accelerators verified"

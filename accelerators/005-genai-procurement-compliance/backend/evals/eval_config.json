@@ -74,6 +74,24 @@
       "message": "hello",
       "expected_intent": "general_info",
       "min_confidence": 0.0
+    },
+    {
+      "id": "TC-013",
+      "message": "Analyze this vendor's AI safety attestation for EO N-5-26 compliance",
+      "expected_intent": "compliance_check",
+      "min_confidence": 0.85
+    },
+    {
+      "id": "TC-014",
+      "message": "What are the SB 53 requirements for AI transparency?",
+      "expected_intent": "regulation_lookup",
+      "min_confidence": 0.80
+    },
+    {
+      "id": "TC-015",
+      "message": "Classify this AI system's risk level under NIST AI RMF",
+      "expected_intent": "risk_assessment",
+      "min_confidence": 0.85
     }
   ]
 }

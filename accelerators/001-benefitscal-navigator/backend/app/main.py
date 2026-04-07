@@ -1,11 +1,25 @@
 """BenefitsCal Navigator — FastAPI application."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.models.schemas import ChatRequest, ChatResponse, ProgramInfo
+from app.models.schemas import (
+    ChatRequest,
+    ChatResponse,
+    CountyOffice,
+    PrescreenRequest,
+    PrescreenResponse,
+    PrescreenResult,
+    ProgramInfo,
+)
 from app.pipeline import BenefitsCalPipeline
+from app.services import county_service, language_service
+from app.services.fpl_service import (
+    calculate_fpl,
+    calculate_fpl_percentage,
+    prescreen_eligibility as fpl_prescreen,
+)
 from app.services.mock_service import MockBenefitsService
 
 settings = get_settings()
@@ -66,3 +80,70 @@ async def list_programs() -> list[ProgramInfo]:
         )
         for p in programs
     ]
+
+
+# ---------------------------------------------------------------------------
+# Domain endpoints
+# ---------------------------------------------------------------------------
+
+
+@app.post("/api/eligibility/prescreen", response_model=PrescreenResponse)
+async def prescreen_eligibility(request: PrescreenRequest) -> PrescreenResponse:
+    """FPL-based pre-screening for benefits programs."""
+    if request.household_size < 1:
+        raise HTTPException(status_code=422, detail="household_size must be >= 1")
+    if request.monthly_income < 0:
+        raise HTTPException(status_code=422, detail="monthly_income must be >= 0")
+
+    annual_income = request.monthly_income * 12
+    fpl_amount = calculate_fpl(request.household_size)
+    fpl_pct = calculate_fpl_percentage(request.household_size, annual_income)
+
+    raw_results = fpl_prescreen(
+        household_size=request.household_size,
+        monthly_income=request.monthly_income,
+        programs=request.programs,
+    )
+
+    results = [PrescreenResult(**r) for r in raw_results]
+
+    return PrescreenResponse(
+        household_size=request.household_size,
+        monthly_income=request.monthly_income,
+        annual_income=annual_income,
+        fpl_amount=fpl_amount,
+        fpl_percentage=round(fpl_pct, 1),
+        results=results,
+    )
+
+
+@app.get("/api/programs/{program_id}/requirements")
+async def get_program_requirements(program_id: str):
+    """Get detailed requirements for a specific program."""
+    program = mock_service.get_program(program_id)
+    if program is None:
+        raise HTTPException(status_code=404, detail=f"Program '{program_id}' not found")
+    return {
+        "program_id": program["program_id"],
+        "name": program["name"],
+        "description": program["description"],
+        "agency": program["agency"],
+        "requirements": program["requirements"],
+        "documents_needed": program["documents_needed"],
+        "income_limits": program.get("income_limits", {}),
+        "policy_ref": program.get("policy_ref"),
+    }
+
+
+@app.get("/api/offices", response_model=list[CountyOffice])
+async def get_county_offices(
+    county: str | None = Query(None, description="Filter by county name"),
+) -> list[CountyOffice]:
+    """Find county welfare offices, optionally filtered by county."""
+    return county_service.get_offices(county)
+
+
+@app.get("/api/languages")
+async def get_supported_languages():
+    """List supported languages."""
+    return language_service.get_supported_languages()

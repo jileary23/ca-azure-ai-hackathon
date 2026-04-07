@@ -8,7 +8,7 @@ Use this template to define guardrails, boundaries, and principles for AI agents
 
 **Version:** [1.0]
 **Effective Date:** [Date]
-**Domain:** [e.g., Higher Education, Healthcare, Financial Services]
+**Domain:** [e.g., State Government, Healthcare, Financial Services]
 
 ---
 

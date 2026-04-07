@@ -155,13 +155,13 @@ docker compose build
  => [backend] RUN pip install --no-cache-dir -r requirements.txt
  => [backend] COPY . .
  => [backend] exporting to image
- => => naming to docker.io/library/47doors-backend
+ => => naming to docker.io/library/ca-accelerators-backend
 ```
 
 ### 3.2 Verify Image Created
 
 ```bash
-docker images | grep 47doors
+docker images | grep ca-accelerators
 ```
 
 **Expected:** Shows the backend (and frontend if applicable) images.
@@ -217,7 +217,7 @@ docker compose ps
 
 ```
 NAME                    STATUS              PORTS
-47doors-backend-1      Up (healthy)        0.0.0.0:8000->8000/tcp
+ca-accelerators-backend-1      Up (healthy)        0.0.0.0:8000->8000/tcp
 ```
 
 Note: It may take 30-60 seconds for the health check to pass and show "(healthy)".

@@ -1,4 +1,4 @@
-# 47 Doors Boot Camp - Smoke Test CI
+# California State AI Hackathon - Smoke Test CI
 # Runs on every push/PR to validate the environment works correctly
 # This catches issues before participants encounter them in Codespaces
 
@@ -216,6 +216,37 @@ jobs:
           else
             echo "⚠ KB articles below 50 - found $ARTICLE_COUNT"
           fi
+
+  accelerator-tests:
+    name: "Accelerator ${{ matrix.accelerator.id }} Tests"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        accelerator:
+          - { id: "001", name: "benefitscal-navigator" }
+          - { id: "002", name: "wildfire-response-coordinator" }
+          - { id: "003", name: "medi-cal-eligibility" }
+          - { id: "004", name: "permit-streamliner" }
+          - { id: "005", name: "genai-procurement-compliance" }
+          - { id: "006", name: "cross-agency-knowledge-hub" }
+          - { id: "007", name: "edd-claims-assistant" }
+          - { id: "008", name: "multilingual-emergency-chat" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          cd accelerators/${{ matrix.accelerator.id }}-${{ matrix.accelerator.name }}/backend
+          pip install -r requirements.txt
+      - name: Run tests
+        run: |
+          cd accelerators/${{ matrix.accelerator.id }}-${{ matrix.accelerator.name }}/backend
+          python -m pytest tests/ -x -v --tb=short
+        env:
+          USE_MOCK_SERVICES: "true"
 
   codespaces-ready:
     name: Codespaces Ready Check

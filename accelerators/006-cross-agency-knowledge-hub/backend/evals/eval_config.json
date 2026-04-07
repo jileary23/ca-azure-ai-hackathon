@@ -81,6 +81,28 @@
       "input": "Hello, help me get started",
       "expected_intent": "general_info",
       "expected_min_confidence": 0.3
+    },
+    {
+      "id": "eval-006-013",
+      "input": "Find policies about AI governance across state agencies",
+      "expected_intent": "policy_search",
+      "expected_min_confidence": 0.7,
+      "expected_has_documents": true
+    },
+    {
+      "id": "eval-006-014",
+      "input": "Who is the expert on data privacy at CDT?",
+      "expected_intent": "expert_search",
+      "expected_agencies": ["CDT"],
+      "expected_min_confidence": 0.5,
+      "expected_has_experts": true
+    },
+    {
+      "id": "eval-006-015",
+      "input": "Show me documents related to the CEQA guidelines",
+      "expected_intent": "policy_search",
+      "expected_min_confidence": 0.7,
+      "expected_has_documents": true
     }
   ]
 }

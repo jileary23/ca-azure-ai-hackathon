@@ -1,8 +1,8 @@
 """
-MCP Server for University Support - Lab 07 Solution
+MCP Server for State Government Services - Lab 07 Solution
 
 This module implements a Model Context Protocol (MCP) server that exposes
-university support tools to AI assistants. MCP is an open protocol that
+state government services tools to AI assistants. MCP is an open protocol that
 enables AI models to access external tools and data sources in a standardized way.
 
 Key Concepts:
@@ -225,20 +225,20 @@ def load_department_routing() -> Optional[dict]:
 # - Async execution
 
 mcp = FastMCP(
-    name="university-support-server",
+    name="state-government-services-server",
     version="1.0.0",
-    description="MCP server providing university student support tools"
+    description="MCP server providing state government services tools"
 )
 
 
 # =============================================================================
-# Tool 1: university_support_query
+# Tool 1: state_government_query
 # =============================================================================
 # This tool calls the full AgentPipeline from Lab 05, which orchestrates
 # multiple agents (QueryAgent, RouterAgent, ActionAgents) to handle queries.
 
 @mcp.tool()
-async def university_support_query(
+async def state_government_query(
     query: str,
     session_id: Optional[str] = None
 ) -> str:
@@ -258,7 +258,7 @@ async def university_support_query(
 
     Args:
         query: The student's question or request in natural language.
-               Example: "How do I reset my university email password?"
+               Example: "How do I reset my state government email password?"
         session_id: Optional session ID to maintain conversation context.
                    Pass the session_id from a previous response to continue
                    the same conversation.
@@ -270,7 +270,7 @@ async def university_support_query(
         - Confidence score and metadata
 
     Example:
-        >>> result = await university_support_query("What are the library hours?")
+        >>> result = await state_government_query("What are the library hours?")
         >>> print(result)
         Response: The main library is open Monday-Friday 7am-midnight...
         Session ID: abc-123-def-456
@@ -346,7 +346,7 @@ async def university_support_query(
 @mcp.tool()
 async def check_department_hours(department_id: str) -> str:
     """
-    Get information about a university department including business hours.
+    Get information about a state government department including business hours.
 
     Returns comprehensive department information including:
     - Department name and contact details (email, phone)
@@ -394,7 +394,7 @@ async def check_department_hours(department_id: str) -> str:
         return json.dumps({
             "error": "Department information unavailable",
             "message": "Unable to load department data. Please contact the main "
-                      "university switchboard at 555-123-4000."
+                      "state government switchboard at 555-123-4000."
         }, indent=2)
 
     # Find the requested department
@@ -489,7 +489,7 @@ def _check_if_open(business_hours: dict) -> tuple[bool, Optional[dict]]:
 # Tool 3: create_support_ticket
 # =============================================================================
 # This tool creates support tickets for issues that need human follow-up.
-# In a boot camp context, we generate mock ticket IDs.
+# In a hackathon context, we generate mock ticket IDs.
 
 @mcp.tool()
 async def create_support_ticket(
@@ -586,7 +586,7 @@ async def create_support_ticket(
     if student_id:
         ticket["student_id"] = student_id
 
-    # Add tracking URL (mock URL for boot camp)
+    # Add tracking URL (mock URL for hackathon)
     ticket["tracking_url"] = f"https://support.university.edu/tickets/{ticket_id}"
 
     # Log the ticket creation (in production, save to database)
@@ -623,10 +623,10 @@ async def search_knowledge_base(
     use_hybrid: bool = True
 ) -> str:
     """
-    Search the university knowledge base for relevant information.
+    Search the state government knowledge base for relevant information.
 
     This tool performs a hybrid search (combining semantic and keyword search)
-    against the indexed university documents. Use this for:
+    against the indexed state government documents. Use this for:
     - Finding specific policies or procedures
     - Looking up official information
     - Getting source documents to cite
@@ -677,8 +677,8 @@ async def search_knowledge_base(
             "error": "Knowledge base search unavailable",
             "message": "The search system is currently unavailable. "
                       "This may be because Azure AI Search is not configured. "
-                      "Please try the university_support_query tool instead.",
-            "fallback_suggestion": "Use university_support_query for general questions"
+                      "Please try the state_government_query tool instead.",
+            "fallback_suggestion": "Use state_government_query for general questions"
         }, indent=2)
 
     try:
@@ -734,7 +734,7 @@ async def search_knowledge_base(
 @mcp.tool()
 async def list_departments() -> str:
     """
-    List all available university departments and their IDs.
+    List all available state government departments and their IDs.
 
     Use this to discover which departments are available before calling
     check_department_hours or create_support_ticket.
@@ -786,7 +786,7 @@ def main():
     This starts the server and listens for incoming connections.
     The server communicates over stdio using the MCP protocol.
     """
-    logger.info("Starting University Support MCP Server...")
+    logger.info("Starting State Government Services MCP Server...")
     logger.info(f"Lab 04 path: {LAB04_SOLUTION}")
     logger.info(f"Lab 05 path: {LAB05_SOLUTION}")
     logger.info(f"Shared data path: {SHARED_DIR}")
@@ -813,9 +813,9 @@ Add to your VS Code settings.json:
 
 {
     "mcp.servers": {
-        "university-support": {
+        "state-government-services": {
             "command": "python",
-            "args": ["c:/Users/segayle/repos/edu/47doors/labs/07-mcp-server/solution/mcp_server.py"],
+            "args": ["c:/Users/segayle/repos/edu/ca-accelerators/labs/07-mcp-server/solution/mcp_server.py"],
             "env": {
                 "AZURE_OPENAI_ENDPOINT": "https://your-openai.openai.azure.com/",
                 "AZURE_OPENAI_KEY": "your-api-key",
@@ -834,17 +834,17 @@ For Claude Desktop, add to your configuration file:
 
 {
     "mcpServers": {
-        "university-support": {
+        "state-government-services": {
             "command": "python",
             "args": [
-                "c:/Users/segayle/repos/edu/47doors/labs/07-mcp-server/solution/mcp_server.py"
+                "c:/Users/segayle/repos/edu/ca-accelerators/labs/07-mcp-server/solution/mcp_server.py"
             ],
             "env": {
                 "AZURE_OPENAI_ENDPOINT": "https://your-openai.openai.azure.com/",
                 "AZURE_OPENAI_KEY": "your-api-key",
                 "AZURE_SEARCH_ENDPOINT": "https://your-search.search.windows.net",
                 "AZURE_SEARCH_KEY": "your-search-key",
-                "AZURE_SEARCH_INDEX": "university-kb"
+                "AZURE_SEARCH_INDEX": "state-government-kb"
             }
         }
     }
@@ -861,7 +861,7 @@ AZURE_OPENAI_KEY=your-api-key-here
 AZURE_OPENAI_DEPLOYMENT=gpt-4o
 AZURE_SEARCH_ENDPOINT=https://your-search.search.windows.net
 AZURE_SEARCH_KEY=your-search-key-here
-AZURE_SEARCH_INDEX=university-kb
+AZURE_SEARCH_INDEX=state-government-kb
 
 
 ## Testing the Server
@@ -880,7 +880,7 @@ For interactive testing, you can use the MCP Inspector:
 
 After connecting, the following tools are available:
 
-1. university_support_query(query, session_id?)
+1. state_government_query(query, session_id?)
    - Process queries through the full agent pipeline
    - Maintains conversation context with session_id
 

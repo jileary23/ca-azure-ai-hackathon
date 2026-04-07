@@ -1,4 +1,3 @@
-import React from "react";
 import type { ChatMessage as ChatMessageType } from "../types";
 
 interface Props {

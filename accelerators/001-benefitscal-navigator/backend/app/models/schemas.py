@@ -78,3 +78,39 @@ class EscalationTicket(BaseModel):
     reason: str
     priority: str
     created_at: datetime
+
+
+class PrescreenRequest(BaseModel):
+    household_size: int
+    monthly_income: float
+    county: str | None = None
+    programs: list[str] | None = None
+
+
+class PrescreenResult(BaseModel):
+    program: str
+    likely_eligible: bool
+    fpl_percentage: float
+    threshold: float
+    confidence: float
+    factors: list[str] = Field(default_factory=list)
+    next_steps: list[str] = Field(default_factory=list)
+
+
+class PrescreenResponse(BaseModel):
+    household_size: int
+    monthly_income: float
+    annual_income: float
+    fpl_amount: int
+    fpl_percentage: float
+    results: list[PrescreenResult] = Field(default_factory=list)
+
+
+class CountyOffice(BaseModel):
+    name: str
+    county: str
+    address: str
+    phone: str
+    hours: str
+    languages_served: list[str] = Field(default_factory=list)
+    services: list[str] = Field(default_factory=list)

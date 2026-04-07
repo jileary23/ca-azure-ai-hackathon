@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
-import type { ChatMessage, ChatRequest, ChatResponse } from "../types";
-
-const API_URL = "http://localhost:8000/api/chat";
+import type { ChatMessage, ChatResponse } from "../types";
+import { postChat } from "../api/apiClient";
 
 export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -21,17 +20,11 @@ export function useChat() {
       setError(null);
 
       try {
-        const body: ChatRequest = { message: text, language };
-        if (agencyFilter) body.agency_filter = agencyFilter;
-
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-
-        if (!res.ok) throw new Error(`Server error: ${res.status}`);
-        const data: ChatResponse = await res.json();
+        const data: ChatResponse = await postChat(
+          text,
+          language,
+          agencyFilter
+        );
 
         const assistantMessage: ChatMessage = {
           id: crypto.randomUUID(),

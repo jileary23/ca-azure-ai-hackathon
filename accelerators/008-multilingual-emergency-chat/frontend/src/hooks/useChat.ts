@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 import type { ChatMessage, ChatResponse } from "../types";
-
-const API_URL = "http://localhost:8000/api/chat";
+import { postChat } from "../api/apiClient";
 
 export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -21,13 +20,7 @@ export function useChat() {
       setError(null);
 
       try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text, language }),
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data: ChatResponse = await res.json();
+        const data: ChatResponse = await postChat(text, language);
 
         const botMsg: ChatMessage = {
           id: crypto.randomUUID(),

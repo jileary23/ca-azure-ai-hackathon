@@ -1,7 +1,7 @@
 {
   "name": "ca-hackathon-accelerator",
   "version": "1.0.0",
-  "description": "California Hackathon Accelerator — 47 Doors University Support Agent",
+  "description": "California State AI Hackathon Accelerators — 8 AI solutions for CA state agencies",
   "private": true,
   "scripts": {
     "smoke-test": "bash scripts/smoke-test.sh",
@@ -54,7 +54,7 @@
     "ai-agents",
     "azure-openai",
     "rag",
-    "higher-education"
+    "state-government"
   ],
   "author": "California Hackathon Accelerator Team",
   "license": "MIT"

@@ -1,15 +1,15 @@
-import React from "react";
 import type { ChatMessage as ChatMessageType } from "../types";
 
 interface Props {
   message: ChatMessageType;
+  index?: number;
 }
 
-export default function ChatMessage({ message }: Props) {
+export default function ChatMessage({ message, index }: Props) {
   const isUser = message.role === "user";
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`} data-testid={index !== undefined ? `message-${index}` : undefined}>
       <div
         className={`max-w-[80%] rounded-2xl px-4 py-3 ${
           isUser

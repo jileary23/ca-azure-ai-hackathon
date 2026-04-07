@@ -1,4 +1,4 @@
-"""47doors MCP server tool definitions.
+"""CA Hackathon MCP server tool definitions.
 
 This module exposes a small set of support tools for MCP clients.
 """

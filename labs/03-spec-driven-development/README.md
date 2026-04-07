@@ -18,7 +18,7 @@ Checkpoints:
 □ Step 2: Write Your Spec (Exercise 03a)
 □ Step 3: Generate Code from Spec (Exercise 03b)
 □ Create Escalation Detection Agent Spec
-□ Create Higher Ed Constitution
+□ Create State Government Constitution
 ```
 
 ---
@@ -109,7 +109,7 @@ By the end of this lab, you will have created:
    - 📋 Detailed functional requirements
    - 📊 Measurable success criteria
 
-### 2. 🛡️ Higher Ed Constitution (`your-constitution.md`)
+### 2. 🛡️ State Government Constitution (`your-constitution.md`)
    - 📜 Core principles for AI agents in educational contexts
    - 🚧 Clear agent boundaries
    - 🚫 Prohibited actions and behaviors

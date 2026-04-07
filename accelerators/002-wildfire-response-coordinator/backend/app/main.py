@@ -1,13 +1,19 @@
 """Wildfire Response Coordinator — FastAPI application."""
 
 import os
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from app.pipeline import WildfirePipeline
-from app.models.schemas import ChatRequest, ChatResponse
+from app.models.schemas import (
+    ChatRequest, ChatResponse,
+    CreateIncidentRequest, IncidentResponse,
+    ResourceAllocationRequest, ResourceAllocationResponse,
+    EvacuationRoute, WeatherAlert, FireWeather, PSPSStatus,
+)
 from app.services.mock_service import MockWildfireService
+from app.services import incident_service, resource_service, weather_service, evacuation_service, psps_service
 
 app = FastAPI(
     title="Wildfire Response Coordinator API",
@@ -54,63 +60,114 @@ async def status():
     }
 
 
-@app.get("/api/incidents")
-async def list_incidents():
-    """List all incidents."""
-    incidents = mock_service.get_all_incidents()
-    return [
-        {
-            "incident_id": i.incident_id,
-            "name": i.name,
-            "incident_type": i.incident_type,
-            "severity": i.severity,
-            "location": i.location,
-            "county": i.county,
-            "acres_burned": i.acres_burned,
-            "containment_pct": i.containment_pct,
-            "status": i.status,
-            "lead_agency": i.lead_agency,
-        }
-        for i in incidents
-    ]
+# ── Incident endpoints ──────────────────────────────────────────────
 
 
-class CreateIncidentRequest(BaseModel):
-    name: str
-    incident_type: str = "wildfire"
-    severity: str = "moderate"
-    location: str = ""
-    county: str = ""
-    acres_burned: float = 0.0
-    lead_agency: str = "CAL FIRE"
-    mutual_aid_region: int = 1
-
-
-@app.post("/api/incidents")
+@app.post("/api/incidents", response_model=IncidentResponse)
 async def create_incident(request: CreateIncidentRequest):
-    """Create a new incident."""
-    incident = mock_service.create_incident(request.model_dump())
+    """Create a new incident report."""
+    incident = incident_service.create_incident(
+        incident_type=request.incident_type,
+        name=request.name,
+        location=request.location,
+        description=request.description,
+        severity=request.severity,
+    )
     return incident
+
+
+@app.get("/api/incidents")
+async def list_incidents(
+    status: str = Query(None, description="Filter by status"),
+    type: str = Query(None, description="Filter by incident type"),
+):
+    """List incidents, optionally filtered."""
+    return incident_service.list_incidents(status=status, incident_type=type)
 
 
 @app.get("/api/incidents/{incident_id}")
 async def get_incident(incident_id: str):
     """Get incident details by ID."""
-    incident = mock_service.get_incident(incident_id)
+    incident = incident_service.get_incident(incident_id)
     if incident is None:
         raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found")
     return incident
 
 
+# ── Resource endpoints ───────────────────────────────────────────────
+
+
+@app.post("/api/resources/allocate", response_model=ResourceAllocationResponse)
+async def allocate_resources(request: ResourceAllocationRequest):
+    """Request resource allocation for an incident."""
+    try:
+        allocation = resource_service.allocate_resources(
+            incident_id=request.incident_id,
+            resource_type=request.resource_type,
+            quantity=request.quantity,
+            from_region=request.from_region,
+        )
+        return allocation
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @app.get("/api/resources/available")
-async def get_available_resources():
-    """Get available resources."""
-    resources = mock_service.get_available_resources()
-    return resources
+async def get_available_resources(
+    region: int = Query(None, description="Filter by mutual aid region number"),
+    type: str = Query(None, description="Filter by resource type"),
+):
+    """Check available resources by region."""
+    return resource_service.get_available_resources(region=region, resource_type=type)
+
+
+# ── Evacuation endpoints ────────────────────────────────────────────
+
+
+@app.get("/api/evacuation/routes", response_model=EvacuationRoute)
+async def get_evacuation_routes(zone: str = Query(..., description="Zone ID")):
+    """Get evacuation routes for a zone."""
+    route = evacuation_service.get_evacuation_routes(zone)
+    if route is None:
+        raise HTTPException(status_code=404, detail=f"Zone {zone} not found")
+    return route
+
+
+@app.get("/api/evacuation/zones")
+async def get_evacuation_zones():
+    """Get all evacuation zone statuses."""
+    return evacuation_service.get_zone_status()
+
+
+# ── Weather endpoints ────────────────────────────────────────────────
+
+
+@app.get("/api/weather/alerts")
+async def get_weather_alerts(region: str = Query(None, description="Filter by region name")):
+    """Get weather alerts, optionally by region."""
+    return weather_service.get_weather_alerts(region=region)
+
+
+@app.get("/api/weather/fire-conditions")
+async def get_fire_weather(location: str = Query(..., description="Location name")):
+    """Get fire weather conditions for a location."""
+    return weather_service.get_fire_weather(location)
+
+
+# ── PSPS endpoints ───────────────────────────────────────────────────
+
+
+@app.get("/api/psps/status")
+async def get_psps_status(utility: str = Query(None, description="Utility code (pge, sce, sdge)")):
+    """Get Public Safety Power Shutoff status."""
+    return psps_service.get_psps_status(utility=utility)
+
+
+# ── Legacy endpoints (backward compatibility) ────────────────────────
 
 
 @app.get("/api/weather")
-async def get_weather(county: str | None = None):
-    """Get fire weather conditions."""
+async def get_weather_legacy(county: str | None = None):
+    """Get fire weather conditions (legacy)."""
     weather = mock_service.get_weather(county)
     return weather

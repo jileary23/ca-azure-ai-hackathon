@@ -485,4 +485,4 @@ Before marking Lab 06 complete, verify all items:
 - Azure subscription with Contributor access
 - Azure CLI and azd CLI installed
 
-**Next Step:** Boot Camp complete! Present your working AI agent to the group.
+**Next Step:** Hackathon complete! Present your working AI agent to the group.

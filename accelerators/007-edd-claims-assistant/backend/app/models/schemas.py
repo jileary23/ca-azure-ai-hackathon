@@ -66,6 +66,60 @@ class SupportTicket(BaseModel):
     claim_type: str | None = None
 
 
+class BenefitCalculationRequest(BaseModel):
+    claim_type: str  # UI, DI, PFL
+    quarterly_earnings: list[float]
+
+
+class BenefitCalculationResponse(BaseModel):
+    claim_type: str
+    weekly_benefit: float
+    max_weeks: int
+    total_benefit: float
+    replacement_rate: float
+    base_period_earnings: float
+
+
+class ClaimTimeline(BaseModel):
+    claim_type: str
+    estimated_days: int
+    steps: list[dict] = Field(default_factory=list)
+
+
+class ClaimRequirements(BaseModel):
+    claim_type: str
+    eligibility_requirements: list[str] = Field(default_factory=list)
+    required_documents: list[str] = Field(default_factory=list)
+    additional_info: list[str] = Field(default_factory=list)
+
+
+class EscalationRequest(BaseModel):
+    reason: str
+    claim_type: str | None = None
+    context: dict = Field(default_factory=dict)
+
+
+class EscalationResponse(BaseModel):
+    ticket_id: str
+    priority: str
+    estimated_wait: str
+    queue_position: int
+
+
+class ClaimStatusRequest(BaseModel):
+    claim_type: str = "UI"
+    last_four_ssn: str = ""
+    date_of_birth: str = ""
+
+
+class EligibilityRequest(BaseModel):
+    claim_type: str = "UI"
+
+
+class DocumentChecklistRequest(BaseModel):
+    claim_type: str = "UI"
+
+
 class ChatRequest(BaseModel):
     message: str
     language: str = "en"

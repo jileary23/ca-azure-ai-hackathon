@@ -33,7 +33,7 @@ Before building your classifier, manually classify these 10 queries to build int
 
 ### Easy (Clear Intent)
 
-1. **"How do I reset my university email password?"**
+1. **"How do I reset my state government email password?"**
    - Expected: `it_support`
    - Rationale: Direct mention of password and email
 

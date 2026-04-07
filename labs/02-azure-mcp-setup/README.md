@@ -365,7 +365,7 @@ In the next lab, you will learn how to write specifications that guide AI-assist
 
 ## 🆘 Need Help?
 
-Raise your hand or ask in the boot camp chat channel. 💬
+Raise your hand or ask in the hackathon chat channel. 💬
 
 ---
 

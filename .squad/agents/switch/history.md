@@ -219,3 +219,36 @@ accelerators/
 - Multi-stage builds keep frontend images small (~50MB vs ~1GB)
 - Non-root users (appuser) improve container security posture
 - Health checks enable Kubernetes/ACA readiness/liveness probes
+
+### 2026-04-03 — Phase D Multi-Accelerator Containerization (Switch, Tank, Morpheus)
+
+**Orchestration session: 2026-04-03T16:38:41Z**
+
+**Context:** Tank's infrastructure rebranding + loop pattern defined 8 accelerator deployment targets. Switch consumed Tank's azure.yaml service names to create standardized containerization.
+
+**Switch's Deliverables:**
+- **8 backend Dockerfiles** (Python 3.12-slim, FastAPI + uvicorn on 8000, `/health` endpoint, non-root appuser)
+- **7 frontend Dockerfiles** (Node 20 builder stage → nginx 1.27 runtime, Vite build, BACKEND_URL envsubst)
+- **7 nginx configs** (SPA routing to /index.html, reverse proxy /api/ → $BACKEND_URL, security headers, gzip, WebSocket upgrade)
+- **Exception:** Accelerator 005 backend-only (no frontend, no nginx config)
+- **Total:** 22 files, all following identical patterns for consistency
+
+**Design Decisions:**
+- Health endpoint: Accelerators use `/health` (scoped service check) vs. core platform `/api/health` (full API surface) — intentional distinction
+- Nginx security headers: X-Frame-Options: DENY, X-Content-Type-Options: nosniff, X-XSS-Protection: 1; mode=block
+- Static asset caching: 1-year expires for /assets/*, no-cache for HTML
+- WebSocket support: Upgrade header passthrough, long proxy_read_timeout (600s) for streaming
+
+**Cross-Agent Dependencies:**
+- Consumed Tank's `azure.yaml` service names (accel-001 through accel-008, accel-001-fe through accel-008-fe)
+- Validated port assumptions (8000 internal for all backends, 80 internal for all frontends)
+- Enabled Morpheus to map ports correctly in docker-compose.accelerators.yml (8001-8008/3001-3008)
+
+**Verification:**
+- All Dockerfiles follow core platform patterns (same base images, security practices)
+- nginx configs tested for syntax correctness (checked with nginx -t locally)
+- Health checks confirmed by Morpheus in docker-compose service_healthy conditions
+
+**Result:** All accelerators containerized and ready for ACR push + Azure Container Apps deployment.
+
+**Decision merged:** `switch-dockerfiles.md` → `.squad/decisions.md`

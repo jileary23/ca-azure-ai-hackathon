@@ -99,3 +99,41 @@ class AgentResponse(BaseModel):
     confidence: float
     citations: list[Citation] = Field(default_factory=list)
     data: dict | None = None
+
+
+# --- Domain endpoint models ---
+
+
+class ClassifyRequest(BaseModel):
+    description: str
+    address: str | None = None
+
+
+class ClassifyResponse(BaseModel):
+    project_type: str
+    agency: str
+    estimated_sla_days: int
+    estimated_fees: float
+    confidence: float
+
+
+class CreateApplicationRequest(BaseModel):
+    applicant_name: str
+    project_type: str
+    project_description: str
+    address: str
+    project_value: float = 0
+
+
+class FeeEstimateRequest(BaseModel):
+    project_type: str
+    project_value: float = 0
+    expedited: bool = False
+    constraints: list[str] = Field(default_factory=list)
+
+
+class FeeEstimate(BaseModel):
+    base_fee: float
+    modifiers: list[dict] = Field(default_factory=list)
+    total_fee: float
+    breakdown: dict = Field(default_factory=dict)

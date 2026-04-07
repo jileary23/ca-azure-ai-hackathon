@@ -9,7 +9,7 @@ Usage:
     python test_lab07.py [--verbose]
 
 Note: This is a STRETCH GOAL. Lab 07 is optional and not required for
-boot camp certification. Completing this lab demonstrates advanced
+hackathon certification. Completing this lab demonstrates advanced
 understanding of MCP and agent integration.
 """
 
@@ -63,7 +63,7 @@ class MCPServerAnalyzer:
     """Analyzes MCP server implementation."""
 
     REQUIRED_TOOLS = [
-        "university_support_query",
+        "state_government_query",
         "list_faq_categories",
         "get_category_faqs",
         "submit_support_ticket",
@@ -389,18 +389,18 @@ class TestRunner:
         try:
             content = json.loads(config_file.read_text(encoding='utf-8'))
 
-            # Check for 47doors server configuration
+            # Check for ca-accelerators server configuration
             servers = content.get("mcpServers", content.get("servers", {}))
-            has_47doors = (
-                "47doors" in servers or
-                "47doors" in str(content).lower()
+            has_ca-accelerators = (
+                "ca-accelerators" in servers or
+                "ca-accelerators" in str(content).lower()
             )
 
-            if has_47doors:
+            if has_ca-accelerators:
                 return TestResult(
                     name="VS Code MCP configuration exists",
                     passed=True,
-                    message=f"Found 47doors server in {config_file.name}",
+                    message=f"Found ca-accelerators server in {config_file.name}",
                     points=1.0,
                     max_points=1.0
                 )
@@ -408,7 +408,7 @@ class TestRunner:
             return TestResult(
                 name="VS Code MCP configuration exists",
                 passed=False,
-                message="Config exists but missing '47doors' server entry",
+                message="Config exists but missing 'ca-accelerators' server entry",
                 points=0.5,
                 max_points=1.0
             )
@@ -579,8 +579,8 @@ class TestRunner:
         print("\nTo test VS Code integration:")
         print("  1. Open VS Code with this project")
         print("  2. Open Copilot Chat (Ctrl+Shift+I)")
-        print("  3. Type '@' and look for '47doors'")
-        print("  4. Try: @47doors What is the deadline for housing applications?")
+        print("  3. Type '@' and look for 'ca-accelerators'")
+        print("  4. Try: @ca-accelerators What is the deadline for housing applications?")
         print("=" * 60)
 
 

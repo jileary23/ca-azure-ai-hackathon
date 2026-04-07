@@ -373,3 +373,48 @@ California Hackathon requires deploying 8 independent accelerators (BenefitsCal 
 - Per accelerator: 1 backend Container App + 0-1 frontend Container App = 1-2 resources each
 - Total with all 8 accelerators: 12 + 8 backends + 7 frontends = 27 Container Apps + 10 shared services = 37 resources
 
+### 2026-04-03 — Phase D Multi-Accelerator Infrastructure (Tank, Switch, Morpheus)
+
+**Orchestration session: 2026-04-03T16:38:41Z**
+
+Three-agent parallel work on accelerator deployment infrastructure:
+
+**Tank's Work:**
+- Rebranded `infra/main.bicep` from 47 Doors → CA Hackathon context
+- Added Azure Translator Service + Document Intelligence resources
+- Implemented **loop-based accelerator deployment pattern** (8 services with optional frontends)
+- Declarative `acceleratorConfig` array; `acceleratorIds` parameter for selective deployment
+- Scale-to-zero: minReplicas: 0 for accelerators, minReplicas: 1 for core platform
+- Updated `infra/main.parameters.json` with rebranded environment names
+- Updated `azure.yaml` with 8 backend services (accel-001 → accel-008) + 7 frontend services
+
+**Key Learning:** Bicep loops with conditional frontends reduce manual duplication but risk loop-index coupling. Mitigation: Keep `acceleratorIds` array sorted to prevent frontend BACKEND_URL env var misrouting.
+
+**Switch's Work (consumed Tank's azure.yaml):**
+- Created **8 backend Dockerfiles** (Python 3.12-slim, non-root appuser, `/health` health check)
+- Created **7 frontend Dockerfiles** (Node 20 → nginx multi-stage build with Vite)
+- Created **7 nginx configs** (SPA routing, reverse proxy, security headers, gzip, WebSocket support)
+- Special case: Accelerator 005 backend-only (GenAI Procurement Compliance) — no frontend service
+- Total: 22 files with security hardening (non-root user, minimal images, health checks for K8s/ACA readiness probes)
+
+**Key Learning:** Consistent Docker patterns across all accelerators enable shared CI/CD pipelines and unified ACR push workflows. Health endpoint inconsistency (accelerators `/health` vs. core `/api/health`) is intentional — scoped service health.
+
+**Morpheus's Work (consumed Tank's azure.yaml + Switch's Dockerfiles):**
+- Created `docker-compose.accelerators.yml` (15 services: 8 backend + 7 frontend, mock mode default)
+- Port scheme: Backend 8001-8008 → internal 8000, Frontend 3001-3008 → internal 80
+- Health checks with dependency gating (frontend waits for backend healthy)
+- Created `scripts/azd-deploy.sh` with selective deployment (all/platform/001-008)
+- Updated `CLAUDE.md` with comprehensive Azure deployment section
+- Updated `.github/copilot-instructions.md` with deployment command reference
+
+**Key Learning:** Multi-accelerator orchestration requires clear local development patterns + documentation parity (human + AI contexts). Mixed frontend/backend-only patterns (005) require script branching.
+
+**Cross-Dependencies:**
+- Tank's infrastructure was the critical path — Switch and Morpheus consumed azure.yaml service names
+- Switch's Dockerfiles validated against Tank's health check assumptions
+- Morpheus's orchestration linked both Tank's azd-service-name tags and Switch's port mappings
+
+**Result:** CA Hackathon ready for `azd provision` + `azd deploy` — all 8 accelerators containerized, infrastructure templated, deployment tooling in place.
+
+**Decisions merged:** `tank-ca-rebrand.md`, `tank-infra-deploy.md`, `switch-dockerfiles.md`, `morpheus-deploy-tooling.md` → `.squad/decisions.md`
+

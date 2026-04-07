@@ -8,7 +8,7 @@
 
 ---
 
-> 📢 **BOOT CAMP NOTE:** The Azure AI Search index `university-kb` has been **pre-populated** with 32 KB articles and embeddings. **Skip Steps 2 and 3** and proceed directly to **Step 4: Implement the Search Tool**.
+> 📢 **BOOT CAMP NOTE:** The Azure AI Search index `state-government-kb` has been **pre-populated** with 32 KB articles and embeddings. **Skip Steps 2 and 3** and proceed directly to **Step 4: Implement the Search Tool**.
 >
 > 🧪 **Verify your setup first:**
 > ```bash
@@ -163,7 +163,7 @@ cat data/kb-001.json | jq .
 
 ### 🔹 Step 2: Create the Azure AI Search Index
 
-> ⏭️ **SKIP THIS STEP** - The index has been pre-created for the boot camp. Read this section for understanding only.
+> ⏭️ **SKIP THIS STEP** - The index has been pre-created for the hackathon. Read this section for understanding only.
 
 The search index defines how documents are stored and queried. Open `start/index_schema.json` and configure:
 
@@ -210,7 +210,7 @@ Enable semantic ranking for improved relevance:
 }
 ```
 
-**Task:** ~~Complete the index schema in `start/index_schema.json`.~~ *(Pre-completed for boot camp)* ✅
+**Task:** ~~Complete the index schema in `start/index_schema.json`.~~ *(Pre-completed for hackathon)* ✅
 
 ### 🔹 Step 3: Generate Embeddings and Index Documents
 
@@ -271,7 +271,7 @@ async def index_documents(articles: list[dict], search_client: SearchClient):
     print(f"Indexed {len(result)} documents")
 ```
 
-**Task:** ~~Complete the indexer in `start/indexer.py` and run it to populate your index.~~ *(Pre-completed for boot camp)* ✅
+**Task:** ~~Complete the indexer in `start/indexer.py` and run it to populate your index.~~ *(Pre-completed for hackathon)* ✅
 
 ```bash
 # ⏭️ (SKIP) Run the indexer - already done

@@ -1,5 +1,5 @@
 """
-Pydantic schemas for the 47 Doors voice interaction feature.
+Pydantic schemas for the CA Hackathon voice interaction feature.
 Matches the data model specification in specs/002-voice-interaction/data-model.md.
 """
 

@@ -130,3 +130,81 @@ class AgentResponse(BaseModel):
     incident: IncidentSummary | None = None
     resources: list[ResourceAllocation] | None = None
     evacuation: EvacuationInfo | None = None
+
+
+# --- Domain Endpoint Models ---
+
+class CreateIncidentRequest(BaseModel):
+    incident_type: str
+    name: str
+    location: str
+    description: str
+    severity: str = "high"
+
+
+class IncidentResponse(BaseModel):
+    incident_id: str
+    incident_type: str
+    name: str
+    location: str
+    description: str
+    severity: str
+    status: str
+    lead_agency: str
+    created_at: str
+    updated_at: str
+    resources: list = Field(default_factory=list)
+
+
+class ResourceAllocationRequest(BaseModel):
+    incident_id: str
+    resource_type: str
+    quantity: int
+    from_region: int | None = None
+
+
+class ResourceAllocationResponse(BaseModel):
+    allocation_id: str
+    incident_id: str
+    resource_type: str
+    quantity: int
+    from_region: int
+    status: str
+
+
+class EvacuationRoute(BaseModel):
+    zone_id: str
+    zone_name: str
+    population: int
+    primary_route: str
+    alternate_route: str
+    status: str
+    estimated_time_minutes: int
+
+
+class WeatherAlert(BaseModel):
+    alert_id: str
+    type: str
+    severity: str
+    regions: list[str]
+    headline: str
+    description: str
+    issued: str
+    expires: str
+
+
+class FireWeather(BaseModel):
+    location: str
+    temperature_f: int
+    humidity_pct: int
+    wind_speed_mph: int
+    wind_direction: str
+    fire_danger_level: str
+
+
+class PSPSStatus(BaseModel):
+    utility_code: str
+    utility_name: str
+    status: str
+    affected_areas: list[str]
+    estimated_restoration: str | None = None

@@ -18,9 +18,9 @@ const STORAGE_KEY = 'branding-config';
 
 // Default branding configuration
 const DEFAULT_BRANDING: BrandingConfig = {
-  logo_url: '/47doors-logo.png',
+  logo_url: '/ca-hackathon-logo.png',
   primary_color: '#2563eb',
-  institution_name: '47 Doors',
+  institution_name: 'California State AI Hackathon',
   tagline: 'University Front Door Support Agent',
 };
 

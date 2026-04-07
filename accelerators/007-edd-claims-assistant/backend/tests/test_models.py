@@ -2,13 +2,22 @@
 
 from datetime import datetime
 from app.models.schemas import (
+    BenefitCalculationRequest,
+    BenefitCalculationResponse,
     ChatRequest,
     ChatResponse,
     Citation,
     ClaimQuery,
+    ClaimRequirements,
     ClaimStatus,
+    ClaimStatusRequest,
+    ClaimTimeline,
+    DocumentChecklistRequest,
     DocumentItem,
     EligibilityAssessment,
+    EligibilityRequest,
+    EscalationRequest,
+    EscalationResponse,
     IdentityVerification,
     PolicyArticle,
     SupportTicket,
@@ -133,3 +142,74 @@ def test_routing_decision():
         escalate=False,
     )
     assert d.escalate is False
+
+
+def test_benefit_calculation_request():
+    req = BenefitCalculationRequest(claim_type="UI", quarterly_earnings=[5000.0, 4000.0])
+    assert req.claim_type == "UI"
+    assert len(req.quarterly_earnings) == 2
+
+
+def test_benefit_calculation_response():
+    resp = BenefitCalculationResponse(
+        claim_type="UI",
+        weekly_benefit=450.0,
+        max_weeks=26,
+        total_benefit=11700.0,
+        replacement_rate=1.0,
+        base_period_earnings=20000.0,
+    )
+    assert resp.total_benefit == 11700.0
+
+
+def test_claim_timeline():
+    ct = ClaimTimeline(
+        claim_type="UI",
+        estimated_days=21,
+        steps=[{"step": 1, "name": "Filed"}],
+    )
+    assert ct.estimated_days == 21
+    assert len(ct.steps) == 1
+
+
+def test_claim_requirements():
+    cr = ClaimRequirements(
+        claim_type="UI",
+        eligibility_requirements=["Req 1"],
+        required_documents=["Doc 1"],
+        additional_info=["Info 1"],
+    )
+    assert cr.claim_type == "UI"
+    assert len(cr.eligibility_requirements) == 1
+
+
+def test_escalation_request_defaults():
+    req = EscalationRequest(reason="Need help")
+    assert req.claim_type is None
+    assert req.context == {}
+
+
+def test_escalation_response():
+    resp = EscalationResponse(
+        ticket_id="TKT-001",
+        priority="high",
+        estimated_wait="10-20 minutes",
+        queue_position=3,
+    )
+    assert resp.queue_position == 3
+
+
+def test_claim_status_request_defaults():
+    req = ClaimStatusRequest()
+    assert req.claim_type == "UI"
+    assert req.last_four_ssn == ""
+
+
+def test_eligibility_request_defaults():
+    req = EligibilityRequest()
+    assert req.claim_type == "UI"
+
+
+def test_document_checklist_request_defaults():
+    req = DocumentChecklistRequest()
+    assert req.claim_type == "UI"

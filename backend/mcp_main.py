@@ -1,4 +1,4 @@
-"""Entry point for the 47doors MCP server."""
+"""Entry point for the CA Hackathon MCP server."""
 
 from __future__ import annotations
 

@@ -1,12 +1,19 @@
 """Cross-Agency Knowledge Hub — FastAPI application."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.config import get_settings
 from app.models.schemas import ChatRequest, ChatResponse, DocumentResult
 from app.pipeline import KnowledgeHubPipeline
 from app.services.mock_service import MockKnowledgeService
+from app.services import (
+    cross_reference_service,
+    expert_service,
+    permission_service,
+    search_service,
+)
 
 settings = get_settings()
 
@@ -55,27 +62,87 @@ async def status():
 
 @app.get("/api/search")
 async def search(
-    query: str = "",
-    agency: str | None = None,
-    doc_type: str | None = None,
+    query: str = Query("", description="Search query"),
+    agency: str | None = Query(None, description="Filter by agency code"),
+    doc_type: str | None = Query(None, description="Filter by document type"),
+    role: str = Query("public", description="User role for permission filtering"),
+    limit: int = Query(10, ge=1, le=50, description="Max results"),
 ):
+    """Federated search with agency-scoped permission filtering."""
     agencies = [agency] if agency else None
     doc_types = [doc_type] if doc_type else None
-    request = ChatRequest(
-        message=query or "search",
-        agency_filter=agencies,
-        document_types=doc_types,
+    permitted = permission_service.get_accessible_agencies(role)
+
+    results = search_service.search(
+        query=query or "search",
+        agencies=agencies,
+        doc_types=doc_types,
+        limit=limit,
+        user_permissions=permitted if role != "admin" else None,
     )
-    result = await pipeline.process(request)
     return {
-        "results": [d.model_dump() for d in result.documents] if result.documents else [],
-        "total": len(result.documents) if result.documents else 0,
+        "results": [d.model_dump() for d in results],
+        "total": len(results),
+        "role": role,
+        "accessible_agencies": permitted,
     }
 
 
 @app.get("/api/documents/{doc_id}")
-async def get_document(doc_id: str):
-    doc = mock_service.get_document_by_id(doc_id)
-    if doc is None:
-        return {"error": "Document not found"}, 404
-    return doc.model_dump()
+async def get_document(
+    doc_id: str,
+    include_refs: bool = Query(True, description="Include cross-references"),
+):
+    """Get document detail with optional cross-references."""
+    detail = search_service.get_document_detail(doc_id)
+    if detail is None:
+        return JSONResponse(status_code=404, content={"error": "Document not found"})
+    if not include_refs:
+        detail.pop("cross_references", None)
+    return detail
+
+
+@app.get("/api/experts")
+async def find_experts(
+    topic: str = Query(..., description="Topic to search experts for"),
+    agency: str | None = Query(None, description="Filter by agency code"),
+):
+    """Find subject matter experts by topic."""
+    experts = expert_service.find_experts(topic=topic, agency=agency)
+    return {
+        "experts": [e.model_dump() for e in experts],
+        "total": len(experts),
+    }
+
+
+@app.get("/api/experts/{expert_id}")
+async def get_expert(expert_id: str):
+    """Get expert details."""
+    expert = expert_service.get_expert(expert_id)
+    if expert is None:
+        return JSONResponse(status_code=404, content={"error": "Expert not found"})
+    return expert.model_dump()
+
+
+@app.get("/api/agencies")
+async def list_agencies(
+    role: str = Query("public", description="User role for permission filtering"),
+):
+    """List searchable agencies based on permission level."""
+    info = permission_service.get_agency_info(role)
+    return {
+        "agencies": info,
+        "total": len(info),
+        "role": role,
+    }
+
+
+@app.get("/api/cross-references/{doc_id}")
+async def get_cross_references(doc_id: str):
+    """Get cross-references for a document."""
+    refs = cross_reference_service.find_cross_references(doc_id)
+    return {
+        "doc_id": doc_id,
+        "cross_references": [r.model_dump() for r in refs],
+        "total": len(refs),
+    }

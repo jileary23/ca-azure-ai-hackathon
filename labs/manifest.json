@@ -63,7 +63,7 @@
       "has_solution_code": false,
       "deliverables": [
         "Escalation Detection Agent spec written",
-        "Higher Ed constitution principles documented"
+        "State Government constitution principles documented"
       ]
     },
     {
@@ -123,15 +123,15 @@
       "duration_minutes": 60,
       "learning_objectives": [
         "Understand MCP tool/resource model",
-        "Expose 47 Doors as MCP server",
+        "Expose California State AI Accelerators as MCP server",
         "Test with Copilot Agent Mode"
       ],
       "prerequisites": ["05"],
       "has_start_code": true,
       "has_solution_code": true,
       "deliverables": [
-        "university_support_query tool responds",
-        "@47doors queries work in VS Code"
+        "state_government_query tool responds",
+        "@ca-accelerators queries work in VS Code"
       ]
     }
   ]

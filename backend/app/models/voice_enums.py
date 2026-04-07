@@ -1,4 +1,4 @@
-"""Voice-specific enumerations for the 47 Doors voice interaction feature."""
+"""Voice-specific enumerations for the CA Hackathon voice interaction feature."""
 
 from enum import Enum
 

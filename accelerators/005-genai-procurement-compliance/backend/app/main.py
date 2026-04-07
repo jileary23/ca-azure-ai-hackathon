@@ -1,12 +1,23 @@
 """GenAI Procurement Compliance — FastAPI application."""
 
 import os
+from datetime import datetime, timezone
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 
-from app.models.schemas import ChatRequest, ChatResponse
+from app.models.schemas import (
+    AttestationRequest,
+    ChatRequest,
+    ChatResponse,
+    ComplianceReport,
+    ComplianceScoreDetail,
+    NistClassification,
+)
 from app.pipeline import process_message
 from app.services.mock_service import MockComplianceService
+from app.services.nist_mapper import classify_system
+from app.services.rule_engine import get_rules, match_rules
+from app.services.scoring_engine import score_attestation
 
 app = FastAPI(
     title="GenAI Procurement Compliance API",
@@ -15,6 +26,10 @@ app = FastAPI(
 )
 
 mock_service = MockComplianceService()
+
+# In-memory store for attestation reports (mock mode)
+_report_store: dict[str, ComplianceReport] = {}
+_report_counter = 0
 
 
 @app.get("/health")
@@ -57,3 +72,69 @@ async def get_attestation_results(doc_id: str):
         "score": score.model_dump(),
         "results": [r.model_dump() for r in results],
     }
+
+
+# ---- New domain-specific endpoints ----
+
+
+@app.post("/api/attestations/analyze", response_model=ComplianceScoreDetail)
+async def analyze_attestation(request: AttestationRequest):
+    """Analyze vendor attestation document for compliance."""
+    global _report_counter
+    score = score_attestation(request.text)
+
+    # Store a report for later retrieval
+    _report_counter += 1
+    att_id = f"ATT-{_report_counter:04d}"
+    rule_matches = match_rules(request.text)
+    nist_class = classify_system(request.system_description)
+    report = ComplianceReport(
+        attestation_id=att_id,
+        vendor_name=request.vendor_name,
+        timestamp=datetime.now(timezone.utc).isoformat(),
+        score=score,
+        rule_matches=rule_matches,
+        nist_classification=nist_class,
+    )
+    _report_store[att_id] = report
+
+    return score
+
+
+@app.get("/api/compliance/rules")
+async def get_compliance_rules(source: str = Query(None)):
+    """List all compliance rules, optionally filtered by source."""
+    rules = get_rules(source)
+    return {"rules": [r.model_dump() for r in rules], "count": len(rules)}
+
+
+@app.get("/api/compliance/report/{attestation_id}", response_model=ComplianceReport)
+async def get_compliance_report(attestation_id: str):
+    """Get detailed compliance report for a previous attestation analysis."""
+    if attestation_id in _report_store:
+        return _report_store[attestation_id]
+
+    # Return a pre-generated sample report for any unknown ID
+    sample_score = score_attestation(
+        "Our AI system implements content safety filters, bias testing with demographic parity, "
+        "transparency disclosure, data privacy protections compliant with CCPA, and human oversight "
+        "with escalation procedures. We conduct risk assessments and maintain audit trails."
+    )
+    sample_rules = match_rules(
+        "content safety bias testing transparency data privacy human oversight risk assessment audit trail"
+    )
+    sample_nist = classify_system("AI governance system with testing and monitoring capabilities")
+    return ComplianceReport(
+        attestation_id=attestation_id,
+        vendor_name="Sample Vendor",
+        timestamp=datetime.now(timezone.utc).isoformat(),
+        score=sample_score,
+        rule_matches=sample_rules,
+        nist_classification=sample_nist,
+    )
+
+
+@app.get("/api/nist/classify", response_model=NistClassification)
+async def classify_nist(description: str = Query(...)):
+    """Classify an AI system against NIST AI RMF."""
+    return classify_system(description)

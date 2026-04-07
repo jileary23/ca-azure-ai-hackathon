@@ -221,8 +221,8 @@ docker compose ps
 
 # Expected output:
 # NAME                    STATUS              PORTS
-# 47doors-backend-1      Up (healthy)        0.0.0.0:8000->8000/tcp
-# 47doors-frontend-1     Up                  0.0.0.0:3000->80/tcp
+# ca-accelerators-backend-1      Up (healthy)        0.0.0.0:8000->8000/tcp
+# ca-accelerators-frontend-1     Up                  0.0.0.0:3000->80/tcp
 ```
 
 #### 2d: 🧪 Test the Health Endpoint
@@ -518,7 +518,7 @@ You have successfully deployed your AI agent to Azure. Your agent pipeline from 
 - 💚 Monitored with health checks
 - 🌐 Accessible via public endpoints
 
-This completes the deployment phase of the boot camp. You now have a fully functional AI support agent running in the cloud.
+This completes the deployment phase of the hackathon. You now have a fully functional AI support agent running in the cloud.
 
 ---
 

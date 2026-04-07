@@ -233,6 +233,102 @@
 
 **Verification:** TypeScript compiles cleanly. Code review passed.
 
+### California State Government Rebranding
+**Timestamp:** 2026-02-02  
+**Authority:** Tank (Backend Dev)  
+**Status:** ✅ Implemented
+
+**Context:** Project rebranded from 47 Doors university student support system to California state government services across 12 agencies (CDSS, DHCS, HCD, CDT, EDD, CAL FIRE, Cal OES, DMV, DGS, OPR, DCA, GovOps).
+
+**Key Decisions:**
+- Constitution v1.0 → v2.0.0: FERPA → CCPA/CPRA, university → constituent/resident terminology
+- Department routing: 6 university departments → 12 CA state agencies
+- Sample queries: 100+ university queries → 50 CA queries with multilingual support (Spanish)
+- Timezone: America/New_York → America/Los_Angeles
+- Compliance: Added EO N-12-23, EO N-5-26, SB 53, CCPA/CPRA, Envision 2026
+
+**Affected Files:**
+- `shared/constitution.md` (1.0 → 2.0.0, 13KB)
+- `shared/department_routing.json` (1.0 → 2.0, 13KB)
+- `shared/sample_queries.json` (1.0 → 2.0, 17KB, 50 queries)
+
+**Rationale:** Complete context rewrite necessary — life-safety requirements (emergency services), incompatible compliance frameworks (FERPA vs. CCPA/CPRA), mandated multilingual access, and 40M-resident scale make gradual migration infeasible. Quality over quantity: 50 realistic queries better serve state services than 100 academic queries.
+
+### CA Hackathon Infrastructure Loop Pattern
+**Timestamp:** 2026-04-02  
+**Authority:** Tank (Backend Dev)  
+**Status:** ✅ Implemented
+
+**Context:** Deploying 8 independent accelerators with optional frontends and shared Azure services requires cost-optimized, declarative architecture.
+
+**Key Decisions:**
+1. **Loop-based Bicep resources** — Avoids manual duplication of 15 Container App definitions
+2. **Selective deployment** — `acceleratorIds` parameter controls which accelerators deploy
+3. **Scale-to-zero** — minReplicas: 0 for accelerators, minReplicas: 1 for platform (cost optimization)
+4. **Conditional frontends** — `accelWithFrontends` filters out accelerator 005 (backend-only)
+5. **Automated RBAC** — Loop-based role assignments grant managed identity access
+
+**Implications:**
+- **For Switch:** Each accelerator gets isolated `BACKEND_URL` env var — no shared state
+- **For deployment:** Selective targeting via `azd up --parameters acceleratorIds='["001","002","003"]'`
+- **For scaling:** Add new entry to `acceleratorConfig` array for future accelerators (009+)
+
+**Affected Files:**
+- `infra/main.bicep` (rebranded, loop pattern, Translator + Document Intelligence)
+- `infra/main.parameters.json` (rebranded environment names)
+- `azure.yaml` (8 backend + 7 frontend services, azd-service-name tags)
+
+**Risks Mitigated:**
+- Loop index coupling: Keep `acceleratorIds` array sorted to prevent frontend BACKEND_URL misrouting
+- Cold start: minReplicas: 0 acceptable for demo/dev; production may need minReplicas: 1
+
+### Standardized Docker Configuration for All Accelerators
+**Timestamp:** 2026-04-02  
+**Authority:** Switch (Frontend Dev)  
+**Status:** ✅ Implemented
+
+**Context:** 8 accelerators needed consistent containerization with security hardening and multi-stage optimization.
+
+**Key Decisions:**
+1. **Backend Dockerfiles (8):** Python 3.12-slim, non-root `appuser`, `/health` health check, minified
+2. **Frontend Dockerfiles (7):** Multi-stage (Node 20 builder → nginx alpine runtime), Vite build, `BACKEND_URL` envsubst
+3. **Nginx configs (7):** SPA routing, reverse proxy, security headers (X-Frame-Options, X-Content-Type-Options, X-XSS-Protection), gzip, 1y asset caching, WebSocket support
+4. **Accelerator 005 exception:** Backend-only (GenAI Procurement Compliance) — no frontend service
+
+**Files Created (22 total):**
+```
+accelerators/00[1-8]/backend/Dockerfile (8)
+accelerators/00[1-4,6-8]/frontend/Dockerfile (7)
+accelerators/00[1-4,6-8]/frontend/nginx.conf (7)
+```
+
+**Rationale:** Consistency enables shared CI/CD, unified maintenance, portability across Docker/K8s/ACA. Non-root users and minimal base images improve security posture. Health checks enable K8s/ACA readiness probes.
+
+**Key Difference from Core Platform:** Accelerators use `/health` endpoint; core platform uses `/api/health` for distinct scope.
+
+### Multi-Accelerator Deployment Tooling
+**Timestamp:** 2026-04-03  
+**Authority:** Morpheus (Lead)  
+**Status:** ✅ Implemented
+
+**Context:** Multi-accelerator deployments require orchestration tooling, clear local development patterns, and comprehensive documentation.
+
+**Key Decisions:**
+1. **docker-compose.accelerators.yml:** 15 services (8 backend, 7 frontend), ports 8001-8008 → 8000 / 3001-3008 → 80, mock mode default, health checks with dependency gating
+2. **scripts/azd-deploy.sh:** Selective deployment helper (all, platform, 001-008 IDs) with mixed patterns (skip 005 frontend)
+3. **Documentation:** Enhanced `CLAUDE.md` with Azure deployment section + `copilot-instructions.md` with deployment reference
+
+**Affected Files:**
+- **Created:** `docker-compose.accelerators.yml`, `scripts/azd-deploy.sh`
+- **Updated:** `CLAUDE.md` (Azure Deployment section), `.github/copilot-instructions.md` (Deployment Commands reference)
+
+**Rationale:** Single command spins up all accelerators locally (`docker-compose up`). Selective deployment supports production updates without full redeployment. Predictable port scheme (800X/300X) maps to accelerator IDs for operator convenience.
+
+**Implementation Notes:**
+- Health check: `curl -f http://localhost:8000/health`
+- Frontend dependency gate: `depends_on: { <backend>: { condition: service_healthy } }`
+- All services: `restart: unless-stopped` for resilience
+
 ## Governance
 
 - All meaningful changes require team consensus

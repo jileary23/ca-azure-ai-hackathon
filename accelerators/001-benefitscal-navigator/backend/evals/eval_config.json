@@ -1,0 +1,42 @@
+{
+  "name": "BenefitsCal Navigator Evals",
+  "version": "0.1.0",
+  "description": "Evaluation scenarios for benefits eligibility and county services",
+  "scenarios": [
+    {
+      "id": "calfresh_family_eligibility",
+      "input": "Am I eligible for CalFresh? Family of 4, $2500/month income",
+      "expected_intent": "eligibility_check",
+      "expected_program": "calfresh",
+      "expected_fields": ["likely_eligible", "fpl_percentage", "next_steps"]
+    },
+    {
+      "id": "sacramento_office_lookup",
+      "input": "Where is the welfare office in Sacramento County?",
+      "expected_intent": "office_lookup",
+      "expected_county": "Sacramento",
+      "expected_fields": ["name", "address", "phone", "hours"]
+    },
+    {
+      "id": "calworks_documents",
+      "input": "What documents do I need for CalWORKs?",
+      "expected_intent": "document_requirements",
+      "expected_program": "calworks",
+      "expected_fields": ["documents_needed"]
+    },
+    {
+      "id": "medi_cal_single_parent",
+      "input": "I'm a single parent making $2000/month. Can I get Medi-Cal?",
+      "expected_intent": "eligibility_check",
+      "expected_program": "medi_cal",
+      "expected_fields": ["likely_eligible", "fpl_percentage"]
+    },
+    {
+      "id": "multilingual_spanish",
+      "input": "Necesito ayuda con CalFresh",
+      "expected_intent": "general_info",
+      "expected_language": "es",
+      "expected_program": "calfresh"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Environment verification script for the 47 Doors boot camp.
+Environment verification script for the California State AI Accelerators hackathon.
 
 Checks all required tools and configurations are in place before starting.
 """
@@ -216,7 +216,7 @@ def print_result(status: str, message: str) -> None:
 
 def main() -> int:
     """Run all environment checks and report results."""
-    print("\n47 Doors Boot Camp - Environment Verification\n")
+    print("\nCalifornia State AI Hackathon - Environment Verification\n")
     print("=" * 50)
     print()
 
@@ -250,7 +250,7 @@ def main() -> int:
 
     print()
     if failed == 0:
-        print(f"Ready for boot camp! ({passed}/{total} checks passed)")
+        print(f"Ready for hackathon! ({passed}/{total} checks passed)")
         return 0
     else:
         print(f"Some issues found ({passed}/{total} checks passed)")

@@ -68,7 +68,7 @@ By completion, your lab directory should contain:
 
 | Criterion | Poor | Adequate | Excellent |
 |-----------|------|----------|-----------|
-| Principles | Generic/vague | Domain-relevant | Higher Ed specific |
+| Principles | Generic/vague | Domain-relevant | State Government specific |
 | Boundaries | Unclear limits | Basic boundaries | Comprehensive limits |
 | Prohibited Actions | Missing rationale | Actions listed | Actions + consequences |
 

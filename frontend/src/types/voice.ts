@@ -1,5 +1,5 @@
 /**
- * Voice interaction types for 47 Doors.
+ * Voice interaction types for CA Hackathon.
  * Mirrors backend voice_schemas.py / voice_enums.py.
  */
 

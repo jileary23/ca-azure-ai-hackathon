@@ -590,4 +590,4 @@ You have completed Lab 06 and successfully deployed your AI agent to Azure. Your
 - Monitored with health checks and logging
 - Ready for production use
 
-This completes the boot camp deployment labs!
+This completes the hackathon deployment labs!

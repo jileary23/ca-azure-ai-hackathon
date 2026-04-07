@@ -1,15 +1,15 @@
 # Lab 07: MCP Server - Completion Specification
 
-> **STRETCH GOAL**: This lab is optional. Participants who skip this lab can still pass the boot camp with full marks on Labs 01-06.
+> **STRETCH GOAL**: This lab is optional. Participants who skip this lab can still pass the hackathon with full marks on Labs 01-06.
 
 ## What "Done" Looks Like
 
 A successfully completed Lab 07 demonstrates:
 
-1. **MCP Server Running**: The 47 Doors backend runs as an MCP server using stdio transport
+1. **MCP Server Running**: The California State AI Accelerators backend runs as an MCP server using stdio transport
 2. **Tools Exposed**: All four required tools are discoverable by MCP clients
 3. **VS Code Integration**: Copilot chat can invoke tools via `Copilot Agent Mode` mentions
-4. **RAG Integration**: The `university_support_query` tool returns contextual answers using your Lab 05 RAG pipeline
+4. **RAG Integration**: The `state_government_query` tool returns contextual answers using your Lab 05 RAG pipeline
 
 ## Deliverables
 
@@ -18,7 +18,7 @@ A successfully completed Lab 07 demonstrates:
 | Criterion | Requirement |
 |-----------|-------------|
 | File Location | `backend/app/mcp_server.py` |
-| Server Name | `47doors-university-support` |
+| Server Name | `ca-accelerators-state-government-services` |
 | Transport | stdio (standard input/output) |
 | Dependencies | `mcp`, `` in requirements.txt |
 
@@ -32,14 +32,14 @@ A successfully completed Lab 07 demonstrates:
 
 | Tool Name | Input Schema | Expected Output |
 |-----------|--------------|-----------------|
-| `university_support_query` | `{question: string, category?: string}` | RAG answer with confidence and sources |
+| `state_government_query` | `{question: string, category?: string}` | RAG answer with confidence and sources |
 | `list_faq_categories` | `{}` | List of category objects with names and counts |
 | `get_category_faqs` | `{category: string}` | List of FAQ Q&A pairs for category |
 | `submit_support_ticket` | `{subject: string, description: string, student_email?: string, priority?: string}` | Ticket confirmation with ID |
 
 **Acceptance Criteria**:
-- [ ] `university_support_query` returns answers with confidence scores
-- [ ] `university_support_query` includes source citations
+- [ ] `state_government_query` returns answers with confidence scores
+- [ ] `state_government_query` includes source citations
 - [ ] `list_faq_categories` returns all categories from your knowledge base
 - [ ] `get_category_faqs` filters FAQs by the specified category
 - [ ] `submit_support_ticket` generates a ticket ID and confirmation
@@ -49,7 +49,7 @@ A successfully completed Lab 07 demonstrates:
 | Criterion | Requirement |
 |-----------|-------------|
 | File Location | `.vscode/mcp.json` |
-| Server Key | `47doors` |
+| Server Key | `ca-accelerators` |
 | Environment Variables | Properly references Azure credentials |
 
 **Acceptance Criteria**:
@@ -71,7 +71,7 @@ A successfully completed Lab 07 demonstrates:
 |-----------|--------|----------|
 | MCP Server Starts | 2 | Server runs without errors, stdio transport works |
 | Tools Discoverable | 2 | `list_tools()` returns all 4 tools with correct schemas |
-| RAG Tool Works | 3 | `university_support_query` returns contextual answers with sources |
+| RAG Tool Works | 3 | `state_government_query` returns contextual answers with sources |
 | VS Code Integration | 2 | `Copilot Agent Mode` queries work in Copilot chat |
 | Error Handling | 1 | Graceful handling of edge cases and errors |
 | **Total** | **10** | **Stretch goal bonus points** |
@@ -80,7 +80,7 @@ A successfully completed Lab 07 demonstrates:
 
 ### This is a Stretch Goal
 
-- **Skipping Lab 07 does NOT affect your boot camp score**
+- **Skipping Lab 07 does NOT affect your hackathon score**
 - Labs 01-06 are worth 100% of the required points
 - Lab 07 is bonus credit for participants who finish early
 - Attempting Lab 07 shows advanced understanding even if incomplete
@@ -109,12 +109,12 @@ pip show mcp
 
 # 3. VS Code config exists
 cat .vscode/mcp.json
-# Should show 47doors server configuration
+# Should show ca-accelerators server configuration
 ```
 
 In VS Code:
 1. Open Copilot Chat (Ctrl+Shift+I)
-2. Type `@` and verify `47doors` appears
+2. Type `@` and verify `ca-accelerators` appears
 3. Send: `Copilot Agent Mode List all FAQ categories`
 4. Verify response lists your categories
 

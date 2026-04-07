@@ -94,6 +94,34 @@
       "input": "Contact CAL FIRE incident commander for update",
       "expected_intent": "incident_report",
       "expected_route": "incident_command"
+    },
+    {
+      "id": "eval-016",
+      "input": "Report a wildfire near Topanga Canyon",
+      "expected_intent": "incident_report",
+      "expected_route": "incident_command",
+      "expected_priority": "critical"
+    },
+    {
+      "id": "eval-017",
+      "input": "What resources are available in Region VI?",
+      "expected_intent": "resource_request",
+      "expected_route": "resource_management",
+      "expected_priority": "high"
+    },
+    {
+      "id": "eval-018",
+      "input": "Are there any evacuation orders in effect?",
+      "expected_intent": "evacuation_query",
+      "expected_route": "evacuation_ops",
+      "expected_priority": "critical"
+    },
+    {
+      "id": "eval-019",
+      "input": "Is there a Red Flag Warning for Southern California?",
+      "expected_intent": "weather_check",
+      "expected_route": "weather_ops",
+      "expected_priority": "medium"
     }
   ]
 }

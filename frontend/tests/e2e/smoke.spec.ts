@@ -1,5 +1,5 @@
 /**
- * Smoke Tests for 47 Doors Boot Camp
+ * Smoke Tests for CA State AI Hackathon
  *
  * These tests run quickly and verify the essential functionality
  * of the application. They're designed to:
