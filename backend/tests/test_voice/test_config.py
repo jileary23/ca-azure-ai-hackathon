@@ -18,7 +18,7 @@ class TestVoiceConfig:
             azure_openai_realtime_deployment="",
             azure_openai_endpoint="https://test.openai.azure.com/",
             azure_openai_api_key="test-key",
-            azure_openai_deployment="gpt-5.4",
+            azure_openai_deployment="gpt-5.2",
         )
         assert settings.voice_enabled is False
 
@@ -29,7 +29,7 @@ class TestVoiceConfig:
             azure_openai_realtime_deployment="gpt-realtime",
             azure_openai_endpoint="https://test.openai.azure.com/",
             azure_openai_api_key="test-key",
-            azure_openai_deployment="gpt-5.4",
+            azure_openai_deployment="gpt-5.2",
         )
         assert settings.voice_enabled is True
 

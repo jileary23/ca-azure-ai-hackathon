@@ -11,10 +11,10 @@ param location string = resourceGroup().location
 param cosmosLocation string = 'canadacentral'
 
 @description('Azure OpenAI deployment model')
-param openAiModel string = 'gpt-5.4'
+param openAiModel string = 'gpt-5.2'
 
 @description('OpenAI model version')
-param openAiModelVersion string = '2026-03-05'
+param openAiModelVersion string = '2025-12-11'
 
 @description('GPT Realtime model version')
 param realtimeModelVersion string = '2025-08-28'

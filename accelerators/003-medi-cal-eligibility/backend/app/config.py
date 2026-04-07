@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     # Azure OpenAI
     azure_openai_endpoint: str = ""
     azure_openai_api_key: str = ""
-    azure_openai_deployment: str = "gpt-5.4"
+    azure_openai_deployment: str = "gpt-5.2"
     azure_openai_api_version: str = "2024-02-15-preview"
 
     # Azure Document Intelligence

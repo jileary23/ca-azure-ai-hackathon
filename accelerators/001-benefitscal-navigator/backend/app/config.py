@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     use_mock_services: bool = True
     azure_openai_endpoint: str = ""
     azure_openai_api_key: str = ""
-    azure_openai_deployment: str = "gpt-5.4"
+    azure_openai_deployment: str = "gpt-5.2"
     azure_search_endpoint: str = ""
     azure_search_key: str = ""
     app_name: str = "BenefitsCal Navigator"
