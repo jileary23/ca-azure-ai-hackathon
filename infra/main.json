@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.41.2.15936",
-      "templateHash": "11887631496436389178"
+      "templateHash": "15430502768179888473"
     }
   },
   "parameters": {
@@ -39,7 +39,7 @@
     },
     "openAiModelVersion": {
       "type": "string",
-      "defaultValue": "2024-05-13",
+      "defaultValue": "2024-11-20",
       "metadata": {
         "description": "OpenAI model version"
       }
@@ -279,7 +279,7 @@
       "type": "Microsoft.Search/searchServices",
       "apiVersion": "2023-11-01",
       "name": "[format('{0}-search', variables('prefix'))]",
-      "location": "[parameters('location')]",
+      "location": "eastus",
       "tags": "[variables('tags')]",
       "sku": {
         "name": "basic"
