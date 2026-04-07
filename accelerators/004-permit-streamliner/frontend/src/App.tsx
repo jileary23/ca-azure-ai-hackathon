@@ -5,6 +5,7 @@ import ChatInput from "./components/ChatInput";
 import PermitIntakeForm from "./components/PermitIntakeForm";
 import ApplicationStatus from "./components/ApplicationStatus";
 import FeeEstimator from "./components/FeeEstimator";
+import Footer from "./components/Footer";
 
 type Tab = "chat" | "intake" | "fees";
 
@@ -167,6 +168,7 @@ export default function App() {
           <FeeEstimator />
         </main>
       )}
+      <Footer />
     </div>
   );
 }

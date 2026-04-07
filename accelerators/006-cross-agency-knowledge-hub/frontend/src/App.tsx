@@ -6,6 +6,7 @@ import SearchBar from "./components/SearchBar";
 import SearchResults from "./components/SearchResults";
 import ExpertCard from "./components/ExpertCard";
 import { getExperts } from "./api/apiClient";
+import Footer from "./components/Footer";
 import type { DocumentResult, ExpertInfo } from "./types";
 
 type TabId = "chat" | "search" | "experts";
@@ -237,7 +238,6 @@ export default function App() {
         <div ref={bottomRef} />
       </main>
 
-      {/* Input (Chat tab only) */}
       {activeTab === "chat" && (
         <footer className="border-t border-gray-200 bg-white px-4 py-3">
           <div className="max-w-3xl mx-auto">
@@ -245,6 +245,7 @@ export default function App() {
           </div>
         </footer>
       )}
+      <Footer />
     </div>
   );
 }

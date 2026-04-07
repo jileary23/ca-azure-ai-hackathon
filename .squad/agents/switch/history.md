@@ -220,7 +220,41 @@ accelerators/
 - Non-root users (appuser) improve container security posture
 - Health checks enable Kubernetes/ACA readiness/liveness probes
 
-### 2026-04-03 — Phase D Multi-Accelerator Containerization (Switch, Tank, Morpheus)
+### 2026-04-07 — Crawler Blocking & Footer Attribution (All Frontends)
+
+**What:** Added `robots.txt` files and `noindex/nofollow` meta tags across all frontends to block search crawlers. Created `Footer.tsx` components with Sean Gayle attribution and Microsoft Azure branding for every frontend.
+
+**Crawler blocking (robots.txt + meta tags):**
+- `frontend/public/robots.txt` — created
+- `docs/robots.txt` — created
+- `accelerators/*/frontend/public/robots.txt` — created (7 files, new `public/` dirs)
+- Meta tag `<meta name="robots" content="noindex, nofollow">` added to all 10 `index.html` files
+
+**Footer components created:**
+- `frontend/src/components/Footer.tsx` — Tailwind, dark gray-900 bar
+- `accelerators/001-benefitscal-navigator/frontend/src/components/Footer.tsx` — Tailwind
+- `accelerators/002-wildfire-response-coordinator/frontend/src/components/Footer.tsx` — inline styles (matches app style)
+- `accelerators/003-medi-cal-eligibility/frontend/src/components/Footer.tsx` — inline styles (matches app style)
+- `accelerators/004-permit-streamliner/frontend/src/components/Footer.tsx` — Tailwind
+- `accelerators/006-cross-agency-knowledge-hub/frontend/src/components/Footer.tsx` — Tailwind
+- `accelerators/007-edd-claims-assistant/frontend/src/components/Footer.tsx` — Tailwind
+- `accelerators/008-multilingual-emergency-chat/frontend/src/components/Footer.tsx` — Tailwind
+
+**Footer integrations (App.tsx imports + JSX):**
+- `frontend/src/App.tsx` — Footer after `</main>`
+- All 7 accelerator `App.tsx` files — Footer as last child before closing `</div>`
+
+**Existing footer updates:**
+- `workshop-site/src/components/Footer.tsx` — replaced "47 Doors / IU Bloomington" with msftsean + Azure branding
+- `docs/index.html` footer (lines 872-882) — added "Built by Sean Gayle · ☁️ Powered by Microsoft Azure"
+
+**Design decisions:**
+- Accels 002 + 003 use inline CSS (matching their app-wide inline style pattern) instead of Tailwind
+- Footer is `mt-auto` to stick to bottom in flex-col layouts
+- All footers include `role="contentinfo"` and `aria-label` for accessibility
+- Left: "Built by Sean Gayle" (GitHub link) · Right: "☁️ Powered by Microsoft Azure"
+
+**Verification:** All 9 React frontends typecheck clean (`tsc --noEmit` passes)
 
 **Orchestration session: 2026-04-03T16:38:41Z**
 

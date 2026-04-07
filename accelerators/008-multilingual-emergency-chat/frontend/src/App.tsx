@@ -5,6 +5,7 @@ import ChatInput from "./components/ChatInput";
 import AirQualityBadge from "./components/AirQualityBadge";
 import AlertCards from "./components/AlertCards";
 import ShelterList from "./components/ShelterList";
+import Footer from "./components/Footer";
 
 export default function App() {
   const { messages, loading, error, sendMessage } = useChat();
@@ -143,6 +144,7 @@ export default function App() {
           </div>
         </aside>
       </div>
+      <Footer />
     </div>
   );
 }

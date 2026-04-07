@@ -5,6 +5,7 @@ import ChatInput from "./components/ChatInput";
 import ClaimStatusForm from "./components/ClaimStatusForm";
 import BenefitCalculator from "./components/BenefitCalculator";
 import TimelineDisplay from "./components/TimelineDisplay";
+import Footer from "./components/Footer";
 
 type Tab = "chat" | "status" | "calculator";
 
@@ -142,6 +143,7 @@ export default function App() {
           <BenefitCalculator />
         </main>
       )}
+      <Footer />
     </div>
   );
 }

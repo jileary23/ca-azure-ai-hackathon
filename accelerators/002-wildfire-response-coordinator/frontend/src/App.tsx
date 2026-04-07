@@ -5,6 +5,7 @@ import type { HealthStatus } from "./types";
 import IncidentList from "./components/IncidentList";
 import AlertBanner from "./components/AlertBanner";
 import EvacuationPanel from "./components/EvacuationPanel";
+import Footer from "./components/Footer";
 
 const severityColor = (s: string) => {
   const map: Record<string, string> = { minor: "#22c55e", moderate: "#f59e0b", major: "#ef4444", catastrophic: "#7c3aed" };
@@ -172,6 +173,7 @@ export default function App() {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   );
 }

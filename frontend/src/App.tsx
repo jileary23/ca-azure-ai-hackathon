@@ -7,6 +7,7 @@ import { useChat } from './hooks/useChat';
 import { useTickets } from './hooks/useTickets';
 import { useAdminTickets } from './hooks/useAdminTickets';
 import { useHighContrast } from './hooks/useHighContrast';
+import Footer from './components/Footer';
 
 type View = 'chat' | 'tickets' | 'admin';
 
@@ -135,6 +136,7 @@ function App() {
           />
         )}
       </main>
+      <Footer />
     </div>
   );
 }

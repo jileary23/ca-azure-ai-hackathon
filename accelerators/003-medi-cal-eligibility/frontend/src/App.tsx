@@ -5,6 +5,7 @@ import type { HealthStatus } from "./types";
 import EligibilityScreener from "./components/EligibilityScreener";
 import DocumentUpload from "./components/DocumentUpload";
 import ProgramList from "./components/ProgramList";
+import Footer from "./components/Footer";
 
 type Tab = "chat" | "screening" | "programs";
 
@@ -163,6 +164,7 @@ export default function App() {
         {/* Programs Tab */}
         {activeTab === "programs" && <ProgramList />}
       </main>
+      <Footer />
     </div>
   );
 }

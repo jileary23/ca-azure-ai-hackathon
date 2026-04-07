@@ -4,6 +4,7 @@ import ChatMessage from "./components/ChatMessage";
 import ChatInput from "./components/ChatInput";
 import EligibilityForm from "./components/EligibilityForm";
 import EligibilityResults from "./components/EligibilityResults";
+import Footer from "./components/Footer";
 import type { EligibilityResult } from "./types";
 
 type Tab = "chat" | "screening";
@@ -141,6 +142,7 @@ export default function App() {
           <EligibilityResults results={screeningResults} />
         </main>
       )}
+      <Footer />
     </div>
   );
 }
