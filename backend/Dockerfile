@@ -14,6 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
+RUN chmod -R a+rX .
 
 # Create non-root user
 RUN useradd --create-home --shell /bin/bash appuser
