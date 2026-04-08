@@ -2,15 +2,21 @@
 
 ## Overview
 
-The docs site uses **Azure Static Web Apps (SWA) built-in authentication** with an **invite-only** access model. GitHub is the primary identity provider; Azure AD (Microsoft Entra ID) is available as a backup.
+The docs site is deployed to **Azure Static Web Apps (SWA)** with **invite-only** GitHub authentication.
 
-Only users assigned the **`team`** role can view the site. Everyone else sees a 403 "Access Denied" page after authenticating.
+- **Site URL:** https://ashy-hill-0c8e2040f.1.azurestaticapps.net
+- **SWA Resource:** `cahack-docs` in resource group `rg-ca-hack`
+- **Auth Provider:** GitHub (primary), Azure AD (backup)
+
+Only users assigned the **`team`** role can view the site. Everyone else sees a 403 "Access Denied" page after authenticating. Unauthenticated visitors are redirected to GitHub login.
+
+> **Note:** GitHub Pages has been replaced by Azure SWA for this site. The old GitHub Pages URL (`msftsean.github.io/ca-hackathon/`) should be disabled in the repo settings (Settings → Pages → disable).
 
 ---
 
 ## How to Invite a User
 
-1. **Azure Portal** → navigate to the Static Web App resource → **Role management**
+1. **Azure Portal** → navigate to Static Web App `cahack-docs` → **Role management**
 2. Click **Invite** → select **GitHub** as the provider → enter the user's GitHub username
 3. Assign the **`team`** role → send the invitation link to the user
 4. The user clicks the link, authenticates with GitHub, and gains access
@@ -18,12 +24,45 @@ Only users assigned the **`team`** role can view the site. Everyone else sees a 
 > Invitations can also be managed via the [Azure CLI](https://learn.microsoft.com/en-us/azure/static-web-apps/authentication-authorization#role-management):
 > ```bash
 > az staticwebapp users invite \
->   --name <swa-name> \
+>   --name cahack-docs \
+>   --resource-group rg-ca-hack \
 >   --authentication-provider github \
 >   --user-details "<github-username>" \
 >   --role team \
->   --domain <swa-hostname>
+>   --domain ashy-hill-0c8e2040f.1.azurestaticapps.net \
+>   --invitation-expiration-in-hours 720
 > ```
+
+### Quick Invite for Jill (or anyone)
+
+Replace `<github-username>` with the person's GitHub username:
+
+```bash
+az staticwebapp users invite \
+  --name cahack-docs \
+  --resource-group rg-ca-hack \
+  --authentication-provider github \
+  --user-details "<github-username>" \
+  --role team \
+  --domain ashy-hill-0c8e2040f.1.azurestaticapps.net \
+  --invitation-expiration-in-hours 720
+```
+
+This generates an invitation link. Send it to the person — they click it, authenticate with GitHub, and get access.
+
+### Deploying Updates
+
+From the codespace, deploy docs changes directly:
+
+```bash
+SWA_TOKEN=$(curl -s -X POST \
+  -H "Authorization: Bearer $(azd auth token)" \
+  -H "Content-Type: application/json" \
+  "https://management.azure.com/subscriptions/b1ade9aa-a8a5-454e-9531-3f8ba1b1a06a/resourceGroups/rg-ca-hack/providers/Microsoft.Web/staticSites/cahack-docs/listSecrets?api-version=2022-09-01" \
+  -d '{}' | python3 -c "import json,sys; print(json.load(sys.stdin)['properties']['apiKey'])")
+
+swa deploy docs/ --deployment-token "$SWA_TOKEN" --env production
+```
 
 ---
 
