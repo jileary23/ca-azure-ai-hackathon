@@ -286,3 +286,37 @@ accelerators/
 **Result:** All accelerators containerized and ready for ACR push + Azure Container Apps deployment.
 
 **Decision merged:** `switch-dockerfiles.md` → `.squad/decisions.md`
+
+### 2026-04-07 — Live Apps Documentation Page
+
+**What:** Created `docs/live-apps.html` — a new docs site page listing all deployed Azure Container App URLs for manual testing. Added "Live Apps" nav link to all existing pages (index.html, architecture.html, getting-started.html).
+
+**Page structure:**
+- Hero section with on-page TOC (Core Platform → Accelerators → URL Reference)
+- Core Platform cards: backend API + frontend dashboard with external link buttons
+- 8 accelerator cards: each with frontend "Open App" button (gold) + secondary backend API link
+- Accel 005 treated differently: "API Only" badge, disabled frontend slot, promoted backend button
+- Quick reference tables: 3 tables (core platform, frontends, backends) for copy-paste URLs
+- Gray status dots (neutral state) next to each service — visual only, not live health checks
+- All URLs open in new tab (`target="_blank" rel="noopener noreferrer"`)
+
+**Design decisions:**
+- Matched architecture.html / getting-started.html sub-page pattern (DM Serif Display + Source Sans 3, warm-gray bg, navy/gold scheme)
+- Did NOT match index.html landing page style — that's a single-page app with different fonts/nav structure
+- Card hover animation: translateY(-4px) lift + subtle gold-tinted shadow
+- Status dots default to gray/neutral — future enhancement could add JS health checks
+- Table URLs truncated with ellipsis in frontend table for readability, full URLs in backend table
+
+**Files created:**
+- `docs/live-apps.html` — full page (~640 lines)
+
+**Files modified:**
+- `docs/index.html` — added "Live Apps" to desktop + mobile nav
+- `docs/architecture.html` — added "Live Apps" to desktop + mobile nav
+- `docs/getting-started.html` — added "Live Apps" to desktop + mobile nav
+
+**Key URLs documented:**
+- 2 core platform services (backend + frontend)
+- 7 accelerator frontends (001-004, 006-008)
+- 8 accelerator backends (001-008)
+- Total: 18 Azure Container App endpoints
