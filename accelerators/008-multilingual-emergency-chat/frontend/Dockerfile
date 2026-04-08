@@ -7,6 +7,7 @@ RUN npx vite build
 
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
+RUN chmod -R a+rX /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 ENV BACKEND_URL=http://backend:8000

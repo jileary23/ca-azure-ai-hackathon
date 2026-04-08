@@ -57,5 +57,9 @@
     "state-government"
   ],
   "author": "California Hackathon Accelerator Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@playwright/test": "^1.59.1",
+    "playwright": "^1.59.1"
+  }
 }

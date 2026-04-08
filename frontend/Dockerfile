@@ -22,6 +22,7 @@ FROM nginx:alpine
 
 # Copy built assets
 COPY --from=builder /app/dist /usr/share/nginx/html
+RUN chmod -R a+rX /usr/share/nginx/html
 
 # Copy nginx configuration as template (envsubst resolves BACKEND_URL at startup)
 COPY nginx.conf /etc/nginx/templates/default.conf.template
