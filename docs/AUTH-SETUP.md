@@ -8,47 +8,29 @@ The docs site is deployed to **Azure Static Web Apps (SWA)** with **invite-only*
 - **SWA Resource:** `cahack-docs` in resource group `rg-ca-hack`
 - **Auth Provider:** GitHub (primary), Azure AD (backup)
 
-Only users assigned the **`team`** role can view the site. Everyone else sees a 403 "Access Denied" page after authenticating. Unauthenticated visitors are redirected to GitHub login.
+Any user who authenticates with GitHub can access the site. To restrict to invite-only, change `"authenticated"` to `"team"` in `staticwebapp.config.json` and manage invitations via Azure Portal.
 
-> **Note:** GitHub Pages has been replaced by Azure SWA for this site. The old GitHub Pages URL (`msftsean.github.io/ca-hackathon/`) should be disabled in the repo settings (Settings → Pages → disable).
+> **Note:** GitHub Pages has NO authentication support — it's always public. To secure the docs, we use Azure SWA instead. You should **disable GitHub Pages** in repo settings (Settings → Pages → disable) to avoid having an unauthenticated copy at `msftsean.github.io/ca-hackathon/`.
 
 ---
 
-## How to Invite a User
+## Access Levels
 
-1. **Azure Portal** → navigate to Static Web App `cahack-docs` → **Role management**
-2. Click **Invite** → select **GitHub** as the provider → enter the user's GitHub username
-3. Assign the **`team`** role → send the invitation link to the user
-4. The user clicks the link, authenticates with GitHub, and gains access
+### Current: GitHub-authenticated (open to any GitHub user)
 
-> Invitations can also be managed via the [Azure CLI](https://learn.microsoft.com/en-us/azure/static-web-apps/authentication-authorization#role-management):
-> ```bash
-> az staticwebapp users invite \
->   --name cahack-docs \
->   --resource-group rg-ca-hack \
->   --authentication-provider github \
->   --user-details "<github-username>" \
->   --role team \
->   --domain ashy-hill-0c8e2040f.1.azurestaticapps.net \
->   --invitation-expiration-in-hours 720
-> ```
+The site currently requires GitHub login but does **not** restrict to specific users. Any GitHub user can access after authenticating.
 
-### Quick Invite for Jill (or anyone)
+### To switch to invite-only:
 
-Replace `<github-username>` with the person's GitHub username:
+1. Edit `docs/staticwebapp.config.json` — change `"authenticated"` to `"team"` in the `/*` route
+2. Redeploy (see Deploying Updates below)
+3. Invite users via Azure Portal → Static Web App `cahack-docs` → **Role management** → Invite
 
-```bash
-az staticwebapp users invite \
-  --name cahack-docs \
-  --resource-group rg-ca-hack \
-  --authentication-provider github \
-  --user-details "<github-username>" \
-  --role team \
-  --domain ashy-hill-0c8e2040f.1.azurestaticapps.net \
-  --invitation-expiration-in-hours 720
-```
-
-This generates an invitation link. Send it to the person — they click it, authenticate with GitHub, and get access.
+| Role | Who gets it | Access |
+|------|-------------|--------|
+| `anonymous` | Everyone (no login) | Auth login/logout pages only |
+| `authenticated` | Any GitHub user who logs in | **Current setting** — full site access |
+| `team` | Explicitly invited users only | Invite-only (tighter security) |
 
 ### Deploying Updates
 
@@ -66,25 +48,20 @@ swa deploy docs/ --deployment-token "$SWA_TOKEN" --env production
 
 ---
 
-## What the "team" Role Means
-
-| Role | Who gets it | Access |
-|------|-------------|--------|
-| `anonymous` | Everyone (no login) | Auth login/logout pages only |
-| `authenticated` | Any user who logs in | **Not used** — insufficient for site access |
-| `team` | Explicitly invited users | Full docs site access |
-
-The `team` role is a **custom role** — Azure SWA does not assign it automatically. Users must be invited through the Portal or CLI to receive it.
-
----
-
 ## Authentication Flow
 
 ```
 User visits site
-  → 401 (not logged in)
-  → Redirect to /.auth/login/github
-  → GitHub OAuth
+  → 302 redirect to /.auth/login/github
+  → GitHub OAuth login
+  → Access granted (any authenticated GitHub user)
+```
+
+To enable invite-only flow (after switching to `team` role):
+```
+User visits site
+  → 302 redirect to /.auth/login/github
+  → GitHub OAuth login
   → If user has "team" role → access granted
   → If user lacks "team" role → 403 → /unauthorized.html
 ```

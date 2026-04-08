@@ -5,7 +5,7 @@
     { "route": "/.auth/logout", "allowedRoles": ["anonymous"] },
     { "route": "/.auth/login/twitter", "statusCode": 404 },
     { "route": "/unauthorized", "allowedRoles": ["anonymous", "authenticated"] },
-    { "route": "/*", "allowedRoles": ["team"] }
+    { "route": "/*", "allowedRoles": ["authenticated"] }
   ],
   "responseOverrides": {
     "401": { "redirect": "/.auth/login/github", "statusCode": 302 },
