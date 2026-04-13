@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Azure Infrastructure — CA Hackathon Accelerators</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#1B2A4A',
+            'navy-light': '#243659',
+            'navy-dark': '#111D33',
+            'ca-blue': '#003366',
+            gold: '#FDB515',
+            'gold-light': '#FEC84B',
+            'gold-dark': '#D4960E',
+            poppy: '#E87722',
+            'poppy-light': '#F09A56',
+            slate: '#4A5568',
+            'warm-gray': '#F7F5F2',
+            'warm-gray-dark': '#EDE9E3',
+          },
+          fontFamily: {
+            display: ['"DM Serif Display"', 'Georgia', 'serif'],
+            body: ['"Source Sans 3"', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Source Sans 3', system-ui, sans-serif; }
+
+    .grain::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-up { animation: slideUp 0.6s ease-out both; }
+    .animate-up-d1 { animation-delay: 0.1s; }
+    .animate-up-d2 { animation-delay: 0.2s; }
+    .animate-up-d3 { animation-delay: 0.3s; }
+    .animate-up-d4 { animation-delay: 0.4s; }
+
+    html { scroll-behavior: smooth; }
+
+    .nav-link {
+      position: relative;
+      transition: color 0.2s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #FDB515;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(90deg, #FDB515, #E87722, transparent);
+      border: none;
+    }
+
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid #FDB515;
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    .mobile-nav { display: none; }
+    @media (max-width: 768px) {
+      .desktop-nav { display: none; }
+      .mobile-nav { display: block; }
+      .mobile-menu { display: none; }
+      .mobile-menu.open { display: flex; }
+    }
+
+    /* Matrix table */
+    .matrix-table th {
+      background: #1B2A4A;
+      color: white;
+      font-weight: 600;
+      text-align: left;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .matrix-table td {
+      border-bottom: 1px solid #EDE9E3;
+      vertical-align: middle;
+    }
+    .matrix-table tr:hover td {
+      background: #FEFCF7;
+    }
+    .matrix-table a {
+      color: #003366;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .matrix-table a:hover {
+      color: #FDB515;
+    }
+
+    /* Resource cards */
+    .resource-card {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    }
+    .resource-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px -4px rgba(27,42,74,0.12);
+    }
+
+    /* Status badges */
+    .badge-green { background: #DEF7EC; color: #03543F; }
+    .badge-amber { background: #FEF3C7; color: #92400E; }
+    .badge-blue { background: #DBEAFE; color: #1E40AF; }
+    .badge-purple { background: #EDE9FE; color: #5B21B6; }
+
+    /* Code blocks */
+    code {
+      font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.8em;
+      background: #F1F5F9;
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-warm-gray text-navy antialiased">
+
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-gold text-navy px-4 py-2 rounded font-semibold z-50">
+    Skip to main content
+  </a>
+
+  <!-- Navigation -->
+  <nav class="bg-navy text-white sticky top-0 z-40 shadow-lg" role="navigation" aria-label="Main navigation">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3 group" aria-label="CA Hackathon Accelerators Home">
+          <div class="w-9 h-9 bg-gold rounded-lg flex items-center justify-center font-display text-navy text-lg font-bold group-hover:scale-105 transition-transform" aria-hidden="true">CA</div>
+          <div class="hidden sm:block">
+            <span class="font-display text-lg text-gold">CA Hackathon</span>
+            <span class="text-white/60 text-sm ml-1">Accelerators</span>
+          </div>
+        </a>
+        <div class="desktop-nav flex items-center gap-8">
+          <a href="index.html" class="nav-link text-white/80 hover:text-gold text-sm font-medium tracking-wide">Home</a>
+          <a href="architecture.html" class="nav-link text-white/80 hover:text-gold text-sm font-medium tracking-wide">Architecture</a>
+          <a href="getting-started.html" class="nav-link text-white/80 hover:text-gold text-sm font-medium tracking-wide">Getting Started</a>
+          <a href="live-apps.html" class="nav-link text-white/80 hover:text-gold text-sm font-medium tracking-wide">Live Apps</a>
+          <a href="azure.html" class="nav-link active text-gold text-sm font-medium tracking-wide" aria-current="page">Azure</a>
+        </div>
+        <div class="mobile-nav">
+          <button onclick="document.getElementById('mobileMenu').classList.toggle('open')" class="text-white/80 hover:text-gold p-2" aria-expanded="false" aria-controls="mobileMenu" aria-label="Toggle navigation menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobileMenu" class="mobile-menu flex-col bg-navy-dark border-t border-white/10 px-4 pb-4">
+      <a href="index.html" class="block py-3 text-white/80 hover:text-gold text-sm font-medium border-b border-white/5">Home</a>
+      <a href="architecture.html" class="block py-3 text-white/80 hover:text-gold text-sm font-medium border-b border-white/5">Architecture</a>
+      <a href="getting-started.html" class="block py-3 text-white/80 hover:text-gold text-sm font-medium border-b border-white/5">Getting Started</a>
+      <a href="live-apps.html" class="block py-3 text-white/80 hover:text-gold text-sm font-medium border-b border-white/5">Live Apps</a>
+      <a href="azure.html" class="block py-3 text-gold text-sm font-medium" aria-current="page">Azure</a>
+    </div>
+  </nav>
+
+  <!-- Hero Header -->
+  <header class="relative bg-gradient-to-br from-navy via-ca-blue to-navy-dark text-white overflow-hidden grain">
+    <div class="absolute inset-0 opacity-5" aria-hidden="true">
+      <svg width="100%" height="100%"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <div class="animate-up">
+        <p class="text-gold font-semibold text-sm tracking-widest uppercase mb-3">Infrastructure</p>
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl mb-4">Azure Deployment</h1>
+        <p class="text-white/70 text-lg sm:text-xl max-w-2xl leading-relaxed">
+          Complete Azure resource inventory and URL matrix for all California State AI Hackathon accelerators deployed on Azure Container Apps.
+        </p>
+      </div>
+      <nav class="mt-10 animate-up animate-up-d2 flex flex-wrap gap-3" aria-label="Page sections">
+        <a href="#environment" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓵</span> Environment
+        </a>
+        <a href="#url-matrix" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓶</span> URL Matrix
+        </a>
+        <a href="#resources" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓷</span> Azure Resources
+        </a>
+        <a href="#commands" class="inline-flex items-center gap-2 bg-white/10 hover:bg-gold/20 border border-white/15 hover:border-gold/40 rounded-full px-4 py-2 text-sm text-white/90 hover:text-gold transition-all">
+          <span aria-hidden="true">⓸</span> Commands
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <hr class="section-divider" aria-hidden="true">
+
+  <main id="main-content">
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- SECTION 1: ENVIRONMENT OVERVIEW -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="environment" class="py-16 sm:py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="animate-up">
+          <p class="text-gold font-semibold text-sm tracking-widest uppercase mb-2">Configuration</p>
+          <h2 class="font-display text-3xl sm:text-4xl mb-3">Environment</h2>
+          <p class="text-slate text-lg max-w-2xl">Azure Developer CLI (<code>azd</code>) environment details for the <code>ca-hack</code> deployment.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
+          <div class="resource-card animate-up animate-up-d1 bg-white rounded-xl border border-warm-gray-dark p-5">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-1">Environment</p>
+            <p class="font-display text-lg text-navy">ca-hack</p>
+          </div>
+          <div class="resource-card animate-up animate-up-d2 bg-white rounded-xl border border-warm-gray-dark p-5">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-1">Resource Group</p>
+            <p class="font-display text-lg text-navy">rg-ca-hack</p>
+          </div>
+          <div class="resource-card animate-up animate-up-d3 bg-white rounded-xl border border-warm-gray-dark p-5">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-1">Region</p>
+            <p class="font-display text-lg text-navy">East US 2</p>
+          </div>
+          <div class="resource-card animate-up animate-up-d4 bg-white rounded-xl border border-warm-gray-dark p-5">
+            <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-1">Container Registry</p>
+            <p class="font-display text-lg text-navy truncate" title="cahackadf7nmuxdcchcacr.azurecr.io">cahackadf7nm…acr</p>
+          </div>
+        </div>
+
+        <div class="mt-6 animate-up animate-up-d3 bg-white rounded-xl border border-warm-gray-dark p-5">
+          <div class="grid sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-1">Subscription ID</p>
+              <p class="font-mono text-navy text-xs">b1ade9aa-a8a5-454e-9531-3f8ba1b1a06a</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-1">Container App Environment</p>
+              <p class="font-mono text-navy text-xs truncate" title="cahack-adf7nmuxdcchc-env">cahack-adf7nmuxdcchc-env</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-1">Container Registry</p>
+              <p class="font-mono text-navy text-xs">cahackadf7nmuxdcchcacr.azurecr.io</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-slate uppercase tracking-wider mb-1">Azure Portal</p>
+              <a href="https://portal.azure.com/#@/resource/subscriptions/b1ade9aa-a8a5-454e-9531-3f8ba1b1a06a/resourceGroups/rg-ca-hack/overview" target="_blank" rel="noopener noreferrer" class="text-ca-blue hover:text-gold underline underline-offset-2 text-xs">Open Resource Group →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- SECTION 2: URL MATRIX -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="url-matrix" class="py-16 sm:py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="animate-up">
+          <p class="text-gold font-semibold text-sm tracking-widest uppercase mb-2">Deployment Matrix</p>
+          <h2 class="font-display text-3xl sm:text-4xl mb-3">App &times; URL Matrix</h2>
+          <p class="text-slate text-lg max-w-2xl">Every accelerator's frontend and backend URLs, side by side. All deployed on Azure Container Apps.</p>
+        </div>
+
+        <div class="mt-10 animate-up animate-up-d1 overflow-x-auto rounded-xl border border-warm-gray-dark shadow-sm">
+          <table class="matrix-table w-full text-sm">
+            <thead>
+              <tr>
+                <th class="px-4 py-3.5 rounded-tl-lg w-12">ID</th>
+                <th class="px-4 py-3.5">Accelerator</th>
+                <th class="px-4 py-3.5">Agency</th>
+                <th class="px-4 py-3.5">Frontend URL</th>
+                <th class="px-4 py-3.5">Backend URL</th>
+                <th class="px-4 py-3.5 rounded-tr-lg text-center">Swagger</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Core Platform -->
+              <tr class="bg-gold/5">
+                <td class="px-4 py-3 font-bold text-gold-dark">—</td>
+                <td class="px-4 py-3 font-semibold text-navy">Core Platform</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded-md badge-purple text-xs font-semibold">Platform</span></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-frontend.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-frontend…</a></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-backend.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-backend…</a></td>
+                <td class="px-4 py-3 text-center"><a href="https://cahack-adf7nm-backend.lemoncliff-b086b49b.eastus2.azurecontainerapps.io/docs" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-ca-blue/10 hover:bg-ca-blue/20 text-ca-blue transition-colors" title="Open Swagger Docs">📄</a></td>
+              </tr>
+
+              <!-- 001 -->
+              <tr>
+                <td class="px-4 py-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-navy text-gold font-display font-bold text-xs">001</span></td>
+                <td class="px-4 py-3 font-medium">BenefitsCal Navigator</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded-md badge-green text-xs font-semibold">CDSS</span></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a001-fe.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a001-fe…</a></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a001-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a001-be…</a></td>
+                <td class="px-4 py-3 text-center"><a href="https://cahack-adf7nm-a001-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io/docs" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-ca-blue/10 hover:bg-ca-blue/20 text-ca-blue transition-colors" title="Open Swagger Docs">📄</a></td>
+              </tr>
+
+              <!-- 002 -->
+              <tr>
+                <td class="px-4 py-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-navy text-gold font-display font-bold text-xs">002</span></td>
+                <td class="px-4 py-3 font-medium">Wildfire Response Coordinator</td>
+                <td class="px-4 py-3">
+                  <span class="inline-block px-2 py-0.5 rounded-md badge-amber text-xs font-semibold">CAL FIRE</span>
+                  <span class="inline-block px-2 py-0.5 rounded-md badge-amber text-xs font-semibold">Cal OES</span>
+                </td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a002-fe.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a002-fe…</a></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a002-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a002-be…</a></td>
+                <td class="px-4 py-3 text-center"><a href="https://cahack-adf7nm-a002-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io/docs" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-ca-blue/10 hover:bg-ca-blue/20 text-ca-blue transition-colors" title="Open Swagger Docs">📄</a></td>
+              </tr>
+
+              <!-- 003 -->
+              <tr>
+                <td class="px-4 py-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-navy text-gold font-display font-bold text-xs">003</span></td>
+                <td class="px-4 py-3 font-medium">Medi-Cal Eligibility Agent</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded-md badge-blue text-xs font-semibold">DHCS</span></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a003-fe.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a003-fe…</a></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a003-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a003-be…</a></td>
+                <td class="px-4 py-3 text-center"><a href="https://cahack-adf7nm-a003-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io/docs" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-ca-blue/10 hover:bg-ca-blue/20 text-ca-blue transition-colors" title="Open Swagger Docs">📄</a></td>
+              </tr>
+
+              <!-- 004 -->
+              <tr>
+                <td class="px-4 py-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-navy text-gold font-display font-bold text-xs">004</span></td>
+                <td class="px-4 py-3 font-medium">Permit Streamliner</td>
+                <td class="px-4 py-3">
+                  <span class="inline-block px-2 py-0.5 rounded-md badge-green text-xs font-semibold">OPR</span>
+                  <span class="inline-block px-2 py-0.5 rounded-md badge-green text-xs font-semibold">HCD</span>
+                  <span class="inline-block px-2 py-0.5 rounded-md badge-green text-xs font-semibold">DCA</span>
+                </td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a004-fe.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a004-fe…</a></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a004-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a004-be…</a></td>
+                <td class="px-4 py-3 text-center"><a href="https://cahack-adf7nm-a004-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io/docs" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-ca-blue/10 hover:bg-ca-blue/20 text-ca-blue transition-colors" title="Open Swagger Docs">📄</a></td>
+              </tr>
+
+              <!-- 005 -->
+              <tr class="bg-poppy/5">
+                <td class="px-4 py-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-navy text-gold font-display font-bold text-xs">005</span></td>
+                <td class="px-4 py-3 font-medium">GenAI Procurement Compliance</td>
+                <td class="px-4 py-3">
+                  <span class="inline-block px-2 py-0.5 rounded-md badge-purple text-xs font-semibold">CDT</span>
+                  <span class="inline-block px-2 py-0.5 rounded-md badge-purple text-xs font-semibold">DGS</span>
+                </td>
+                <td class="px-4 py-3 text-slate italic">No frontend — API only</td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a005-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a005-be…</a></td>
+                <td class="px-4 py-3 text-center"><a href="https://cahack-adf7nm-a005-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io/docs" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-ca-blue/10 hover:bg-ca-blue/20 text-ca-blue transition-colors" title="Open Swagger Docs">📄</a></td>
+              </tr>
+
+              <!-- 006 -->
+              <tr>
+                <td class="px-4 py-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-navy text-gold font-display font-bold text-xs">006</span></td>
+                <td class="px-4 py-3 font-medium">Cross-Agency Knowledge Hub</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded-md badge-blue text-xs font-semibold">GovOps</span></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a006-fe.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a006-fe…</a></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a006-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a006-be…</a></td>
+                <td class="px-4 py-3 text-center"><a href="https://cahack-adf7nm-a006-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io/docs" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-ca-blue/10 hover:bg-ca-blue/20 text-ca-blue transition-colors" title="Open Swagger Docs">📄</a></td>
+              </tr>
+
+              <!-- 007 -->
+              <tr>
+                <td class="px-4 py-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-navy text-gold font-display font-bold text-xs">007</span></td>
+                <td class="px-4 py-3 font-medium">EDD Claims Assistant</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded-md badge-amber text-xs font-semibold">EDD</span></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a007-fe.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a007-fe…</a></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a007-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a007-be…</a></td>
+                <td class="px-4 py-3 text-center"><a href="https://cahack-adf7nm-a007-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io/docs" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-ca-blue/10 hover:bg-ca-blue/20 text-ca-blue transition-colors" title="Open Swagger Docs">📄</a></td>
+              </tr>
+
+              <!-- 008 -->
+              <tr>
+                <td class="px-4 py-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-navy text-gold font-display font-bold text-xs">008</span></td>
+                <td class="px-4 py-3 font-medium">Multilingual Emergency Chatbot</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 rounded-md badge-amber text-xs font-semibold">Cal OES</span></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a008-fe.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a008-fe…</a></td>
+                <td class="px-4 py-3"><a href="https://cahack-adf7nm-a008-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io" target="_blank" rel="noopener noreferrer">cahack-adf7nm-a008-be…</a></td>
+                <td class="px-4 py-3 text-center"><a href="https://cahack-adf7nm-a008-be.lemoncliff-b086b49b.eastus2.azurecontainerapps.io/docs" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-ca-blue/10 hover:bg-ca-blue/20 text-ca-blue transition-colors" title="Open Swagger Docs">📄</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Port mapping for local dev -->
+        <div class="mt-10 animate-up animate-up-d2">
+          <h3 class="font-display text-xl text-navy mb-4">Local Development Ports</h3>
+          <div class="overflow-x-auto rounded-xl border border-warm-gray-dark shadow-sm">
+            <table class="matrix-table w-full text-sm">
+              <thead>
+                <tr>
+                  <th class="px-4 py-3 rounded-tl-lg">Service</th>
+                  <th class="px-4 py-3">Backend Port</th>
+                  <th class="px-4 py-3 rounded-tr-lg">Frontend Port</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="bg-gold/5">
+                  <td class="px-4 py-3 font-semibold text-navy">Core Platform</td>
+                  <td class="px-4 py-3"><code>8000</code></td>
+                  <td class="px-4 py-3"><code>3000</code></td>
+                </tr>
+                <tr><td class="px-4 py-3 font-medium">001 — BenefitsCal Navigator</td><td class="px-4 py-3"><code>8001</code></td><td class="px-4 py-3"><code>3001</code></td></tr>
+                <tr><td class="px-4 py-3 font-medium">002 — Wildfire Response</td><td class="px-4 py-3"><code>8002</code></td><td class="px-4 py-3"><code>3002</code></td></tr>
+                <tr><td class="px-4 py-3 font-medium">003 — Medi-Cal Eligibility</td><td class="px-4 py-3"><code>8003</code></td><td class="px-4 py-3"><code>3003</code></td></tr>
+                <tr><td class="px-4 py-3 font-medium">004 — Permit Streamliner</td><td class="px-4 py-3"><code>8004</code></td><td class="px-4 py-3"><code>3004</code></td></tr>
+                <tr class="bg-poppy/5"><td class="px-4 py-3 font-medium">005 — Procurement Compliance</td><td class="px-4 py-3"><code>8005</code></td><td class="px-4 py-3 text-slate italic">—</td></tr>
+                <tr><td class="px-4 py-3 font-medium">006 — Knowledge Hub</td><td class="px-4 py-3"><code>8006</code></td><td class="px-4 py-3"><code>3006</code></td></tr>
+                <tr><td class="px-4 py-3 font-medium">007 — EDD Claims</td><td class="px-4 py-3"><code>8007</code></td><td class="px-4 py-3"><code>3007</code></td></tr>
+                <tr><td class="px-4 py-3 font-medium">008 — Multilingual Emergency</td><td class="px-4 py-3"><code>8008</code></td><td class="px-4 py-3"><code>3008</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- SECTION 3: AZURE RESOURCES -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="resources" class="py-16 sm:py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="animate-up">
+          <p class="text-gold font-semibold text-sm tracking-widest uppercase mb-2">Infrastructure</p>
+          <h2 class="font-display text-3xl sm:text-4xl mb-3">Azure Resources</h2>
+          <p class="text-slate text-lg max-w-2xl">Key Azure services powering the accelerator ecosystem.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+          <div class="resource-card animate-up animate-up-d1 bg-white rounded-xl border border-warm-gray-dark p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-lg bg-ca-blue/10 flex items-center justify-center text-xl">☁️</div>
+              <h3 class="font-display text-lg text-navy">Container Apps Environment</h3>
+            </div>
+            <p class="text-slate text-sm">Managed Kubernetes environment hosting all 18 container apps (8 backends + 7 frontends + core platform).</p>
+            <p class="mt-3 text-xs font-mono text-slate">cahack-adf7nmuxdcchc-env</p>
+          </div>
+
+          <div class="resource-card animate-up animate-up-d2 bg-white rounded-xl border border-warm-gray-dark p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-lg bg-ca-blue/10 flex items-center justify-center text-xl">📦</div>
+              <h3 class="font-display text-lg text-navy">Container Registry</h3>
+            </div>
+            <p class="text-slate text-sm">Azure Container Registry storing Docker images for all services. Auto-pushed on <code>azd deploy</code>.</p>
+            <p class="mt-3 text-xs font-mono text-slate">cahackadf7nmuxdcchcacr.azurecr.io</p>
+          </div>
+
+          <div class="resource-card animate-up animate-up-d3 bg-white rounded-xl border border-warm-gray-dark p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-lg bg-ca-blue/10 flex items-center justify-center text-xl">🧠</div>
+              <h3 class="font-display text-lg text-navy">Azure OpenAI</h3>
+            </div>
+            <p class="text-slate text-sm">GPT-5.4 (chat) and GPT-Realtime (voice) model deployments. Used by all accelerator agent pipelines.</p>
+            <p class="mt-3 text-xs font-mono text-slate">gpt-5.4 · 2026-03-05</p>
+          </div>
+
+          <div class="resource-card animate-up animate-up-d1 bg-white rounded-xl border border-warm-gray-dark p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-lg bg-ca-blue/10 flex items-center justify-center text-xl">🔍</div>
+              <h3 class="font-display text-lg text-navy">Azure AI Search</h3>
+            </div>
+            <p class="text-slate text-sm">Vector + semantic search across agency knowledge bases. Powers RAG retrieval in the ActionAgent.</p>
+          </div>
+
+          <div class="resource-card animate-up animate-up-d2 bg-white rounded-xl border border-warm-gray-dark p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-lg bg-ca-blue/10 flex items-center justify-center text-xl">🔐</div>
+              <h3 class="font-display text-lg text-navy">Managed Identity</h3>
+            </div>
+            <p class="text-slate text-sm">DefaultAzureCredential across all services — no API keys in config. Container Apps use system-assigned identity.</p>
+          </div>
+
+          <div class="resource-card animate-up animate-up-d3 bg-white rounded-xl border border-warm-gray-dark p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-lg bg-ca-blue/10 flex items-center justify-center text-xl">📊</div>
+              <h3 class="font-display text-lg text-navy">Application Insights</h3>
+            </div>
+            <p class="text-slate text-sm">Telemetry, tracing, and monitoring for all accelerator backends. Linked to the Container Apps environment.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- SECTION 4: DEPLOYMENT COMMANDS -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="commands" class="py-16 sm:py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="animate-up">
+          <p class="text-gold font-semibold text-sm tracking-widest uppercase mb-2">Operations</p>
+          <h2 class="font-display text-3xl sm:text-4xl mb-3">Deployment Commands</h2>
+          <p class="text-slate text-lg max-w-2xl">Common <code>azd</code> and Docker commands for managing the accelerator deployment.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8 mt-10">
+          <div class="animate-up animate-up-d1">
+            <h3 class="font-display text-xl text-navy mb-4">Full Deployment</h3>
+            <div class="bg-navy-dark rounded-xl p-5 text-sm font-mono text-white/90 leading-relaxed overflow-x-auto">
+              <p class="text-gold/60"># Provision infrastructure + deploy all services</p>
+              <p>azd up</p>
+              <br>
+              <p class="text-gold/60"># Deploy all services to existing infrastructure</p>
+              <p>azd deploy</p>
+              <br>
+              <p class="text-gold/60"># Deploy via helper script</p>
+              <p>./scripts/azd-deploy.sh all</p>
+            </div>
+          </div>
+
+          <div class="animate-up animate-up-d2">
+            <h3 class="font-display text-xl text-navy mb-4">Selective Deployment</h3>
+            <div class="bg-navy-dark rounded-xl p-5 text-sm font-mono text-white/90 leading-relaxed overflow-x-auto">
+              <p class="text-gold/60"># Deploy a specific accelerator backend</p>
+              <p>azd deploy accel-001</p>
+              <br>
+              <p class="text-gold/60"># Deploy a specific accelerator frontend</p>
+              <p>azd deploy accel-001-fe</p>
+              <br>
+              <p class="text-gold/60"># Deploy specific accelerator via script</p>
+              <p>./scripts/azd-deploy.sh 001</p>
+            </div>
+          </div>
+
+          <div class="animate-up animate-up-d3">
+            <h3 class="font-display text-xl text-navy mb-4">Local Development</h3>
+            <div class="bg-navy-dark rounded-xl p-5 text-sm font-mono text-white/90 leading-relaxed overflow-x-auto">
+              <p class="text-gold/60"># Run all accelerators locally</p>
+              <p>docker-compose -f docker-compose.accelerators.yml up</p>
+              <br>
+              <p class="text-gold/60"># Run a single accelerator</p>
+              <p>docker-compose -f docker-compose.accelerators.yml up accel-001-backend</p>
+              <br>
+              <p class="text-gold/60"># Rebuild and run</p>
+              <p>docker-compose -f docker-compose.accelerators.yml up --build</p>
+            </div>
+          </div>
+
+          <div class="animate-up animate-up-d4">
+            <h3 class="font-display text-xl text-navy mb-4">Diagnostics</h3>
+            <div class="bg-navy-dark rounded-xl p-5 text-sm font-mono text-white/90 leading-relaxed overflow-x-auto">
+              <p class="text-gold/60"># Check environment</p>
+              <p>azd env get-values</p>
+              <br>
+              <p class="text-gold/60"># Show deployed services</p>
+              <p>azd show</p>
+              <br>
+              <p class="text-gold/60"># Run live e2e tests</p>
+              <p>npx playwright test --config playwright.live.config.ts</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-navy text-white/60 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid sm:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 bg-gold rounded-lg flex items-center justify-center font-display text-navy text-sm font-bold" aria-hidden="true">CA</div>
+            <span class="font-display text-gold text-base">CA Hackathon Accelerators</span>
+          </div>
+          <p class="text-sm leading-relaxed">AI accelerators for California state government agencies. Built with Azure, governed by constitution.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white text-sm mb-3">Documentation</h4>
+          <nav class="space-y-2 text-sm" aria-label="Footer documentation links">
+            <a href="architecture.html" class="block hover:text-gold transition-colors">Architecture Overview</a>
+            <a href="getting-started.html" class="block hover:text-gold transition-colors">Getting Started</a>
+            <a href="live-apps.html" class="block hover:text-gold transition-colors">Live Apps</a>
+            <a href="azure.html" class="block hover:text-gold transition-colors" aria-current="page">Azure Infrastructure</a>
+          </nav>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white text-sm mb-3">References</h4>
+          <nav class="space-y-2 text-sm" aria-label="Footer reference links">
+            <a href="../shared/constitution.md" class="block hover:text-gold transition-colors">Agent Constitution</a>
+            <a href="../CHANGELOG.md" class="block hover:text-gold transition-colors">Changelog</a>
+            <a href="../README.md" class="block hover:text-gold transition-colors">README</a>
+          </nav>
+        </div>
+      </div>
+      <div class="border-t border-white/10 mt-8 pt-6 text-xs text-center">
+        <p>State of California · AI Hackathon Accelerators · Built for CA state agencies</p>
+        <p class="mt-2 text-white/30">
+          Built by <a href="https://github.com/msftsean" target="_blank" rel="noopener noreferrer" class="text-white/40 hover:text-gold-400 transition-colors underline underline-offset-2">Sean Gayle</a> · ☁️ Powered by Microsoft Azure
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelector('[aria-controls="mobileMenu"]')?.addEventListener('click', function() {
+      const expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', String(!expanded));
+    });
+  </script>
+
+</body>
+</html>
