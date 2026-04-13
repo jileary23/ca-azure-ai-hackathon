@@ -22,10 +22,19 @@ class ActionAgent:
         self, query: EmergencyQuery, routing: RoutingDecision
     ) -> AgentResponse:
         if not self.mock_mode:
-            raise NotImplementedError("Live services not yet configured")
+            try:
+                return self._handle_live(query, routing)
+            except NotImplementedError:
+                pass  # fall back to mock
 
         handler = self._HANDLERS.get(query.intent, self._handle_general)
         return handler(self, query, routing)
+
+    def _handle_live(
+        self, query: EmergencyQuery, routing: RoutingDecision
+    ) -> AgentResponse:
+        """Live service integration — not yet implemented."""
+        raise NotImplementedError("Live services not yet configured")
 
     # ---- intent handlers ------------------------------------------------
 

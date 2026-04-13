@@ -59,7 +59,7 @@ All accelerators follow a consistent three-agent architecture:
                               ▼
                     ┌──────────────────┐
                     │   QueryAgent     │  ← Intent detection
-                    │   (GPT-4o)       │    Entity extraction
+                    │   (GPT-4.1)      │    Entity extraction
                     └────────┬─────────┘    PII filtering
                              │
                              ▼

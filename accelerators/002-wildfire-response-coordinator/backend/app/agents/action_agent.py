@@ -16,9 +16,16 @@ class ActionAgent:
         self.mock_service = MockWildfireService()
 
     async def execute(self, query: IncidentQuery, routing: RoutingDecision) -> AgentResponse:
-        """Execute action based on routing decision."""
+        """Execute action based on routing decision. Falls back to mock when live not ready."""
         if self.mock_mode:
             return self._handle_mock(query, routing)
+        try:
+            return self._handle_live(query, routing)
+        except NotImplementedError:
+            return self._handle_mock(query, routing)
+
+    def _handle_live(self, query: IncidentQuery, routing: RoutingDecision) -> AgentResponse:
+        """Live service integration — not yet implemented."""
         raise NotImplementedError("Live services not yet configured")
 
     def _handle_mock(self, query: IncidentQuery, routing: RoutingDecision) -> AgentResponse:
