@@ -4,6 +4,7 @@ import os
 from datetime import datetime, timezone
 
 from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.models.schemas import (
     AttestationRequest,
@@ -23,6 +24,14 @@ app = FastAPI(
     title="GenAI Procurement Compliance API",
     description="Automated vendor attestation review and compliance scoring for CDT/DGS",
     version="0.1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 mock_service = MockComplianceService()
