@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8008';
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 export async function postChat(message: string, language?: string) {
   const res = await fetch(`${API_BASE}/api/chat`, {

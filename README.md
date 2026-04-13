@@ -119,7 +119,7 @@ This repository separates **shared platform infrastructure** from **individual a
 |-------|-----------|
 | **Backend** | Python 3.11+ / FastAPI / Pydantic v2 / Semantic Kernel |
 | **Frontend** | React 18 / TypeScript 5 / Vite / Tailwind CSS |
-| **AI/LLM** | Azure OpenAI (GPT-4o) + Azure AI Search (hybrid RAG) |
+| **AI/LLM** | Azure OpenAI (GPT-4.1) + Azure AI Search (hybrid RAG) |
 | **Voice** | Azure OpenAI Realtime API (WebRTC) |
 | **Document AI** | Azure Document Intelligence |
 | **Auth** | Azure Entra ID / MSAL |
@@ -263,6 +263,93 @@ See the [Coach Guide](coach-guide/) for facilitation tips and workshop logistics
 
 ---
 
+## 📈 Learning Path
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  🚀 Lab 00  │     │  🤖 Lab 01  │     │  🔌 Lab 02  │     │  📝 Lab 03  │
+│    Setup    │────▶│   Agents    │────▶│  QueryAgent │────▶│   Router    │
+│   30 min    │     │   60 min    │     │   60 min    │     │   60 min    │
+└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+                                                                   │
+       ┌───────────────────────────────────────────────────────────┘
+       ▼
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  🔍 Lab 04  │     │  🔗 Lab 05  │     │  🚀 Lab 06  │     │  🔌 Lab 07  │
+│  Azure AI   │────▶│    RAG      │────▶│   Voice     │────▶│   Deploy    │
+│   90 min    │     │   2 hrs     │     │   90 min    │     │   90 min    │
+└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+```
+
+---
+
+## 🛠️ Key Skills by Lab
+
+| 💡 Skill                  | Lab 00 | Lab 01 | Lab 02 | Lab 03 | Lab 04 | Lab 05 | Lab 06 | Lab 07 |
+| ------------------------- | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: |
+| 🐍 Python/FastAPI         |        |   ●    |   ●    |   ●    |   ●    |   ●    |        |   ●    |
+| 🤖 Azure OpenAI           |        |        |        |        |   ●    |   ●    |   ●    |        |
+| 🔍 Azure AI Search        |        |        |        |        |        |   ●    |        |        |
+| 💬 Prompt Engineering     |        |   ●    |   ●    |   ●    |   ●    |   ●    |        |        |
+| 📋 Spec-Driven Dev        |        |        |        |   ●    |        |        |        |        |
+| 🐳 Docker/Containers      |        |        |        |        |        |        |        |   ●    |
+| ☁️ Azure Deployment       |        |        |        |        |        |        |        |   ●    |
+| 🎙️ Voice/WebRTC          |        |        |        |        |        |        |   ●    |        |
+
+---
+
+## ☁️ Azure Service Requirements
+
+Labs 00-03 run entirely in **mock mode** without Azure credentials. Labs 04+ require live Azure services.
+
+| 📋 Requirement               | Lab 00 | Lab 01 | Lab 02 | Lab 03 | Lab 04 | Lab 05 | Lab 06 | Lab 07 |
+| ----------------------------- | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: |
+| ✅ Mock Mode OK               |   ✓    |   ✓    |   ✓    |   ✓    |        |        |        |        |
+| 🤖 Azure OpenAI (GPT-4.1)    |        |        |        |        | **Required** | **Required** | **Required** | **Required** |
+| 🔍 Azure AI Search            |        |        |        |        |        | **Required** |        | **Required** |
+| 🎙️ Azure OpenAI Realtime API |        |        |        |        |        |        | **Required** |        |
+
+> 💡 **Cost-Saving Tip**: Run Labs 00-03 with `USE_MOCK_SERVICES=true` to validate your setup before provisioning Azure services.
+
+---
+
+## ☁️ Accelerator Azure Service Requirements
+
+| Azure Service              | 001 | 002 | 003 | 004 | 005 | 006 | 007 | 008 |
+| -------------------------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| Azure OpenAI (GPT-4.1)    |  ●  |  ●  |  ●  |  ●  |  ●  |  ●  |  ●  |  ●  |
+| Azure AI Search            |  ●  |     |     |  ●  |     |  ●  |     |     |
+| Document Intelligence      |     |     |  ●  |     |     |     |     |     |
+| Azure Translator           |     |     |     |     |     |     |     |  ●  |
+| Realtime API (Voice)       |  ●  |     |     |     |     |     |  ●  |     |
+| Semantic Kernel            |     |     |     |     |  ●  |     |     |     |
+
+---
+
+## 🏛️ Solutions Architecture
+
+> _Architecture diagram coming soon — being designed for the California State Hackathon._
+
+![Solutions Architecture](./docs/architecture/ca-hackathon-architecture.jpg)
+
+---
+
+## 📊 Version Matrix
+
+| 🔧 Component   | 📋 Required Version | ✅ Tested Version |
+| -------------- | ------------------- | ----------------- |
+| 🐍 Python      | 3.11+               | 3.11.x            |
+| ⚡ FastAPI     | 0.109+              | 0.109.0           |
+| 📦 Node.js     | 18+                 | 20.x              |
+| ⚛️ React       | 18+                 | 18.2.0            |
+| 📘 TypeScript  | 5.0+                | 5.3.x             |
+| 🐳 Docker      | 20.10+              | 24.x              |
+| ☁️ Azure CLI   | 2.50+               | 2.56+             |
+| 🚀 azd         | 1.5+                | 1.7+              |
+| 🤖 GPT Model   | GPT-4.1             | GPT-4.1           |
+
+---
+
 ## 📂 Project Structure
 
 ```
@@ -347,7 +434,7 @@ azd deploy
 **What gets deployed:**
 - Azure Container Apps (backend API)
 - Azure Static Web Apps (frontend)
-- Azure OpenAI (GPT-4o)
+- Azure OpenAI (GPT-4.1)
 - Azure AI Search (knowledge base)
 - Azure Cosmos DB (session storage)
 - Azure Application Insights (monitoring)
