@@ -97,3 +97,55 @@
 - Made cross-origin connectivity tests soft-skip rather than hard-fail because CORS/proxy is
   an infrastructure concern, not a code bug. The tests surface the finding via annotations and
   console warnings so the team knows it needs fixing.
+
+### Eval Tests for 001/004 + Shared Red Team Framework — 2026-04-03
+
+**What was created:**
+
+**Accelerator 001 (BenefitsCal Navigator) evals:**
+- `eval_config.json` — 19 golden test cases covering CalFresh, CalWORKs, Medi-Cal eligibility,
+  FPL calculations, office lookups, application help, Spanish language, crisis escalation
+- `test_accuracy.py` — Intent detection accuracy (≥70%), response quality, confidence, citations
+- `test_routing.py` — Routing accuracy (≥70%), escalation detection (≥50%), priority assignment
+- `conftest.py` — Shared fixtures with USE_MOCK_SERVICES=true
+
+**Accelerator 004 (Permit Streamliner) evals:**
+- `eval_config.json` — 19 golden test cases covering project intake, SLA inquiries, fee estimates,
+  requirement checks, agency routing, CEQA, ADU, business licensing, land use
+- `test_accuracy.py` — Intent detection, response quality, confidence, citations
+- `test_routing.py` — Routing accuracy, escalation for stuck permits, priority for safety items
+- `conftest.py` — Shared fixtures
+
+**Shared Red Team Framework (`shared/red-team/`):**
+- 92 adversarial tests across 7 modules:
+  - `test_prompt_injection.py` (18+ tests): Instruction override, DAN jailbreaks, encoding tricks,
+    multi-turn injection, system prompt leak resistance
+  - `test_pii_leakage.py` (17+ tests): SSN echo prevention, financial data, PII extraction,
+    cross-session leakage, case number isolation
+  - `test_constitutional_compliance.py` (10+ tests): Scope boundaries, escalation triggers,
+    no eligibility determinations, no legal/medical advice, AI disclosure, CA governance references
+  - `test_boundary.py` (15+ tests): 10K-char input, empty string, null, missing field,
+    Unicode attacks (zero-width, RTL, BOM, null bytes), SQL injection, HTML/XSS injection
+  - `test_escalation.py` (6 tests): Crisis escalation bypass, human handoff cancel,
+    forced misrouting, post-injection escalation integrity
+  - `test_authority_bypass.py` (9 tests): Eligibility ruling prevention, legal/medical/tax
+    advice disclaimers, record modification refusal
+- `payloads/injection_payloads.json` — 23 categorized injection payloads across 5 categories
+- `payloads/pii_test_data.json` — Synthetic PII patterns for SSN, financial, contact, case numbers
+- `README.md` — Usage guide, architecture, compliance context
+
+**Patterns used:**
+- `--accel` and `--base-url` conftest flags for targeting any accelerator (local or Azure)
+- `pytest.mark.parametrize` throughout for data-driven test execution
+- Payload JSON files for maintainable attack vector management
+- httpx for synchronous HTTP testing against the /api/chat endpoint
+- Indicator-based assertion (checking for presence of safety markers in responses)
+- Followed the 002/003/005 eval patterns: fixtures, QueryAgent/RouterAgent/ActionAgent imports
+
+**Key decisions:**
+- Red team tests use httpx (sync) not async — simpler for adversarial probing, no need for ASGI
+- Eval configs normalized from "scenarios" to "test_cases" key for cross-accelerator consistency
+- Constitutional compliance tests check both positive (escalation happens) and negative
+  (no eligibility determination) behaviors
+- Boundary tests accept multiple status codes (200, 400, 422) — different accelerators may
+  validate inputs at different layers
