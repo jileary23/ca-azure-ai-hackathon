@@ -1,42 +1,131 @@
 {
-  "name": "BenefitsCal Navigator Evals",
-  "version": "0.1.0",
-  "description": "Evaluation scenarios for benefits eligibility and county services",
-  "scenarios": [
+  "accelerator": "001-benefitscal-navigator",
+  "version": "0.2.0",
+  "description": "Golden test cases for BenefitsCal Navigator — benefits eligibility, county services, FPL calculations",
+  "test_cases": [
     {
-      "id": "calfresh_family_eligibility",
+      "id": "eval-001",
       "input": "Am I eligible for CalFresh? Family of 4, $2500/month income",
       "expected_intent": "eligibility_check",
-      "expected_program": "calfresh",
-      "expected_fields": ["likely_eligible", "fpl_percentage", "next_steps"]
+      "expected_route": "calfresh",
+      "expected_priority": "high"
     },
     {
-      "id": "sacramento_office_lookup",
+      "id": "eval-002",
       "input": "Where is the welfare office in Sacramento County?",
       "expected_intent": "office_lookup",
-      "expected_county": "Sacramento",
-      "expected_fields": ["name", "address", "phone", "hours"]
+      "expected_route": "county_services"
     },
     {
-      "id": "calworks_documents",
+      "id": "eval-003",
       "input": "What documents do I need for CalWORKs?",
       "expected_intent": "document_requirements",
-      "expected_program": "calworks",
-      "expected_fields": ["documents_needed"]
+      "expected_route": "calworks"
     },
     {
-      "id": "medi_cal_single_parent",
+      "id": "eval-004",
       "input": "I'm a single parent making $2000/month. Can I get Medi-Cal?",
       "expected_intent": "eligibility_check",
-      "expected_program": "medi_cal",
-      "expected_fields": ["likely_eligible", "fpl_percentage"]
+      "expected_route": "medi_cal",
+      "expected_priority": "high"
     },
     {
-      "id": "multilingual_spanish",
+      "id": "eval-005",
       "input": "Necesito ayuda con CalFresh",
       "expected_intent": "general_info",
-      "expected_language": "es",
-      "expected_program": "calfresh"
+      "expected_route": "calfresh"
+    },
+    {
+      "id": "eval-006",
+      "input": "How do I apply for CalWORKs benefits?",
+      "expected_intent": "application_help",
+      "expected_route": "calworks"
+    },
+    {
+      "id": "eval-007",
+      "input": "What is the federal poverty level for a household of 3?",
+      "expected_intent": "eligibility_check",
+      "expected_route": "fpl_calculation"
+    },
+    {
+      "id": "eval-008",
+      "input": "I lost my job and have two kids, what benefits can I get?",
+      "expected_intent": "eligibility_check",
+      "expected_route": "general_benefits",
+      "expected_priority": "high",
+      "expected_escalation": false
+    },
+    {
+      "id": "eval-009",
+      "input": "My CalFresh benefits were cut off without notice",
+      "expected_intent": "case_issue",
+      "expected_route": "calfresh",
+      "expected_escalation": true
+    },
+    {
+      "id": "eval-010",
+      "input": "Can I get emergency food assistance today?",
+      "expected_intent": "eligibility_check",
+      "expected_route": "calfresh",
+      "expected_priority": "critical"
+    },
+    {
+      "id": "eval-011",
+      "input": "What is the income limit for a family of 6 on CalWORKs?",
+      "expected_intent": "eligibility_check",
+      "expected_route": "calworks"
+    },
+    {
+      "id": "eval-012",
+      "input": "I need to report a change in my household income",
+      "expected_intent": "case_update",
+      "expected_route": "general_benefits"
+    },
+    {
+      "id": "eval-013",
+      "input": "How long does it take to get approved for Medi-Cal?",
+      "expected_intent": "application_help",
+      "expected_route": "medi_cal"
+    },
+    {
+      "id": "eval-014",
+      "input": "I'm homeless and need immediate help with food and shelter",
+      "expected_intent": "eligibility_check",
+      "expected_route": "general_benefits",
+      "expected_priority": "critical",
+      "expected_escalation": true
+    },
+    {
+      "id": "eval-015",
+      "input": "Transfer me to a human case worker right now",
+      "expected_intent": "escalation_request",
+      "expected_escalation": true
+    },
+    {
+      "id": "eval-016",
+      "input": "What is CalFresh?",
+      "expected_intent": "general_info",
+      "expected_route": "calfresh",
+      "expected_priority": "low"
+    },
+    {
+      "id": "eval-017",
+      "input": "I make $1200/month and I'm pregnant. What programs am I eligible for?",
+      "expected_intent": "eligibility_check",
+      "expected_route": "general_benefits",
+      "expected_priority": "high"
+    },
+    {
+      "id": "eval-018",
+      "input": "Los Angeles County DPSS office hours",
+      "expected_intent": "office_lookup",
+      "expected_route": "county_services"
+    },
+    {
+      "id": "eval-019",
+      "input": "Can undocumented immigrants receive CalFresh?",
+      "expected_intent": "eligibility_check",
+      "expected_route": "calfresh"
     }
   ]
 }

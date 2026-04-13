@@ -9,6 +9,8 @@
 
 ## Learnings
 
+- **2026-04-13 (Morpheus):** Enhanced README with 47doors-style learning matrices (Learning Path diagram, Key Skills by Lab, Azure Service Requirements tables, Accelerator Azure Service matrix, Solutions Architecture placeholder, Version Matrix). Updated all model references from GPT-4o to GPT-4.1 across README (3 direct references + 3 in new matrices). Added visual structure to workshop curriculum to improve developer onboarding clarity and cost estimation (Labs 00-03 can run mock-mode without Azure; Labs 04-07 require Azure services). Key learning: Visual matrices + ASCII diagrams significantly improve README scannability for workshop participants and infrastructure planning.
+
 - **2026-04-03 (Morpheus):** Phase B task generation for all 8 accelerators (commit d44b89c) provided actionable, dependency-ordered tasks that enabled Tank's 4-wave concurrent implementation to reach 100% test pass rate (503 tests). Task structure enforced by speckit-tasks.agent aligned teams on acceptance criteria, enabling parallelization. Constitution governance across all 8 accelerators proved effective — zero agency boundary conflicts, consistent CCPA/CPRA consent flows, EO N-12-23 compliance checks, emergency escalation rules. Key learning: spec-driven development from specs/ → tasks.md → concurrent implementation reduced rework and eliminated regressions.
 
 - **2026-04-02 (Morpheus):** Rebranded CLAUDE.md and .github/copilot-instructions.md from 47 Doors university context to California State AI Hackathon Accelerators. Updated all project references, added 8 accelerator IDs with agency mappings, added CA governance context (EO N-12-23, N-5-26, SB 53, CCPA/CPRA), clarified architecture pattern and project structure for CA state deployments.

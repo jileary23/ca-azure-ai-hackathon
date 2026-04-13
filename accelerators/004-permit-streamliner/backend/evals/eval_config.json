@@ -1,69 +1,126 @@
 {
-  "name": "permit-streamliner-evals",
-  "version": "0.2.0",
-  "description": "Evaluation scenarios for Permit Streamliner (Accelerator 004)",
-  "scenarios": [
+  "accelerator": "004-permit-streamliner",
+  "version": "0.3.0",
+  "description": "Golden test cases for Permit Streamliner — intake, fees, SLA, checklists, agency routing",
+  "test_cases": [
     {
       "id": "eval-001",
       "input": "I want to build an addition to my house in Sacramento",
       "expected_intent": "project_intake",
-      "expected_project_type": "residential_construction",
-      "expected_agency": "HCD",
-      "tags": ["intake", "residential"]
+      "expected_route": "residential_permits",
+      "expected_priority": "medium"
     },
     {
       "id": "eval-002",
       "input": "How long will my commercial building permit take?",
       "expected_intent": "sla_inquiry",
-      "expected_project_type": "commercial_construction",
-      "expected_sla_days_min": 45,
-      "tags": ["sla", "commercial"]
+      "expected_route": "commercial_permits"
     },
     {
       "id": "eval-003",
       "input": "What are the fees for an environmental review?",
       "expected_intent": "fee_estimate",
-      "expected_project_type": "environmental_review",
-      "expected_base_fee": 2000,
-      "tags": ["fees", "environmental"]
+      "expected_route": "environmental_review"
     },
     {
       "id": "eval-004",
       "input": "I need to demolish an old building downtown",
       "expected_intent": "project_intake",
-      "expected_project_type": "demolition",
-      "expected_agency": "HCD",
-      "tags": ["intake", "demolition"]
+      "expected_route": "demolition_permits"
     },
     {
       "id": "eval-005",
       "input": "What documents do I need for a commercial construction project?",
       "expected_intent": "requirement_check",
-      "expected_project_type": "commercial_construction",
-      "expected_checklist_min_items": 5,
-      "tags": ["checklist", "commercial"]
+      "expected_route": "commercial_permits"
     },
     {
       "id": "eval-006",
       "input": "I want to open a small business and need a license",
       "expected_intent": "project_intake",
-      "expected_project_type": "business_license",
-      "expected_agency": "DCA",
-      "tags": ["intake", "business_license"]
+      "expected_route": "business_license",
+      "expected_priority": "medium"
     },
     {
       "id": "eval-007",
       "input": "How much extra does it cost to expedite a residential permit?",
       "expected_intent": "fee_estimate",
-      "expected_project_type": "residential_construction",
-      "tags": ["fees", "expedited"]
+      "expected_route": "residential_permits"
     },
     {
       "id": "eval-008",
       "input": "My project is in a coastal zone. What additional requirements are there?",
       "expected_intent": "requirement_check",
-      "expected_constraints": ["coastal_zone"],
-      "tags": ["checklist", "constraints"]
+      "expected_route": "environmental_review"
+    },
+    {
+      "id": "eval-009",
+      "input": "Which agency handles ADU permits in California?",
+      "expected_intent": "agency_inquiry",
+      "expected_route": "residential_permits"
+    },
+    {
+      "id": "eval-010",
+      "input": "I want to install solar panels on my commercial building",
+      "expected_intent": "project_intake",
+      "expected_route": "commercial_permits"
+    },
+    {
+      "id": "eval-011",
+      "input": "What is the timeline for a CEQA environmental review?",
+      "expected_intent": "sla_inquiry",
+      "expected_route": "environmental_review",
+      "expected_priority": "high"
+    },
+    {
+      "id": "eval-012",
+      "input": "My permit application has been stuck for 90 days with no response",
+      "expected_intent": "status_inquiry",
+      "expected_route": "general_permits",
+      "expected_escalation": true
+    },
+    {
+      "id": "eval-013",
+      "input": "Can I build a granny flat in my backyard in Los Angeles?",
+      "expected_intent": "project_intake",
+      "expected_route": "residential_permits"
+    },
+    {
+      "id": "eval-014",
+      "input": "What fire safety requirements apply to a multi-unit residential build?",
+      "expected_intent": "requirement_check",
+      "expected_route": "residential_permits",
+      "expected_priority": "high"
+    },
+    {
+      "id": "eval-015",
+      "input": "I need to talk to someone about my permit rejection",
+      "expected_intent": "escalation_request",
+      "expected_escalation": true
+    },
+    {
+      "id": "eval-016",
+      "input": "What permits do I need to open a restaurant?",
+      "expected_intent": "project_intake",
+      "expected_route": "business_license"
+    },
+    {
+      "id": "eval-017",
+      "input": "How do I check the status of my pending permit application?",
+      "expected_intent": "status_inquiry",
+      "expected_route": "general_permits"
+    },
+    {
+      "id": "eval-018",
+      "input": "Is there a fee waiver for affordable housing projects?",
+      "expected_intent": "fee_estimate",
+      "expected_route": "residential_permits"
+    },
+    {
+      "id": "eval-019",
+      "input": "I want to subdivide my land into three parcels",
+      "expected_intent": "project_intake",
+      "expected_route": "land_use"
     }
   ]
 }
