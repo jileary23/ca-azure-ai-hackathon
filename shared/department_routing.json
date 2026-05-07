@@ -1,7 +1,7 @@
 {
   "routing_rules": {
-    "version": "2.0",
-    "last_updated": "2026-02-02",
+    "version": "3.0",
+    "last_updated": "2026-05-05",
     "domain": "California State Government Services"
   },
   "departments": [
@@ -232,6 +232,196 @@
       "keywords": ["state operations", "cross-agency", "shared services", "it modernization", "government efficiency", "public records", "cpra", "information practices"],
       "priority_keywords": ["cpra request", "public records urgent", "transparency"],
       "categories": ["state_operations", "public_records", "cross_agency_services"]
+    },
+    {
+      "id": "caiso",
+      "name": "California Independent System Operator (CAISO)",
+      "email": "caiso.info@caiso.com",
+      "phone": "1-916-351-4400",
+      "business_hours": {
+        "monday": {"open": "00:00", "close": "23:59"},
+        "tuesday": {"open": "00:00", "close": "23:59"},
+        "wednesday": {"open": "00:00", "close": "23:59"},
+        "thursday": {"open": "00:00", "close": "23:59"},
+        "friday": {"open": "00:00", "close": "23:59"},
+        "saturday": {"open": "00:00", "close": "23:59"},
+        "sunday": {"open": "00:00", "close": "23:59"}
+      },
+      "timezone": "America/Los_Angeles",
+      "keywords": ["grid", "electricity", "power", "energy market", "lmp", "day-ahead market", "real-time market", "flex alert", "demand response", "transmission", "renewable", "solar", "wind", "curtailment", "oasis", "wholesale energy", "grid reliability", "blackout", "outage", "wecc", "nerc"],
+      "priority_keywords": ["grid emergency", "stage 3 emergency", "rolling blackouts", "flex alert issued", "load shed", "system emergency"],
+      "categories": ["grid_operations", "energy_markets", "demand_response", "transmission_planning", "flex_alert"]
+    },
+    {
+      "id": "calpers",
+      "name": "California Public Employees' Retirement System (CalPERS)",
+      "email": "calpers.info@calpers.ca.gov",
+      "phone": "1-888-225-7377",
+      "business_hours": {
+        "monday": {"open": "08:00", "close": "17:00"},
+        "tuesday": {"open": "08:00", "close": "17:00"},
+        "wednesday": {"open": "08:00", "close": "17:00"},
+        "thursday": {"open": "08:00", "close": "17:00"},
+        "friday": {"open": "08:00", "close": "17:00"},
+        "saturday": {"open": null, "close": null},
+        "sunday": {"open": null, "close": null}
+      },
+      "timezone": "America/Los_Angeles",
+      "keywords": ["retirement", "pension", "calpers", "public employee", "service credit", "retirement date", "final compensation", "pepra", "classic member", "health benefits", "open enrollment", "long-term care", "beneficiary", "death benefit", "survivor", "my calpers", "retirement formula", "2 percent at 55"],
+      "priority_keywords": ["retirement imminent", "payment missing", "beneficiary death", "disability retirement"],
+      "categories": ["retirement_benefits", "health_enrollment", "service_credit", "death_survivor_benefits", "appeals"]
+    },
+    {
+      "id": "caltrans",
+      "name": "California Department of Transportation (Caltrans)",
+      "email": "caltrans.info@dot.ca.gov",
+      "phone": "1-916-654-2852",
+      "business_hours": {
+        "monday": {"open": "08:00", "close": "17:00"},
+        "tuesday": {"open": "08:00", "close": "17:00"},
+        "wednesday": {"open": "08:00", "close": "17:00"},
+        "thursday": {"open": "08:00", "close": "17:00"},
+        "friday": {"open": "08:00", "close": "17:00"},
+        "saturday": {"open": null, "close": null},
+        "sunday": {"open": null, "close": null}
+      },
+      "timezone": "America/Los_Angeles",
+      "keywords": ["highway", "road", "bridge", "encroachment permit", "right-of-way", "caltrans", "state highway", "transportation", "traffic", "lane closure", "ceqa", "nepa", "environmental review", "construction", "capital project", "highway design manual", "hdm", "transportation project", "interstate"],
+      "priority_keywords": ["road closure emergency", "bridge closure", "accident blocking highway", "encroachment emergency"],
+      "categories": ["encroachment_permits", "highway_design", "environmental_review", "capital_projects", "road_conditions"]
+    },
+    {
+      "id": "cchcs",
+      "name": "California Correctional Health Care Services (CCHCS)",
+      "email": "cchcs.info@cdcr.ca.gov",
+      "phone": "1-916-691-0900",
+      "business_hours": {
+        "monday": {"open": "08:00", "close": "17:00"},
+        "tuesday": {"open": "08:00", "close": "17:00"},
+        "wednesday": {"open": "08:00", "close": "17:00"},
+        "thursday": {"open": "08:00", "close": "17:00"},
+        "friday": {"open": "08:00", "close": "17:00"},
+        "saturday": {"open": null, "close": null},
+        "sunday": {"open": null, "close": null}
+      },
+      "timezone": "America/Los_Angeles",
+      "keywords": ["correctional health", "cchcs", "cdcr", "incarcerated", "prison medical", "mental health", "mhsds", "eop", "cccms", "mhcb", "dental", "pharmacy", "formulary", "competency", "clinical policy", "hcspp", "custody health", "inmate health"],
+      "priority_keywords": ["medical emergency custody", "suicide risk", "mental health crisis inmate", "urgent medical custody"],
+      "categories": ["clinical_policy", "mental_health_program", "pharmacy_formulary", "dental", "staff_admin"]
+    },
+    {
+      "id": "cdi",
+      "name": "California Department of Insurance (CDI)",
+      "email": "consumer.hotline@insurance.ca.gov",
+      "phone": "1-800-927-4357",
+      "business_hours": {
+        "monday": {"open": "08:00", "close": "17:00"},
+        "tuesday": {"open": "08:00", "close": "17:00"},
+        "wednesday": {"open": "08:00", "close": "17:00"},
+        "thursday": {"open": "08:00", "close": "17:00"},
+        "friday": {"open": "08:00", "close": "17:00"},
+        "saturday": {"open": null, "close": null},
+        "sunday": {"open": null, "close": null}
+      },
+      "timezone": "America/Los_Angeles",
+      "keywords": ["insurance", "claim denied", "insurance complaint", "homeowners insurance", "auto insurance", "cancellation", "non-renewal", "fair plan", "insurance fraud", "clca", "low cost auto", "insurance license", "life insurance", "broker", "agent license", "policy", "premium", "adjuster", "flood insurance", "earthquake insurance"],
+      "priority_keywords": ["claim denied urgent", "disaster claim", "wildfire insurance", "coverage lapse", "policy cancelled"],
+      "categories": ["claim_disputes", "cancellation_nonrenewal", "licensing_verification", "consumer_complaints", "clca_program"]
+    },
+    {
+      "id": "cdph",
+      "name": "California Department of Public Health (CDPH)",
+      "email": "cdph.info@cdph.ca.gov",
+      "phone": "1-916-558-1784",
+      "business_hours": {
+        "monday": {"open": "08:00", "close": "17:00"},
+        "tuesday": {"open": "08:00", "close": "17:00"},
+        "wednesday": {"open": "08:00", "close": "17:00"},
+        "thursday": {"open": "08:00", "close": "17:00"},
+        "friday": {"open": "08:00", "close": "17:00"},
+        "saturday": {"open": null, "close": null},
+        "sunday": {"open": null, "close": null}
+      },
+      "timezone": "America/Los_Angeles",
+      "keywords": ["public health", "disease", "outbreak", "immunization", "vaccine", "birth certificate", "death certificate", "vital records", "wic", "food safety", "environmental health", "epidemiology", "cair", "communicable disease", "reportable disease", "flu", "covid", "measles", "hepatitis", "foodborne illness", "water quality"],
+      "priority_keywords": ["outbreak emergency", "disease cluster", "public health emergency", "mass casualty", "bioterrorism"],
+      "categories": ["disease_reporting", "immunization", "vital_statistics", "wic_program", "environmental_health"]
+    },
+    {
+      "id": "cdtfa",
+      "name": "California Department of Tax and Fee Administration (CDTFA)",
+      "email": "cdtfa.info@cdtfa.ca.gov",
+      "phone": "1-800-400-7115",
+      "business_hours": {
+        "monday": {"open": "07:30", "close": "17:00"},
+        "tuesday": {"open": "07:30", "close": "17:00"},
+        "wednesday": {"open": "07:30", "close": "17:00"},
+        "thursday": {"open": "07:30", "close": "17:00"},
+        "friday": {"open": "07:30", "close": "17:00"},
+        "saturday": {"open": null, "close": null},
+        "sunday": {"open": null, "close": null}
+      },
+      "timezone": "America/Los_Angeles",
+      "keywords": ["sales tax", "use tax", "taxability", "seller's permit", "sales tax rate", "cannabis tax", "fuel tax", "ifta", "excise tax", "tobacco tax", "sales tax audit", "tax compliance", "cdtfa", "tax return", "tax filing", "business tax", "use tax", "prepayment", "sales tax exemption"],
+      "priority_keywords": ["tax audit notice", "jeopardy assessment", "tax lien", "sales tax overdue"],
+      "categories": ["taxability_guidance", "seller_permit", "audit_compliance", "fuel_tax", "cannabis_tax"]
+    },
+    {
+      "id": "dsh",
+      "name": "Department of State Hospitals (DSH)",
+      "email": "dsh.info@dsh.ca.gov",
+      "phone": "1-916-654-2183",
+      "business_hours": {
+        "monday": {"open": "08:00", "close": "17:00"},
+        "tuesday": {"open": "08:00", "close": "17:00"},
+        "wednesday": {"open": "08:00", "close": "17:00"},
+        "thursday": {"open": "08:00", "close": "17:00"},
+        "friday": {"open": "08:00", "close": "17:00"},
+        "saturday": {"open": null, "close": null},
+        "sunday": {"open": null, "close": null}
+      },
+      "timezone": "America/Los_Angeles",
+      "keywords": ["state hospital", "forensic commitment", "ist", "incompetent to stand trial", "ngi", "not guilty by reason of insanity", "lps", "lanterman petris short", "svp", "sexually violent predator", "conrep", "conditional release", "psychiatric hospital", "competency restoration", "mental health commitment", "atascadero", "napa state hospital", "metropolitan", "patton", "coalinga"],
+      "priority_keywords": ["patient elopement", "escape from state hospital", "urgent forensic placement", "wcab deadline forensic"],
+      "categories": ["ist_commitment", "ngi_conrep", "lps_commitment", "svp_program", "placement_transfer"]
+    },
+    {
+      "id": "otsi",
+      "name": "CHHS Office of Technology and Solutions Integration (OTSI)",
+      "email": "otsi.info@chhs.ca.gov",
+      "phone": "1-916-651-6000",
+      "business_hours": {
+        "monday": {"open": "08:00", "close": "17:00"},
+        "tuesday": {"open": "08:00", "close": "17:00"},
+        "wednesday": {"open": "08:00", "close": "17:00"},
+        "thursday": {"open": "08:00", "close": "17:00"},
+        "friday": {"open": "08:00", "close": "17:00"},
+        "saturday": {"open": null, "close": null},
+        "sunday": {"open": null, "close": null}
+      },
+      "timezone": "America/Los_Angeles",
+      "keywords": ["calsaws", "meds", "calhers", "chhs api", "data sharing agreement", "otsi", "system integration", "hipaa chhs", "simm", "data de-identification", "calaim technical", "eligibility system", "bsaws", "saws", "chhs technology", "it integration", "fti", "federal tax information", "its 600", "pmso"],
+      "priority_keywords": ["system outage chhs", "calsaws down", "meds down", "integration emergency", "security breach chhs"],
+      "categories": ["system_integration", "api_catalog", "data_sharing", "security_compliance", "calaim_technical"]
+    },
+    {
+      "id": "ca_state_fund",
+      "name": "State Compensation Insurance Fund (CA State Fund)",
+      "email": "contactus@statefund.com",
+      "phone": "1-888-782-8338",
+      "business_hours": {
+        "monday": {"open": "08:00", "close": "17:00"},
+        "tuesday": {"open": "08:00", "close": "17:00"},
+        "wednesday": {"open": "08:00", "close": "17:00"},
+        "thursday": {"open": "08:00", "close": "17:00"},
+        "friday": {"open": "08:00", "close": "17:00"},
+        "saturday": {"open": null, "close": null},
+        "sunday": {"open": null, "close": null}
+      },
+      "timezone": "America/Los_Angeles",
+      "keywords": ["workers comp", "workers compensation", "injured worker", "work injury", "claim status", "temporary disability", "td benefits", "permanent disability", "pd rating", "return to work", "modified duty", "qme", "qualified medical evaluator", "ime", "independent medical review", "imr", "utilization review", "ur denial", "wcab", "employer policy", "x-mod", "experience modification", "iipp", "employer audit", "statefund", "state fund", "light duty", "work related injury", "occupational injury"],
+      "priority_keywords": ["serious work injury", "hospitalized worker", "work fatality", "emergency workers comp", "claim denied urgent"],
+      "categories": ["injured_worker_claims", "employer_policy", "medical_treatment_authorization", "wcab_disputes", "safety_programs"]
     }
   ],
   "escalation_triggers": {
