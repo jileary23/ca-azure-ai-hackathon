@@ -1,4 +1,4 @@
-# 🏛️ California State AI Hackathon Accelerators
+# 🏛️ California State Azure AI Hackathon Accelerators
 
 **Accelerating AI innovation for California state government — powered by the 3-agent pipeline pattern**
 
@@ -14,7 +14,7 @@
 
 ## 📖 Overview
 
-This repository contains **8 AI accelerators** built for California state agencies participating in the **California State Hackathon**. Each accelerator demonstrates practical AI solutions to improve public service delivery across diverse policy domains — from benefits navigation to emergency response.
+This repository contains **20 AI accelerators** built for California state agencies participating in the **California State Hackathon**. Each accelerator demonstrates practical AI solutions to improve public service delivery across diverse policy domains — from benefits navigation to emergency response.
 
 **Key Features:**
 
@@ -29,18 +29,37 @@ This work supports California's **Envision 2026** strategy, Executive Orders **N
 
 ---
 
-## 🎯 The 8 Accelerators
+## 🎯 The 20 Accelerators
 
-| # | Accelerator | Agency | Description | Complexity | Key Tech |
-|---|-------------|--------|-------------|------------|----------|
-| 001 | [BenefitsCal Navigator](accelerators/001-benefitscal-navigator/) | CDSS | Natural language benefits eligibility Q&A with multi-language support | ⭐⭐⭐ | Azure AI Search, Realtime API |
-| 002 | [Wildfire Response Coordinator](accelerators/002-wildfire-response-coordinator/) | CAL FIRE / Cal OES | Multi-agency wildfire incident coordination and evacuation planning | ⭐⭐⭐⭐ | Azure Maps, MCP Tools |
-| 003 | [Medi-Cal Eligibility Agent](accelerators/003-medi-cal-eligibility/) | DHCS | Automated document extraction and eligibility pre-determination | ⭐⭐⭐⭐ | Document Intelligence |
-| 004 | [Permit Streamliner](accelerators/004-permit-streamliner/) | OPR / HCD / DCA | AI-powered permit intake, routing, and SLA tracking | ⭐⭐⭐ | Azure AI Search |
-| 005 | [GenAI Procurement Compliance](accelerators/005-genai-procurement-compliance/) | CDT / DGS | Vendor AI attestation review against EO N-5-26 | ⭐⭐ | Semantic Kernel |
-| 006 | [Cross-Agency Knowledge Hub](accelerators/006-cross-agency-knowledge-hub/) | GovOps | Permission-aware federated search across 200+ agencies | ⭐⭐⭐ | Hybrid Search, Entra ID |
-| 007 | [EDD Claims Assistant](accelerators/007-edd-claims-assistant/) | EDD | Voice-enabled claims status and eligibility screening | ⭐⭐⭐ | Realtime API, WebRTC |
-| 008 | [Multilingual Emergency Chatbot](accelerators/008-multilingual-emergency-chat/) | Cal OES | 70+ language emergency info with SMS support | ⭐⭐ | Azure Translator |
+### Original 8 Accelerators
+
+| #   | Accelerator                                                                      | Agency             | Description                                                           | Complexity | Key Tech                      |
+| --- | -------------------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------- | ---------- | ----------------------------- |
+| 001 | [BenefitsCal Navigator](accelerators/001-benefitscal-navigator/)                 | CDSS               | Natural language benefits eligibility Q&A with multi-language support | ⭐⭐⭐        | Azure AI Search, Realtime API |
+| 002 | [Wildfire Response Coordinator](accelerators/002-wildfire-response-coordinator/) | CAL FIRE / Cal OES | Multi-agency wildfire incident coordination and evacuation planning   | ⭐⭐⭐⭐       | Azure Maps, MCP Tools         |
+| 003 | [Medi-Cal Eligibility Agent](accelerators/003-medi-cal-eligibility/)             | DHCS               | Automated document extraction and eligibility pre-determination       | ⭐⭐⭐⭐       | Document Intelligence         |
+| 004 | [Permit Streamliner](accelerators/004-permit-streamliner/)                       | OPR / HCD / DCA    | AI-powered permit intake, routing, and SLA tracking                   | ⭐⭐⭐        | Azure AI Search               |
+| 005 | [GenAI Procurement Compliance](accelerators/005-genai-procurement-compliance/)   | CDT / DGS          | Vendor AI attestation review against EO N-5-26                        | ⭐⭐         | Semantic Kernel               |
+| 006 | [Cross-Agency Knowledge Hub](accelerators/006-cross-agency-knowledge-hub/)       | GovOps             | Permission-aware federated search across 200+ agencies                | ⭐⭐⭐        | Hybrid Search, Entra ID       |
+| 007 | [EDD Claims Assistant](accelerators/007-edd-claims-assistant/)                   | EDD                | Voice-enabled claims status and eligibility screening                 | ⭐⭐⭐        | Realtime API, WebRTC          |
+| 008 | [Multilingual Emergency Chatbot](accelerators/008-multilingual-emergency-chat/)  | Cal OES            | 70+ language emergency info with SMS support                          | ⭐⭐         | Azure Translator              |
+
+### New Accelerators — Hackathon Attendee Agencies
+
+| #   | Accelerator                                                                                  | Agency        | Description                                                                   | Complexity | Key Tech                                       |
+| --- | -------------------------------------------------------------------------------------------- | ------------- | ----------------------------------------------------------------------------- | ---------- | ---------------------------------------------- |
+| 009 | [CAISO Grid Operations Agent](accelerators/009-caiso-grid-operations-agent/)                 | CAISO         | Real-time grid intelligence, Flex Alert guidance, and energy market Q&A       | ⭐⭐⭐⭐       | Azure OpenAI, OASIS API, Event Hubs            |
+| 010 | [CalPERS Retirement Navigator](accelerators/010-calpers-retirement-navigator/)               | CalPERS       | Pension formula, health plan, and retirement benefit guidance for 2M members  | ⭐⭐⭐        | Azure OpenAI, AI Search RAG                    |
+| 011 | [Caltrans Project Intelligence Agent](accelerators/011-caltrans-project-intelligence-agent/) | Caltrans      | Encroachment permit guidance, HDM standards Q&A, and CEQA/NEPA intake         | ⭐⭐⭐        | Azure OpenAI, AI Search, Document Intelligence |
+| 012 | [CCHCS Clinical Support Agent](accelerators/012-cchcs-clinical-support-agent/)               | CCHCS         | Clinical policy navigation and formulary lookup for correctional health staff | ⭐⭐⭐        | Azure OpenAI, HCSPP RAG                        |
+| 013 | [CDI Insurance Consumer Agent](accelerators/013-cdi-insurance-consumer-agent/)               | CDI           | Consumer insurance rights, claim dispute guidance, and license verification   | ⭐⭐⭐        | Azure OpenAI, AI Search                        |
+| 014 | [CDPH Public Health Agent](accelerators/014-cdph-public-health-agent/)                       | CDPH          | Disease reporting, immunization guidance, and vital statistics support        | ⭐⭐⭐        | Azure OpenAI, AI Search                        |
+| 015 | [CDTFA Tax Compliance Navigator](accelerators/015-cdtfa-tax-compliance-navigator/)           | CDTFA         | Sales tax, cannabis tax, and audit guidance for California businesses         | ⭐⭐⭐        | Azure OpenAI, R&TC RAG                         |
+| 016 | [DCA License Navigator](accelerators/016-dca-license-navigator/)                             | DCA           | Professional licensing guidance across 200+ license types and 37 boards       | ⭐⭐⭐        | Azure OpenAI, AI Search, BreEZe API            |
+| 017 | [DGS Procurement Agent](accelerators/017-dgs-procurement-agent/)                             | DGS           | CMAS, SB/DVBE, and State Contracting Manual guidance                          | ⭐⭐⭐        | Azure OpenAI, SCM RAG                          |
+| 018 | [DSH Forensic Placement Agent](accelerators/018-dsh-forensic-placement-agent/)               | DSH           | IST/NGI/LPS commitment timelines and CONREP placement guidance                | ⭐⭐⭐⭐       | Azure OpenAI, Penal Code RAG                   |
+| 019 | [OTSI HHS Integration Agent](accelerators/019-otsi-hhs-integration-agent/)                   | OTSI/CHHS     | CHHS system integration guidance, API catalog, and SIMM compliance            | ⭐⭐⭐⭐       | Azure OpenAI, AI Search                        |
+| 020 | [CA State Fund Workers' Comp Navigator](accelerators/020-statefund-workers-comp-navigator/)  | CA State Fund | Workers' comp claims, employer policy, and IMR/WCAB guidance                  | ⭐⭐⭐        | Azure OpenAI, Labor Code RAG                   |
 
 Each accelerator has a full specification in `specs/` and an implementation project in `accelerators/`.
 
@@ -81,11 +100,11 @@ All accelerators follow a consistent three-agent architecture:
 
 ### Agent Responsibilities
 
-| Agent | Role | Key Capabilities |
-|-------|------|-----------------|
-| **QueryAgent** | Understands user input | Intent detection, entity extraction, PII filtering, input validation against constitution |
-| **RouterAgent** | Determines action path | Agency routing, priority setting, escalation triggers, session context management |
-| **ActionAgent** | Executes the action | Knowledge retrieval (RAG), ticket creation, API calls, response formatting, audit logging |
+| Agent           | Role                   | Key Capabilities                                                                          |
+| --------------- | ---------------------- | ----------------------------------------------------------------------------------------- |
+| **QueryAgent**  | Understands user input | Intent detection, entity extraction, PII filtering, input validation against constitution |
+| **RouterAgent** | Determines action path | Agency routing, priority setting, escalation triggers, session context management         |
+| **ActionAgent** | Executes the action    | Knowledge retrieval (RAG), ticket creation, API calls, response formatting, audit logging |
 
 ### Why Three Agents?
 
@@ -100,14 +119,14 @@ All accelerators follow a consistent three-agent architecture:
 
 This repository separates **shared platform infrastructure** from **individual accelerator projects**, allowing teams to work independently while sharing a common foundation.
 
-| Layer | Location | Purpose |
-|-------|----------|---------|
-| **Core Platform** | `backend/`, `frontend/` | Reference implementation of the 3-agent pipeline (FastAPI + React) |
-| **Shared Governance** | `shared/` | Constitution templates, routing schemas, and cross-accelerator policies ensuring CA compliance |
-| **Accelerators** | `accelerators/` | Self-contained projects — each can be developed, tested, and deployed independently |
-| **Specifications** | `specs/` | Spec-driven definitions for each accelerator: `spec.md`, `plan.md`, `tasks.md`, `constitution.md` |
-| **Workshop Labs** | `labs/` | Hands-on learning curriculum (8 labs) teaching the 3-agent pattern step by step |
-| **Infrastructure** | `infra/` | Reusable Bicep IaC modules for Azure deployment |
+| Layer                 | Location                | Purpose                                                                                           |
+| --------------------- | ----------------------- | ------------------------------------------------------------------------------------------------- |
+| **Core Platform**     | `backend/`, `frontend/` | Reference implementation of the 3-agent pipeline (FastAPI + React)                                |
+| **Shared Governance** | `shared/`               | Constitution templates, routing schemas, and cross-accelerator policies ensuring CA compliance    |
+| **Accelerators**      | `accelerators/`         | Self-contained projects — each can be developed, tested, and deployed independently               |
+| **Specifications**    | `specs/`                | Spec-driven definitions for each accelerator: `spec.md`, `plan.md`, `tasks.md`, `constitution.md` |
+| **Workshop Labs**     | `labs/`                 | Hands-on learning curriculum (8 labs) teaching the 3-agent pattern step by step                   |
+| **Infrastructure**    | `infra/`                | Reusable Bicep IaC modules for Azure deployment                                                   |
 
 **Spec-driven development**: Every accelerator starts with a specification before any code is written. Specs live in `specs/<accelerator-id>/` and define requirements, architecture decisions, task breakdowns, and governance rules.
 
@@ -115,19 +134,19 @@ This repository separates **shared platform infrastructure** from **individual a
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| **Backend** | Python 3.11+ / FastAPI / Pydantic v2 / Semantic Kernel |
-| **Frontend** | React 18 / TypeScript 5 / Vite / Tailwind CSS |
-| **AI/LLM** | Azure OpenAI (GPT-4o) + Azure AI Search (hybrid RAG) |
-| **Voice** | Azure OpenAI Realtime API (WebRTC) |
-| **Document AI** | Azure Document Intelligence |
-| **Auth** | Azure Entra ID / MSAL |
-| **Infrastructure** | Docker + docker-compose / Azure Developer CLI (azd) |
-| **IaC** | Bicep |
-| **Testing** | pytest + vitest + Playwright |
-| **CI/CD** | GitHub Actions |
-| **Governance** | Constitution-driven, EO N-12-23 / N-5-26 compliant |
+| Layer              | Technology                                             |
+| ------------------ | ------------------------------------------------------ |
+| **Backend**        | Python 3.11+ / FastAPI / Pydantic v2 / Semantic Kernel |
+| **Frontend**       | React 18 / TypeScript 5 / Vite / Tailwind CSS          |
+| **AI/LLM**         | Azure OpenAI (GPT-4o) + Azure AI Search (hybrid RAG)   |
+| **Voice**          | Azure OpenAI Realtime API (WebRTC)                     |
+| **Document AI**    | Azure Document Intelligence                            |
+| **Auth**           | Azure Entra ID / MSAL                                  |
+| **Infrastructure** | Docker + docker-compose / Azure Developer CLI (azd)    |
+| **IaC**            | Bicep                                                  |
+| **Testing**        | pytest + vitest + Playwright                           |
+| **CI/CD**          | GitHub Actions                                         |
+| **Governance**     | Constitution-driven, EO N-12-23 / N-5-26 compliant     |
 
 ---
 
@@ -209,14 +228,14 @@ This project is designed to align with California's AI governance framework:
 
 ### 📜 Executive Orders & Legislation
 
-| Policy | What It Covers | Relevant Accelerator(s) |
-|--------|---------------|------------------------|
-| **EO N-12-23** | GenAI guidelines for state agencies — transparency, accountability, bias mitigation | All — codified in each `constitution.md` |
-| **EO N-5-26** | AI procurement & vendor attestation for safety, security, explainability | #005 GenAI Procurement Compliance |
-| **SB 53** | AI safety — risk assessment and safeguards for state AI systems | All — risk assessments in specs |
-| **CCPA/CPRA** | California consumer privacy — PII handling, data minimization | All — PII filtering in QueryAgent |
-| **Envision 2026** | CDT's digital transformation strategy for California government | All — strategic alignment |
-| **Breakthrough Project** | Governor's initiative to modernize permitting processes | #004 Permit Streamliner |
+| Policy                   | What It Covers                                                                      | Relevant Accelerator(s)                  |
+| ------------------------ | ----------------------------------------------------------------------------------- | ---------------------------------------- |
+| **EO N-12-23**           | GenAI guidelines for state agencies — transparency, accountability, bias mitigation | All — codified in each `constitution.md` |
+| **EO N-5-26**            | AI procurement & vendor attestation for safety, security, explainability            | #005 GenAI Procurement Compliance        |
+| **SB 53**                | AI safety — risk assessment and safeguards for state AI systems                     | All — risk assessments in specs          |
+| **CCPA/CPRA**            | California consumer privacy — PII handling, data minimization                       | All — PII filtering in QueryAgent        |
+| **Envision 2026**        | CDT's digital transformation strategy for California government                     | All — strategic alignment                |
+| **Breakthrough Project** | Governor's initiative to modernize permitting processes                             | #004 Permit Streamliner                  |
 
 ### 🔐 Constitution-Driven Governance
 
@@ -246,16 +265,16 @@ The constitution is **executable** — it's referenced in agent prompts and enfo
 
 The `labs/` directory contains an **8-lab curriculum** that teaches the 3-agent pipeline pattern step by step:
 
-| Lab | Topic | Azure Required? |
-|-----|-------|-----------------|
-| 00 | Environment Setup | No |
-| 01 | Understanding Agents | No |
-| 02 | Building a QueryAgent | No |
-| 03 | Adding a RouterAgent | No |
-| 04 | Connecting Azure OpenAI | Yes |
-| 05 | RAG with Azure AI Search | Yes |
-| 06 | Voice with Realtime API | Yes |
-| 07 | End-to-End Accelerator | Yes |
+| Lab | Topic                    | Azure Required? |
+| --- | ------------------------ | --------------- |
+| 00  | Environment Setup        | No              |
+| 01  | Understanding Agents     | No              |
+| 02  | Building a QueryAgent    | No              |
+| 03  | Adding a RouterAgent     | No              |
+| 04  | Connecting Azure OpenAI  | Yes             |
+| 05  | RAG with Azure AI Search | Yes             |
+| 06  | Voice with Realtime API  | Yes             |
+| 07  | End-to-End Accelerator   | Yes             |
 
 Labs 00–03 run entirely in **mock mode** — no Azure credentials needed. Labs 04+ require an Azure subscription with the appropriate services provisioned.
 
@@ -385,27 +404,6 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 **Note**: This is open-source reference architecture. Agencies are responsible for compliance with state procurement, security, and privacy requirements when deploying to production.
 
----
-
-## 📞 Contact & Support
-
-- **GitHub Issues**: Bug reports and feature requests
-- **Discussions**: Architecture questions and best practices
-- **CA CDT Innovation Team**: innovation@cdt.ca.gov
-
----
-
-## 🙏 Acknowledgments
-
-Built for the **California State Hackathon** by teams from:
-- California Department of Technology (CDT)
-- Government Operations Agency (GovOps)
-- California Department of Social Services (CDSS)
-- CAL FIRE / California Governor's Office of Emergency Services (Cal OES)
-- Department of Health Care Services (DHCS)
-- And many more California state agencies
-
-**Powered by**: Azure OpenAI · Semantic Kernel · FastAPI · React · TypeScript
 
 ---
 
