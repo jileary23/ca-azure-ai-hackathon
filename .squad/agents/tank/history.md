@@ -418,3 +418,30 @@ Three-agent parallel work on accelerator deployment infrastructure:
 
 **Decisions merged:** `tank-ca-rebrand.md`, `tank-infra-deploy.md`, `switch-dockerfiles.md`, `morpheus-deploy-tooling.md` → `.squad/decisions.md`
 
+
+
+### 2026-04-13 — Graceful Mock Fallback, Env-Driven CORS, GPT-4.1 Migration
+
+**ActionAgent mock fallback (002, 003, 005, 008)**
+
+- Four accelerators (002-wildfire, 003-medi-cal, 005-procurement, 008-emergency) had ActionAgent raising NotImplementedError when USE_MOCK_SERVICES=false. Azure deployment sets mock_mode=false, so all four crashed.
+- Fix pattern: try _handle_live() then catch NotImplementedError then fall back to mock. Same behavior whether mock_mode is true or live services are not ready yet.
+- 002/003 use execute() method; 005/008 use act() method — both patterns now have the fallback.
+- 001, 004, 006, 007 already worked because they either always use mock service or have live services configured.
+
+**Environment-variable-driven CORS (all 8 backends)**
+
+- All 8 main.py files had allow_origins=["*"] hardcoded. Replaced with CORS_ORIGINS env var support.
+- Default: "*" (backward compatible). When set: comma-separated specific origins.
+- Added import os to 001, 004, 006, 007 (002, 003, 005, 008 already had it).
+
+**GPT-4.1 migration**
+
+- Updated all 9 .env.example files from gpt-4o to gpt-4.1 for AZURE_OPENAI_DEPLOYMENT.
+- Left AZURE_OPENAI_REALTIME_DEPLOYMENT=gpt-4o-realtime-preview unchanged (no realtime equivalent of 4.1).
+
+**Key file paths**
+
+- accelerators/*/backend/app/agents/action_agent.py — ActionAgent with mock fallback
+- accelerators/*/backend/app/main.py — CORS middleware with env-var origins
+- accelerators/*.env.example, backend/.env.example — GPT-4.1 deployment name

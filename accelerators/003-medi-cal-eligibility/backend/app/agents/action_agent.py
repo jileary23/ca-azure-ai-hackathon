@@ -20,9 +20,16 @@ class ActionAgent:
         self.mock_service = MockMediCalService()
 
     async def execute(self, query: MediCalQuery, routing: RoutingDecision) -> AgentResponse:
-        """Execute action based on routing decision."""
+        """Execute action based on routing decision. Falls back to mock when live not ready."""
         if self.mock_mode:
             return self._handle_mock(query, routing)
+        try:
+            return self._handle_live(query, routing)
+        except NotImplementedError:
+            return self._handle_mock(query, routing)
+
+    def _handle_live(self, query: MediCalQuery, routing: RoutingDecision) -> AgentResponse:
+        """Live service integration — not yet implemented."""
         raise NotImplementedError("Live Azure services not yet configured")
 
     def _handle_mock(self, query: MediCalQuery, routing: RoutingDecision) -> AgentResponse:

@@ -320,3 +320,11 @@ accelerators/
 - 7 accelerator frontends (001-004, 006-008)
 - 8 accelerator backends (001-008)
 - Total: 18 Azure Container App endpoints
+
+### 2026-04-02 — Fix Accelerator Frontend Azure Deployments
+
+**Problem:** All 7 accelerator frontends (001-008, no 005) had hardcoded `localhost:800X` fallbacks in `apiClient.ts`. Since `VITE_API_URL` is not set at build time, the localhost URL was baked into the JS bundle, breaking Azure deployments.
+
+**Fix:** Changed the fallback from `http://localhost:800X` to empty string in all 7 `apiClient.ts` files. API calls now use relative paths (`/api/chat`, `/health`, etc.) which nginx proxies to the backend — same pattern the platform frontend already uses.
+
+**Key insight:** Dockerfiles were already correct (`BACKEND_URL=http://backend:8000`, overridden at deploy time). The only issue was the JS bundle baking in localhost URLs. The nginx proxy pattern (relative URLs + envsubst backend routing) is the correct approach for all frontends.
