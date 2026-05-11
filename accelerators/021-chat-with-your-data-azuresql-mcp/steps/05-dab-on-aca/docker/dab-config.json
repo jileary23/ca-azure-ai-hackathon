@@ -1,0 +1,66 @@
+{
+  "$schema": "https://github.com/Azure/data-api-builder/releases/latest/download/dab.draft.schema.json",
+  "data-source": {
+    "database-type": "mssql",
+    "connection-string": "@env('SQL_CONNECTION_STRING')",
+    "options": {
+      "set-session-context": false
+    }
+  },
+  "runtime": {
+    "rest": {
+      "enabled": true,
+      "path": "/api",
+      "request-body-strict": true
+    },
+    "graphql": {
+      "enabled": true,
+      "path": "/graphql",
+      "allow-introspection": true
+    },
+    "mcp": {
+      "enabled": true
+    },
+    "host": {
+      "mode": "production",
+      "cors": {
+        "origins": ["*"],
+        "allow-credentials": false
+      }
+    }
+  },
+  "entities": {
+    "Product": {
+      "source": {
+        "object": "dbo.Products",
+        "type": "table"
+      },
+      "permissions": [
+        { "role": "anonymous", "actions": ["read"] }
+      ],
+      "description": "Catalog of physical products (id, name, category, price, description)."
+    },
+    "ProductReview": {
+      "source": {
+        "object": "dbo.ProductReviews",
+        "type": "table"
+      },
+      "permissions": [
+        { "role": "anonymous", "actions": ["read"] }
+      ],
+      "description": "Customer reviews of products. Each row has free-text ReviewText, a star Rating, and a VECTOR(1536) ReviewEmbedding."
+    },
+    "FindSimilarReviewsHybrid": {
+      "source": {
+        "object": "dbo.find_similar_reviews_hybrid",
+        "type": "stored-procedure"
+      },
+      "rest":    { "methods": ["POST"] },
+      "graphql": { "operation": "mutation" },
+      "permissions": [
+        { "role": "anonymous", "actions": ["execute"] }
+      ],
+      "description": "Hybrid (vector + full-text) search over ProductReviews. Returns top-N reviews ranked by Reciprocal Rank Fusion. Parameters: queryText, top."
+    }
+  }
+}

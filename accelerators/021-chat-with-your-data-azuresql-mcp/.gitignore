@@ -1,0 +1,22 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+terraform.tfvars
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+.vscode/*.log
+*.user
+*.suo
+node_modules/
+coverage/
+dist/
+*.png
+!.drawio.png
+
+# Generated DAB config (step 4) — contains your SQL FQDN, never commit
+steps/04-dab-local/dab-config.json

@@ -1,0 +1,19 @@
+{
+  "deployedAtUtc": "2026-05-10T21:50:36.1977017Z",
+  "resourceGroup": "rg-sqlrag-dev",
+  "location": "westus",
+  "namePrefix": "sqlrag",
+  "environmentName": "dev",
+  "uamiName": "sqlrag-uami-dev",
+  "uamiResourceId": "/subscriptions/4810461e-93cc-4bb5-af74-b3559f033c3b/resourceGroups/rg-sqlrag-dev/providers/Microsoft.ManagedIdentity/userAssignedIdentities/sqlrag-uami-dev",
+  "uamiClientId": "93600bae-56d5-42ce-8d7b-c58e55ee81c4",
+  "uamiPrincipalId": "82ae6ed1-6638-4923-8cef-56083087c141",
+  "sqlServerName": "sqlrag-sql-dev-z4gsb7",
+  "sqlServerFqdn": "sqlrag-sql-dev-z4gsb7.database.windows.net",
+  "sqlDatabaseName": "ProductsDB",
+  "foundryAccountName": "sqlrag-ai-dev-z4gsb7",
+  "foundryProjectName": "sqlrag-proj-dev",
+  "foundryEndpoint": "https://sqlrag-ai-dev-z4gsb7.services.ai.azure.com/api/projects/sqlrag-proj-dev",
+  "openAiEndpoint": "https://sqlrag-ai-dev-z4gsb7.openai.azure.com/",
+  "embeddingDeployment": "embedding"
+}
