@@ -1,0 +1,79 @@
+{
+  "$schema": "https://github.com/Azure/data-api-builder/releases/latest/download/dab.draft.schema.json",
+  "data-source": {
+    "database-type": "mssql",
+    "connection-string": "Server=tcp:<<SQL_FQDN>>,1433;Database=<<SQL_DB>>;Authentication=Active Directory Default;Encrypt=True;TrustServerCertificate=False;",
+    "options": {
+      "set-session-context": false
+    }
+  },
+  "runtime": {
+    "rest": {
+      "enabled": true,
+      "path": "/api",
+      "request-body-strict": true
+    },
+    "graphql": {
+      "enabled": true,
+      "path": "/graphql",
+      "allow-introspection": true
+    },
+    "mcp": {
+      "enabled": true
+    },
+    "host": {
+      "mode": "development",
+      "cors": {
+        "origins": ["http://localhost:5173", "http://localhost:3000"],
+        "allow-credentials": false
+      }
+    }
+  },
+  "entities": {
+    "Product": {
+      "source": {
+        "object": "dbo.Products",
+        "type": "table"
+      },
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": ["read"]
+        }
+      ],
+      "description": "Catalog of physical products (id, name, category, price, description)."
+    },
+    "ProductReview": {
+      "source": {
+        "object": "dbo.ProductReviews",
+        "type": "table"
+      },
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": ["read"]
+        }
+      ],
+      "description": "Customer reviews of products. Each row has free-text ReviewText, a star Rating, and a VECTOR(1536) ReviewEmbedding."
+    },
+    "FindSimilarReviewsHybrid": {
+      "source": {
+        "object": "dbo.find_similar_reviews_hybrid",
+        "type": "stored-procedure"
+      },
+      "rest": {
+        "methods": ["POST"]
+      },
+      "graphql": {
+        "operation": "mutation"
+      },
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": ["execute"]
+        }
+      ],
+      "description": "Hybrid (vector + full-text) search over ProductReviews. Returns top-N reviews ranked by Reciprocal Rank Fusion. Parameters: openAiEndpoint, embeddingDeployment, queryText, top."
+    }
+  }
+}
