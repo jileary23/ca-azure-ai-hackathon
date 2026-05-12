@@ -56,3 +56,8 @@ The agent operates in a **strictly advisory capacity** on clinical and legal mat
 ## Specification
 
 See [../../specs/018-dsh-forensic-placement-agent/spec.md](../../specs/018-dsh-forensic-placement-agent/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-018-dsh-build.prompt.md](../../.github/prompts/accel-018-dsh-build.prompt.md)

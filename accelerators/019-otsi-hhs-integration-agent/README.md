@@ -57,3 +57,8 @@ This accelerator uniquely targets **internal government developer productivity**
 ## Specification
 
 See [../../specs/019-otsi-hhs-integration-agent/spec.md](../../specs/019-otsi-hhs-integration-agent/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-019-otsi-build.prompt.md](../../.github/prompts/accel-019-otsi-build.prompt.md)

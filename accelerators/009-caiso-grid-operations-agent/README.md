@@ -49,3 +49,8 @@ The ActionAgent integrates with CAISO's publicly available OASIS data feeds in p
 ## Specification
 
 See [../../specs/009-caiso-grid-operations-agent/spec.md](../../specs/009-caiso-grid-operations-agent/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-009-caiso-build.prompt.md](../../.github/prompts/accel-009-caiso-build.prompt.md)

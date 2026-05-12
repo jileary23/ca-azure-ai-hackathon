@@ -56,3 +56,8 @@ The agent integrates with DCA's public License Lookup system for real-time licen
 ## Specification
 
 See [../../specs/016-dca-license-navigator/spec.md](../../specs/016-dca-license-navigator/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-016-dca-build.prompt.md](../../.github/prompts/accel-016-dca-build.prompt.md)

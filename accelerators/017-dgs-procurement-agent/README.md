@@ -54,3 +54,8 @@ This accelerator directly supports EO N-5-26 AI procurement compliance. The agen
 ## Specification
 
 See [../../specs/017-dgs-procurement-agent/spec.md](../../specs/017-dgs-procurement-agent/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-017-dgs-build.prompt.md](../../.github/prompts/accel-017-dgs-build.prompt.md)

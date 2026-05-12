@@ -58,3 +58,8 @@ The agent is strictly **advisory** — it never accesses individual claim record
 ## Specification
 
 See [../../specs/020-statefund-workers-comp-navigator/spec.md](../../specs/020-statefund-workers-comp-navigator/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-020-statefund-build.prompt.md](../../.github/prompts/accel-020-statefund-build.prompt.md)

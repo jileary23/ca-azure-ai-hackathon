@@ -50,3 +50,8 @@ The agent operates in a **strictly advisory capacity** — it never accesses mem
 ## Specification
 
 See [../../specs/010-calpers-retirement-navigator/spec.md](../../specs/010-calpers-retirement-navigator/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-010-calpers-build.prompt.md](../../.github/prompts/accel-010-calpers-build.prompt.md)

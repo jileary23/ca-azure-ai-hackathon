@@ -54,3 +54,8 @@ The agent uses **intent classification** to distinguish consumer vs. producer qu
 ## Specification
 
 See [../../specs/013-cdi-insurance-consumer-agent/spec.md](../../specs/013-cdi-insurance-consumer-agent/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-013-cdi-build.prompt.md](../../.github/prompts/accel-013-cdi-build.prompt.md)

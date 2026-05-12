@@ -50,3 +50,8 @@ This agent is strictly **clinical decision support** — it does not access or m
 ## Specification
 
 See [../../specs/012-cchcs-clinical-support-agent/spec.md](../../specs/012-cchcs-clinical-support-agent/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-012-cchcs-build.prompt.md](../../.github/prompts/accel-012-cchcs-build.prompt.md)

@@ -50,3 +50,8 @@ The agent integrates with CDTFA's public Tax Rate API for jurisdiction-specific 
 ## Specification
 
 See [../../specs/015-cdtfa-tax-compliance-navigator/spec.md](../../specs/015-cdtfa-tax-compliance-navigator/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-015-cdtfa-build.prompt.md](../../.github/prompts/accel-015-cdtfa-build.prompt.md)

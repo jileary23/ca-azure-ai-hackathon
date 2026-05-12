@@ -50,3 +50,8 @@ Azure Document Intelligence is used to parse submitted encroachment permit drawi
 ## Specification
 
 See [../../specs/011-caltrans-project-intelligence-agent/spec.md](../../specs/011-caltrans-project-intelligence-agent/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-011-caltrans-build.prompt.md](../../.github/prompts/accel-011-caltrans-build.prompt.md)

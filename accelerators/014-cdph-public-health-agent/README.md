@@ -56,3 +56,8 @@ Syndromic surveillance queries are served from synthetic mock data in local dev.
 ## Specification
 
 See [../../specs/014-cdph-public-health-agent/spec.md](../../specs/014-cdph-public-health-agent/spec.md)
+
+## Build & Deploy Prompt
+
+Use the GitHub Copilot agent prompt to scaffold and deploy this accelerator:
+[../../.github/prompts/accel-014-cdph-build.prompt.md](../../.github/prompts/accel-014-cdph-build.prompt.md)
