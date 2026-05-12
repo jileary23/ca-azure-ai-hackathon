@@ -14,7 +14,7 @@
 
 ## 📖 Overview
 
-This repository contains **20 AI accelerators** built for California state agencies participating in the **California State Hackathon**. Each accelerator demonstrates practical AI solutions to improve public service delivery across diverse policy domains — from benefits navigation to emergency response.
+This repository contains **21 AI accelerators** built for California state agencies participating in the **California State Hackathon**. Each accelerator demonstrates practical AI solutions to improve public service delivery across diverse policy domains — from benefits navigation to emergency response.
 
 **Key Features:**
 
@@ -29,7 +29,7 @@ This work supports California's **Envision 2026** strategy, Executive Orders **N
 
 ---
 
-## 🎯 The 20 Accelerators
+## 🎯 The 21 Accelerators
 
 ### Original 8 Accelerators
 
@@ -60,6 +60,7 @@ This work supports California's **Envision 2026** strategy, Executive Orders **N
 | 018 | [DSH Forensic Placement Agent](accelerators/018-dsh-forensic-placement-agent/)               | DSH           | IST/NGI/LPS commitment timelines and CONREP placement guidance                | ⭐⭐⭐⭐       | Azure OpenAI, Penal Code RAG                   |
 | 019 | [OTSI HHS Integration Agent](accelerators/019-otsi-hhs-integration-agent/)                   | OTSI/CHHS     | CHHS system integration guidance, API catalog, and SIMM compliance            | ⭐⭐⭐⭐       | Azure OpenAI, AI Search                        |
 | 020 | [CA State Fund Workers' Comp Navigator](accelerators/020-statefund-workers-comp-navigator/)  | CA State Fund | Workers' comp claims, employer policy, and IMR/WCAB guidance                  | ⭐⭐⭐        | Azure OpenAI, Labor Code RAG                   |
+| 021 | [Chat with Your Data — Azure SQL + MCP](accelerators/021-chat-with-your-data-azuresql-mcp/) | Cross-Agency  | Step-by-step tutorial: hybrid search over Azure SQL with DAB + optional Foundry agent (managed identity only) | ⭐⭐⭐⭐       | Azure SQL, Hybrid Search, DAB, MCP, Foundry    |
 
 Each accelerator has a full specification in `specs/` and an implementation project in `accelerators/`.
 

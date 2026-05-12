@@ -1,0 +1,10 @@
+{
+  "deployedAtUtc": "2026-05-11T01:29:18.5568622Z",
+  "resourceGroup": "rg-sqlrag-dev",
+  "acrName": "sqlragacrdevz4gsb7",
+  "acrLoginServer": "sqlragacrdevz4gsb7.azurecr.io",
+  "dabImage": "sqlragacrdevz4gsb7.azurecr.io/dab:latest",
+  "acaAppName": "sqlrag-dab-dev",
+  "acaAppFqdn": "sqlrag-dab-dev.redbay-c65fa1d0.westus.azurecontainerapps.io",
+  "acaAppUrl": "https://sqlrag-dab-dev.redbay-c65fa1d0.westus.azurecontainerapps.io"
+}
