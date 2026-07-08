@@ -71,3 +71,9 @@ htmlcov/
 .squad-workstream
 infra/main.json
 infra/azuredeploy.json
+
+# Local-only: personal inventory dumps, export scripts, and customer-specific work
+foundry-inventory-*/
+scripts/export-agents-and-kb.ps1
+scripts/export-foundry-inventory.ps1
+Calpers/
